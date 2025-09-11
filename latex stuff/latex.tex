@@ -1,0 +1,49 @@
+\documentclass{article}
+\usepackage{graphicx}
+\title{Digital Twin for Deutsche Bahn Railway Network}
+\author{Theo, Nikola, Winston and Jonas}
+\date{September 2025}
+
+\begin{document}
+
+\maketitle
+
+\section{Introduction}
+
+This project develops a Digital Twin for the German railway network using Deutsche Bahn's operational data. Our system models train movements, delays, and performance patterns across Germany's rail infrastructure to enable real-time monitoring and predictive analytics for improved railway operations.
+
+\section{Data Foundation}
+
+Our Digital Twin is built on Deutsche Bahn's comprehensive operational dataset spanning July 2024 to August 2025. This data consists of 14 monthly parquet files, each containing approximately 2 million train events totaling around 700 MB per month. The dataset captures every train stop across Germany's network with 13 key attributes including station locations, train identifiers, scheduled and actual times, delays, and cancellation status.
+
+The data covers Germany's full railway spectrum from high-speed ICE trains to regional services and urban S-Bahn systems. With 108 stations and 55 different train types represented, the dataset provides complete visibility into network operations. Key performance metrics show an average delay of 3.71 minutes, with 37.2\% of trains arriving exactly on time and a 5.3\% cancellation rate. The core operational fields maintain 100\% data completeness, while timing fields show 22.8\% missing values typically at terminal stations where only arrivals or departures occur.
+
+\section{Data Schema and Structure}
+
+Each record in our dataset represents a single train event at a station, capturing both scheduled and actual performance. The core identification fields include \texttt{station} (the location name), \texttt{train\_name} (service identifier like "ICE 123"), \texttt{train\_type} (service category such as ICE, RE, or S-Bahn), and \texttt{final\_destination\_station} (the train's ultimate endpoint). Journey tracking uses \texttt{train\_line\_ride\_id} to connect all stops within a single train run, while \texttt{train\_line\_station\_num} indicates the sequential position along that route.
+
+The temporal structure captures planned versus actual operations through paired timing fields. \texttt{arrival\_planned\_time} and \texttt{departure\_planned\_time} store the original schedule, while \texttt{arrival\_change\_time} and \texttt{departure\_change\_time} reflect real-world updates including delays. The \texttt{delay\_in\_min} field provides the calculated difference, with negative values indicating early arrivals. A general \texttt{time} timestamp marks when each event occurred, and the boolean \texttt{is\_canceled} flag identifies service disruptions.
+
+This structure enables comprehensive analysis of railway performance by linking scheduled expectations with operational reality. Missing values in timing fields typically occur at terminal stations where trains only arrive or only depart, representing normal data patterns rather than quality issues. The schema design supports both individual journey tracking and system-wide performance analysis across Germany's rail network.
+
+\section{System Requirements and Stakeholders}
+
+Our Digital Twin addresses the operational needs of Germany's complex railway ecosystem. Deutsche Bahn requires real-time performance monitoring to track punctuality and identify bottlenecks across their network. Passengers need reliable travel information and delay predictions, while regional transport authorities must monitor local services like S-Bahn and regional trains. Government regulators ensure public transport compliance, and third-party app developers integrate this data into passenger-facing services.
+
+The system supports predictive analytics by analyzing historical delay patterns to forecast disruptions. This enables proactive operational adjustments and improves passenger communication. By tracking performance metrics across stations, routes, and time periods, the Digital Twin identifies systematic inefficiencies and guides infrastructure investments.
+
+\section{Digital Twin Architecture}
+
+The Digital Twin models Germany's railway network through interconnected physical and operational components. Physical entities include stations with their platforms and infrastructure, various train types from high-speed ICE to local S-Bahn services, and the rail network connecting them. Operational entities capture individual train journeys through unique identifiers (\texttt{train\_line\_ride\_id}), scheduled services, and station stops that form complete travel routes.
+
+Our model tracks three key variable types that define system behavior. Temporal variables compare planned schedules with actual performance, calculating real-time delays and identifying patterns. Performance variables measure service reliability through cancellation rates and punctuality metrics. Operational variables track train positions, journey sequences, and network capacity utilization.
+
+The system captures complex interdependencies where delays cascade through the network. When one train runs late, it affects connecting services and station capacity. Peak hours amplify these effects, creating system-wide congestion that our model helps predict and mitigate. The Digital Twin tracks state transitions as trains move from scheduled to delayed, on-time, or canceled status, while monitoring how external factors like weather or maintenance impact operations.
+
+\section{Data Integration and Sensor Modeling}
+
+Real-world railway operations generate continuous streams of sensor data that feed our Digital Twin. Train tracking systems provide GPS coordinates and platform sensors detect arrivals and departures. Signaling systems monitor train movements along routes, while traffic control centers coordinate responses to delays and disruptions. Crew reporting systems capture real-time updates about service conditions.
+
+This sensor data flows through Deutsche Bahn's operational systems into structured datasets that update our Digital Twin continuously. Each data point modifies multiple model components simultaneously - station performance metrics adjust with new delay measurements, journey tracking connects events across routes, and network analysis reveals emerging patterns. The result is a living representation of Germany's railway system that evolves with real-world conditions, enabling both historical analysis and predictive insights for improved operations.
+
+\end{document}
