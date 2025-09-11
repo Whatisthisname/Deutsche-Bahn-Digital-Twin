@@ -1,0 +1,44 @@
+name: Run Calculations
+
+on:
+  schedule:
+    # Runs at 16:00 UTC on the first day of every month
+    - cron: '0 16 1 * *'
+  workflow_dispatch:
+
+jobs:
+  run-calculations:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+
+      - name: "Set up Python"
+        uses: actions/setup-python@v5
+        with:
+          python-version-file: ".python-version"
+
+      - name: Install the project
+        run: uv sync
+
+      - name: Download Data Files
+        run: bash download_data.sh
+
+      - name: Run Calculations
+        run: |
+          uv run run_all_calculations.py
+          START_DATE=$(date -d "$(date +%Y-%m-01) -3 month" +%Y.%m.%d)
+          END_DATE=$(date +%Y.%m.01)
+          uv run generate_html_links.py $START_DATE $END_DATE "allgemein,zeitraum,direkter_zug,zugverbindung,verspaetungsverlauf_zugfahrt,verspaetung_pro_bahnhof,zuggattungen_pro_bahnhof,bahnhof,zuggattung"
+
+      - name: Commit and Push
+        run: |
+          git config --local user.email "noreply@github.com"
+          git config --local user.name "GitHub Actions Bot"
+          # Add all changes in the questions directory
+          git add questions/*/
+          git commit -m "Monthly calculations update $(date +'%Y-%m')"
+          git push 
