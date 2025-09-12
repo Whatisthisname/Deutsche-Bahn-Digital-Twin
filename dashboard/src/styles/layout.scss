@@ -1,0 +1,87 @@
+@use "./variables" as *;
+
+html,
+body,
+#root {
+    height: 100%;
+    font-family: var(--font-family);
+}
+
+button {
+    line-height: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.app-shell {
+    display: grid;
+    grid-template-rows: 60px 1fr;
+    height: 100vh;
+    background: var(--bg);
+}
+
+.menu {
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr;
+    align-items: center;
+    gap: 12px;
+    padding: 0 16px;
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    background: #fff;
+    z-index: 10;
+
+    .menu-left {
+        display: flex;
+        align-items: center;
+        
+        gap: 12px;
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-weight: bold;
+            color: var(--primary);
+
+            img {
+                height: 32px;
+                width: 32px;
+            }
+        }
+
+        .tabs {
+            display: flex;
+            gap: 8px;
+            flex: 1;
+            justify-content: center;
+
+            .tab {
+                padding: 6px 10px;
+                border-radius: 8px;
+                text-decoration: none;
+                color: inherit;
+            }
+
+            .tab.active {
+                background: #f3f4f6;
+            }
+        }
+    }
+
+    .menu-center {
+        display: flex;
+        justify-content: center;
+    }
+
+    .menu-right {
+        display: flex;
+        justify-content: flex-end;
+    }
+}
+
+.app-body {
+    overflow: hidden;
+}

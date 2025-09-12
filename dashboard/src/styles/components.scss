@@ -1,0 +1,78 @@
+@use "./variables" as *;
+
+/* Main Stats */
+.main-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    padding: 12px;
+    border-bottom: 1px solid var(--border);
+
+
+    @media (max-width: 768px) {
+        grid-template-columns: 1fr;
+    }
+
+    .statistic {
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 10px 12px;
+
+        .statistic-title {
+            font-size: 12px;
+            color: var(--faded);
+        }
+
+        .statistic-value {
+            font-size: 20px;
+            font-weight: 600;
+        }
+    }
+}
+
+/* Timeline slider */
+.timeline {
+    width: 100%;
+    max-width: 720px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+
+    input[type="range"] {
+        width: 100%;
+    }
+
+    .timeline-labels {
+        display: flex;
+        justify-content: space-between;
+        font-size: 12px;
+        color: var(--faded);
+    }
+}
+
+/* Replay controls (buttons + speed pills) */
+.replay-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    button {
+        padding: 6px 10px;
+        border: 1px solid var(--border);
+        background: #fff;
+        border-radius: 8px;
+        cursor: pointer;
+    }
+
+    .speed {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .speed button.active {
+        background: #111;
+        border-color: #111;
+        color: #fff;
+    }
+}
