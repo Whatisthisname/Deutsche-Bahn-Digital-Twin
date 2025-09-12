@@ -13,6 +13,7 @@ export default function Menu({ activePath }: Props) {
                 <nav className="tabs">
                     <Link className={activePath.startsWith("/map") ? "tab active" : "tab"} to="/map">Map</Link>
                     <Link className={activePath.startsWith("/visualisations") ? "tab active" : "tab"} to="/visualisations">Visualisations</Link>
+                    <Link className={activePath.startsWith("/raw-data") ? "tab active" : "tab"} to="/raw-data">Raw Data</Link>
                 </nav>
             </div>
 
