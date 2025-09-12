@@ -13,7 +13,7 @@ current_date=$(date +"%Y-%m-01")
 while [[ "$start_date" < "$current_date" ]]; do
     year_month=$(date -j -f "%Y-%m-%d" "$start_date" +"%Y-%m")
     url="https://github.com/piebro/deutsche-bahn-data/raw/refs/heads/main/monthly_data_releases/data-$year_month.parquet"
-    output_file="data/data-$year_month.parquet"
+    output_file="Deutsche-Bahn-Digital-Twin/dashboard/public/data/data-$year_month.parquet"
     
     echo "Downloading $url"
     curl -L "$url" -o "$output_file"
