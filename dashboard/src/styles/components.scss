@@ -56,12 +56,30 @@
     align-items: center;
     gap: 8px;
 
-    button {
+    button,
+    select.speed-select {
         padding: 6px 10px;
         border: 1px solid var(--border);
         background: #fff;
         border-radius: 8px;
         cursor: pointer;
+        font: inherit;
+        color: inherit;
+        appearance: none;
+        outline: none;
+    }
+
+    select.speed-select {
+        background-repeat: no-repeat;
+        background-position: right 8px center;
+        background-size: 12px;
+        padding-right: 24px;
+
+        &.active {
+            background: #111;
+            border-color: #111;
+            color: #fff;
+        }
     }
 
     .speed {

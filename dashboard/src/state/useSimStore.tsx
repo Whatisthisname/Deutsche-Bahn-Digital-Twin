@@ -1,7 +1,7 @@
 import { create } from "zustand";
 
 // Define available speeds
-export const SPEEDS = [1, 5, 10, 100] as const;
+export const SPEEDS = [1, 10, 100, 1000, 10000, 100000, 1000000] as const;
 export type Speed = typeof SPEEDS[number];
 
 // Fetch range start and end from months.json
@@ -27,7 +27,7 @@ type SimState = {
 // Create the Zustand store for simulation state management
 export const useSimStore = create<SimState>((set, get) => ({
     isPlaying: false,
-    speed: 10,
+    speed: SPEEDS[0],
     rangeStart: RANGE_START,
     rangeEnd: RANGE_END,
     cursorTs: RANGE_START,
@@ -38,11 +38,11 @@ export const useSimStore = create<SimState>((set, get) => ({
     stepBack: () => {
         const { cursorTs, rangeStart } = get();
         if (cursorTs == null || rangeStart == null) return;
-        set({ cursorTs: Math.max(rangeStart, cursorTs - 5 * 60 * 1000) });
+        set({ cursorTs: Math.max(rangeStart, cursorTs - 60 * 60 * 1000) });
     },
     stepForward: () => {
         const { cursorTs, rangeEnd } = get();
         if (cursorTs == null || rangeEnd == null) return;
-        set({ cursorTs: Math.min(rangeEnd, cursorTs + 10 * 1000) });
+        set({ cursorTs: Math.min(rangeEnd, cursorTs + 60 * 60 * 1000) });
     },
 }));
