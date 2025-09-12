@@ -16,7 +16,7 @@ import warnings
 warnings.filterwarnings("ignore")
 
 
-def load_sample_data(data_dir="data", sample_months=3, sample_fraction=0.1):
+def load_sample_data(data_dir="Deutsche-Bahn-Digital-Twin/dashboard/public/data", sample_months=3, sample_fraction=0.1):
     """Load a sample of parquet files for faster analysis."""
     print("🚂 Loading Deutsche Bahn data (sample for faster analysis)...")
     files = glob.glob(os.path.join(data_dir, "*.parquet"))
