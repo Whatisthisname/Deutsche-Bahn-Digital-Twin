@@ -58,6 +58,33 @@ def main():
 
     with open(OUT_DIR / "months.json", "w", encoding="utf-8") as fh:
         json.dump({"files": written, "default": written[0] if written else None}, fh, indent=2)
+        
+    # after processing all files, determine rangeStart and rangeEnd
+    if written:
+        first_file = OUT_DIR / written[0]
+        last_file = OUT_DIR / written[-1]
+
+        df_first = pd.read_csv(first_file, usecols=["ts_ms"])
+        df_last = pd.read_csv(last_file, usecols=["ts_ms"])
+
+        range_start = int(df_first["ts_ms"].min())
+        range_end = int(df_last["ts_ms"].max())
+    else:
+        range_start = None
+        range_end = None
+
+    with open(OUT_DIR / "months.json", "w", encoding="utf-8") as fh:
+        json.dump(
+            {
+                "files": written,
+                "default": written[0] if written else None,
+                "rangeStart": range_start,
+                "rangeEnd": range_end,
+            },
+            fh,
+            indent=2,
+        )
+
 
 if __name__ == "__main__":
     main()

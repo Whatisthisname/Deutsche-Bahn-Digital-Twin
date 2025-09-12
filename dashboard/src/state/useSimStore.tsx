@@ -4,6 +4,11 @@ import { create } from "zustand";
 export const SPEEDS = [1, 5, 10, 100] as const;
 export type Speed = typeof SPEEDS[number];
 
+// Fetch range start and end from months.json
+import monthsData from '../../public/data/months.json' assert { type: "json" };
+const RANGE_START = monthsData.rangeStart;
+const RANGE_END = monthsData.rangeEnd;
+
 // Define the shape of the simulation state
 type SimState = {
     isPlaying: boolean; // whether the simulation is currently playing
@@ -23,9 +28,9 @@ type SimState = {
 export const useSimStore = create<SimState>((set, get) => ({
     isPlaying: false,
     speed: 10,
-    rangeStart: null,
-    rangeEnd: null,
-    cursorTs: null,
+    rangeStart: RANGE_START,
+    rangeEnd: RANGE_END,
+    cursorTs: RANGE_START,
     setIsPlaying: (b) => set({ isPlaying: b }),
     setSpeed: (s) => set({ speed: s }),
     setRange: (a, b) => set({ rangeStart: a, rangeEnd: b, cursorTs: a }),
