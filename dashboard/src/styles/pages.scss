@@ -12,14 +12,15 @@
     }
 }
 
-.map-pane {
+.map-panel {
     border-right: 1px solid var(--border);
-}
-
-.map-view {
     height: 100%;
-    display: grid;
-    place-items: center;
+
+    .map-view {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+    }
 }
 
 .side-panel {

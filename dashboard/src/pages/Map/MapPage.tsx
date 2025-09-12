@@ -5,7 +5,7 @@ export default function MapPage() {
     return (
         <div className="page map-page">
             {/* Map */}
-            <section className="map-pane">
+            <section className="map-panel">
                 <MapView />
             </section>
 
