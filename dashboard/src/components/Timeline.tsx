@@ -19,7 +19,7 @@ export default function Timeline() {
             useSimStore.setState((state) => {
                 if (state.cursorTs == null || state.rangeEnd == null) return state;
 
-                const next = state.cursorTs + 1000; // +1s per tick
+                const next = state.cursorTs + 60 * 1000;
                 if (next >= state.rangeEnd) {
                     return { cursorTs: state.rangeEnd, isPlaying: false }; // stop at end
                 }
