@@ -1,0 +1,1682 @@
+[
+  {
+    "name": "Burkhardtsdorf",
+    "stationID": "1001",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Cainsdorf",
+    "stationID": "1018",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Altenhasungen",
+    "stationID": "102",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Caldern",
+    "stationID": "1023",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Chemnitz-Erfenschlag Mitte",
+    "stationID": "1047",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Chemnitz-Reichenhain",
+    "stationID": "1051",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Altenmarkt (Alz)",
+    "stationID": "106",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Cranzahl",
+    "stationID": "1080",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Cursdorf",
+    "stationID": "1094",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Distelhausen",
+    "stationID": "1228",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Dittersdorf",
+    "stationID": "1232",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Dittigheim",
+    "stationID": "1233",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Dorfchemnitz (b Zwönitz)",
+    "stationID": "1267",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Altötting",
+    "stationID": "127",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Dorfprozelten",
+    "stationID": "1272",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Amorbach",
+    "stationID": "138",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Edelfingen",
+    "stationID": "1460",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Edling",
+    "stationID": "1466",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Eggenfelden",
+    "stationID": "1474",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Egglkofen",
+    "stationID": "1477",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Ehringen",
+    "stationID": "1490",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Einsiedel",
+    "stationID": "1524",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Annaberg-Buchholz Mitte",
+    "stationID": "153",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Eisenärzt",
+    "stationID": "1531",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Annaberg-Buchholz Süd",
+    "stationID": "154",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Annaberg-Buchholz unt Bahnhof",
+    "stationID": "155",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Elpersheim",
+    "stationID": "1559",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Engertsham",
+    "stationID": "1600",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Antonsthal",
+    "stationID": "162",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Erdmannsdorf-Augustusburg",
+    "stationID": "1629",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Erla",
+    "stationID": "1648",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Erlabrunn (Erzgeb)",
+    "stationID": "1649",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Anzenkirchen",
+    "stationID": "165",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Erlenbach am Main",
+    "stationID": "1656",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Ernsthausen (Kr Frankenberg)",
+    "stationID": "1661",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Fährbrücke",
+    "stationID": "1745",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Falkenau (Sachs)",
+    "stationID": "1750",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Faulbach (Main)",
+    "stationID": "1766",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Feudingen",
+    "stationID": "1786",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Floßmühle",
+    "stationID": "1820",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Forsting",
+    "stationID": "1837",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Frankenberg (Eder)",
+    "stationID": "1841",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Freudenberg-Kirschfurt",
+    "stationID": "1920",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Fridolfing",
+    "stationID": "1928",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Friedensdorf (Lahn)",
+    "stationID": "1933",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Fritzlar",
+    "stationID": "1964",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Fürstenwald",
+    "stationID": "1979",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Fürstenzell",
+    "stationID": "1982",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Gamburg",
+    "stationID": "2004",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Garching (Alz)",
+    "stationID": "2010",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Gars (Inn)",
+    "stationID": "2015",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Geisenhausen",
+    "stationID": "2041",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Aue (Sachs)",
+    "stationID": "205",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Glanzstoffwerke",
+    "stationID": "2137",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Goßfelden",
+    "stationID": "2205",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Grünhainichen-Borstendorf",
+    "stationID": "2396",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Grünstädtel",
+    "stationID": "2404",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Hainstadt (Baden)",
+    "stationID": "2481",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Bad Birnbach",
+    "stationID": "255",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Hartenstein",
+    "stationID": "2567",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Hasloch am Main",
+    "stationID": "2578",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Hebertsfelden",
+    "stationID": "2612",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Ahnatal-Heckershausen",
+    "stationID": "2616",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Hennersdorf (Sachs)",
+    "stationID": "2690",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Bad Empfing",
+    "stationID": "270",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Hetzdorf (Flöhatal)",
+    "stationID": "2754",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Hochhausen",
+    "stationID": "2801",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Bad Höhenstadt",
+    "stationID": "283",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Hohenfichte",
+    "stationID": "2845",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Höpfling",
+    "stationID": "2899",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Hörpolding",
+    "stationID": "2918",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Hufschlag",
+    "stationID": "2940",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Igersheim",
+    "stationID": "2968",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Bad Mergentheim",
+    "stationID": "305",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Jettenbach",
+    "stationID": "3052",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Johanngeorgenstadt",
+    "stationID": "3059",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Karpfham",
+    "stationID": "3116",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Kastl (Oberbay)",
+    "stationID": "3128",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Katzhütte",
+    "stationID": "3137",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Kemtau",
+    "stationID": "3157",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Kirchanschöring",
+    "stationID": "3182",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Kirchhalling",
+    "stationID": "3192",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Kleinheubach",
+    "stationID": "3250",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Kleinwallstadt",
+    "stationID": "3262",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Klingenberg am Main",
+    "stationID": "3270",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Aich (Niederbay)",
+    "stationID": "33",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Korbach Hauptbahnhof",
+    "stationID": "3371",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Korbach Süd",
+    "stationID": "3372",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Bad Laasphe",
+    "stationID": "3487",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Landshut (Bay) Süd",
+    "stationID": "3514",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Laudenbach am Main",
+    "stationID": "3577",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Laudenbach (Württ)",
+    "stationID": "3579",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Laufen (Oberbay)",
+    "stationID": "3588",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Lauter (Sachs)",
+    "stationID": "3601",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Bad Wildungen",
+    "stationID": "362",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Leimstruth",
+    "stationID": "3624",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Lengefeld-Rauenstein",
+    "stationID": "3659",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Leubsdorf (Sachs)",
+    "stationID": "3678",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Lichtenhain a d Bergbahn",
+    "stationID": "3702",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Lößnitz ob Bf",
+    "stationID": "3791",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Lößnitz unt Bf",
+    "stationID": "3792",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Mandern",
+    "stationID": "3921",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Marienberg (Sachs)",
+    "stationID": "3948",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Markelsheim",
+    "stationID": "3958",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Markersbach (Erzgeb)",
+    "stationID": "3959",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Marktl",
+    "stationID": "3975",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Massing",
+    "stationID": "3998",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Matzing",
+    "stationID": "4000",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Meinersdorf (Erzgeb)",
+    "stationID": "4030",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Mellenbach-Glasbach",
+    "stationID": "4045",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Bärenstein (Kr Annaberg)",
+    "stationID": "407",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Meuselbach-Schwarzmühle",
+    "stationID": "4089",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Miltenberg",
+    "stationID": "4110",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Mittergars",
+    "stationID": "4137",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Mühldorf (Oberbay)",
+    "stationID": "4201",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Münchhausen",
+    "stationID": "4272",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Nennigmühle",
+    "stationID": "4339",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Bayerbach",
+    "stationID": "434",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Neuhausen (Erzgeb)",
+    "stationID": "4398",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Neukirchen (Inn)",
+    "stationID": "4407",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Neumarkt-St. Veit",
+    "stationID": "4417",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Neuötting",
+    "stationID": "4430",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Bechstedt-Trippstein",
+    "stationID": "445",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Neustift (b Passau)",
+    "stationID": "4459",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Niederstetten",
+    "stationID": "4530",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Niklashausen",
+    "stationID": "4556",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Oberelsungen",
+    "stationID": "4636",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Aschaffenburg-Obernau",
+    "stationID": "4666",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Obernburg-Elsenfeld",
+    "stationID": "4668",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Oberndorf (Kr Wittgenstein)",
+    "stationID": "4669",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Oberweißbach-Deesbach",
+    "stationID": "4707",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Obstfelderschmiede",
+    "stationID": "4716",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Olbernhau",
+    "stationID": "4757",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Olbernhau-Grünthal",
+    "stationID": "4758",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Otting",
+    "stationID": "4833",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Pfarrkirchen",
+    "stationID": "4917",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Pockau-Lengefeld",
+    "stationID": "4972",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Pocking",
+    "stationID": "4973",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Ramerberg",
+    "stationID": "5109",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Raschau (b Schwarzenberg)",
+    "stationID": "5124",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Reicholzheim",
+    "stationID": "5195",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Reifland-Wünschendorf",
+    "stationID": "5196",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Collenberg",
+    "stationID": "5210",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Rippberg",
+    "stationID": "5290",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Rohrbach (Oberbay)",
+    "stationID": "5318",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Rot am See",
+    "stationID": "5376",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Rott (Inn)",
+    "stationID": "5396",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Ruhpolding",
+    "stationID": "5426",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Ruhstorf",
+    "stationID": "5427",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Satteldorf",
+    "stationID": "5515",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Schalchen",
+    "stationID": "5534",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Schameder",
+    "stationID": "5539",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Scharfenstein",
+    "stationID": "5543",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Schechen",
+    "stationID": "5551",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Scheibenberg",
+    "stationID": "5553",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Bad Schlema",
+    "stationID": "5587",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Schlettau (Erzgeb)",
+    "stationID": "5589",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Schneeberg im Odenwald",
+    "stationID": "5625",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Schrozberg",
+    "stationID": "5689",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Schwarzburg",
+    "stationID": "5720",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Schwarzenberg (Erzgeb)",
+    "stationID": "5728",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Schwarzenberg (Erzgeb) Hp",
+    "stationID": "5729",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Schwarzenberg-Neuwelt",
+    "stationID": "5730",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Sehma",
+    "stationID": "5801",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Seiboldsdorf",
+    "stationID": "5803",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Siegsdorf",
+    "stationID": "5845",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Silberstraße",
+    "stationID": "5858",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Simbach (Inn)",
+    "stationID": "5859",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Simtshausen",
+    "stationID": "5862",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Sitzendorf-Unterweißbach",
+    "stationID": "5874",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Soyen",
+    "stationID": "5914",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Stadtprozelten",
+    "stationID": "5959",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Stein (Traun)",
+    "stationID": "5978",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Steinhöring",
+    "stationID": "6000",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Sterzhausen",
+    "stationID": "6022",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Sulzbach (Inn)",
+    "stationID": "6109",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Sulzbach am Main",
+    "stationID": "6110",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Tacherting",
+    "stationID": "6133",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Tauberbischofsheim",
+    "stationID": "6152",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Thalheim (Erzgeb)",
+    "stationID": "6187",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Thermalbad Wiesenbad",
+    "stationID": "6196",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Biedenkopf",
+    "stationID": "620",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Tittmoning-Wiesmühl",
+    "stationID": "6222",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Töging (Inn)",
+    "stationID": "6223",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Traundorf",
+    "stationID": "6239",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Trostberg",
+    "stationID": "6277",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Tulling",
+    "stationID": "6285",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Tüßling",
+    "stationID": "6289",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Ungedanken",
+    "stationID": "6332",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Unteraschau",
+    "stationID": "6343",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Usseln",
+    "stationID": "6381",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Vilsbiburg",
+    "stationID": "6420",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Voldagsen",
+    "stationID": "6444",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Volkmarsen",
+    "stationID": "6446",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Waging",
+    "stationID": "6465",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Waldkirchen (Erzgeb)",
+    "stationID": "6488",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Biedenkopf-Wallau",
+    "stationID": "6502",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Walldürn",
+    "stationID": "6505",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Walthersdorf (Erzgeb)",
+    "stationID": "6524",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Warmbad",
+    "stationID": "6543",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Wasserburg (Inn) Bahnhof",
+    "stationID": "6559",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Birkenbringhausen",
+    "stationID": "657",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Wega",
+    "stationID": "6583",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Weibhausen",
+    "stationID": "6589",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Weikersheim",
+    "stationID": "6605",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Weilbach in Unterfranken",
+    "stationID": "6611",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Ahnatal-Weimar",
+    "stationID": "6618",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Wertheim",
+    "stationID": "6698",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Wertheim-Bestenheid",
+    "stationID": "6699",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Wetter (Hess-Nass)",
+    "stationID": "6727",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Wiesenburg (Sachs)",
+    "stationID": "6753",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Wiesenfeld",
+    "stationID": "6754",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Wiesmühl (Alz)",
+    "stationID": "6760",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Wilhelmshütte (Lahn)",
+    "stationID": "6774",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Wilischthal",
+    "stationID": "6776",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Wilkau-Haßlau",
+    "stationID": "6777",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Willingen",
+    "stationID": "6778",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Witzschdorf",
+    "stationID": "6841",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Wolfhagen",
+    "stationID": "6857",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Wolkenstein",
+    "stationID": "6869",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Wörth am Main",
+    "stationID": "6892",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Blaufelden",
+    "stationID": "697",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Zennern",
+    "stationID": "6997",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Zierenberg",
+    "stationID": "7018",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Zöblitz-Pobershau",
+    "stationID": "7038",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Zschopau",
+    "stationID": "7055",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Zwickau-Schedewitz",
+    "stationID": "7071",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Zwönitz",
+    "stationID": "7076",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Blumenau",
+    "stationID": "711",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Wiesa (Erzgeb)",
+    "stationID": "7121",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Lindaunis",
+    "stationID": "7263",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Bödigheim",
+    "stationID": "745",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Bad Arolsen",
+    "stationID": "7463",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Vöhl Ederbringhausen",
+    "stationID": "7473",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Vöhl Herzhausen",
+    "stationID": "7486",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Külte-Wetterburg",
+    "stationID": "7490",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Mengeringhausen",
+    "stationID": "7494",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Vöhl Schmittlotheim",
+    "stationID": "7508",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Twiste",
+    "stationID": "7511",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Frankenberg (Eder) Viermünden",
+    "stationID": "7512",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Gendorf",
+    "stationID": "7547",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Heiligenstatt",
+    "stationID": "7549",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Kirchweidach",
+    "stationID": "7550",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Waldkraiburg-Kraiburg",
+    "stationID": "7870",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Zierenberg-Rosental",
+    "stationID": "8012",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Traunreut",
+    "stationID": "8127",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Eggenfelden Mitte",
+    "stationID": "8209",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Aue (Sachs) Erzgebirgsstadion",
+    "stationID": "8216",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Bibelöd",
+    "stationID": "8217",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Biedenkopf Wirtschafts- und Wissenscampus",
+    "stationID": "8218",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Burkhardtsdorf Mitte",
+    "stationID": "8219",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Einsiedel Gymnasium",
+    "stationID": "8220",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Flöha-Plaue",
+    "stationID": "8221",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Julbach",
+    "stationID": "8222",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Bad Laasphe-Niederlaasphe",
+    "stationID": "8223",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Niederzwönitz",
+    "stationID": "8224",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Olbernhau West",
+    "stationID": "8225",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Pockau Strobelmühle",
+    "stationID": "8226",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Zschopau Ost",
+    "stationID": "8227",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Willingen-Stryck",
+    "stationID": "8232",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Lahntal-Sarnau",
+    "stationID": "8246",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Rosenheim Hochschule",
+    "stationID": "8259",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Ahnatal-Casselbreite",
+    "stationID": "8263",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Wallhausen (Württ)",
+    "stationID": "8269",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Brandstätt",
+    "stationID": "827",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Frankenberg (Eder) Goßberg",
+    "stationID": "8302",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Vöhl Thalitter",
+    "stationID": "8308",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Traunstein Klinikum",
+    "stationID": "8313",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Chemnitz-Erfenschlag Ost",
+    "stationID": "8359",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Einsiedel August-Bebel-Platz",
+    "stationID": "8360",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Thalheim (Erzgeb) Mitte",
+    "stationID": "8361",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Einsiedel Brauerei",
+    "stationID": "8368",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Breitenbrunn (Erzgeb)",
+    "stationID": "848",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Miltenberg-Breitendiel",
+    "stationID": "850",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Kloster Bronnbach",
+    "stationID": "897",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Buchen im Odenwald",
+    "stationID": "930",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Buchen Ost",
+    "stationID": "931",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Buchenau (Lahn)",
+    "stationID": "932",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Burghausen",
+    "stationID": "985",
+    "evaNr": null,
+    "rl100Code": null
+  },
+  {
+    "name": "Burgkirchen",
+    "stationID": "990",
+    "evaNr": null,
+    "rl100Code": null
+  }
+]
