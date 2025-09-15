@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useSimStore } from "../state/useSimStore";
+import { useSimStore } from "@/state/useSimStore";
 
 export default function Timeline() {
     const { isPlaying, speed, rangeStart, rangeEnd, cursorTs, setCursorTs, setIsPlaying } = useSimStore();
@@ -13,22 +13,22 @@ export default function Timeline() {
 
     // Effect to handle playback
     useEffect(() => {
-    if (!isPlaying) return;
+        if (!isPlaying) return;
 
-    const interval = setInterval(() => {
-      useSimStore.setState((state) => {
-        if (state.cursorTs == null || state.rangeEnd == null) return state;
+        const interval = setInterval(() => {
+            useSimStore.setState((state) => {
+                if (state.cursorTs == null || state.rangeEnd == null) return state;
 
-        const next = state.cursorTs + 1000; // +1s per tick
-        if (next >= state.rangeEnd) {
-          return { cursorTs: state.rangeEnd, isPlaying: false }; // stop at end
-        }
-        return { cursorTs: next };
-      });
-    }, 1000 / speed);
+                const next = state.cursorTs + 1000; // +1s per tick
+                if (next >= state.rangeEnd) {
+                    return { cursorTs: state.rangeEnd, isPlaying: false }; // stop at end
+                }
+                return { cursorTs: next };
+            });
+        }, 1000 / speed);
 
-    return () => clearInterval(interval);
-  }, [isPlaying, speed]);
+        return () => clearInterval(interval);
+    }, [isPlaying, speed]);
 
     return (
         <div className="timeline">
@@ -37,8 +37,8 @@ export default function Timeline() {
                 min={rangeStart ?? 0} // minimum is start of range or 0 if no data
                 max={rangeEnd ?? 100} // maximum is end of range or 100 if no data
                 value={cursorTs ?? 0} // value is current cursor or 0 if no data
-                onChange={(e) => onInput(Number(e.target.value))} 
-                disabled={disabled} 
+                onChange={(e) => onInput(Number(e.target.value))}
+                disabled={disabled}
             />
             <div className="timeline-labels">
                 <span>{rangeStart ? new Date(rangeStart).toLocaleString() : "—"}</span>

@@ -5,7 +5,7 @@ export const SPEEDS = [1, 10, 100, 1000] as const;
 export type Speed = typeof SPEEDS[number];
 
 // Fetch range start and end from months.json
-import monthsData from '../../public/data/months.json' assert { type: "json" };
+import monthsData from '@/data/months.json' assert { type: "json" };
 const RANGE_START = monthsData.rangeStart;
 const RANGE_END = monthsData.rangeEnd;
 
