@@ -1,0 +1,21 @@
+{
+  "files": [
+    "events-2024-07.csv",
+    "events-2024-08.csv",
+    "events-2024-09.csv",
+    "events-2024-10.csv",
+    "events-2024-11.csv",
+    "events-2024-12.csv",
+    "events-2025-01.csv",
+    "events-2025-02.csv",
+    "events-2025-03.csv",
+    "events-2025-04.csv",
+    "events-2025-05.csv",
+    "events-2025-06.csv",
+    "events-2025-07.csv",
+    "events-2025-08.csv"
+  ],
+  "default": "events-2024-07.csv",
+  "rangeStart": 1719792000000,
+  "rangeEnd": 1756684740000
+}
