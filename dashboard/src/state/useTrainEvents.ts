@@ -41,10 +41,11 @@ const coalesceTime = (r: any) =>
     toMs(r.timestamp);
 
 /** Global store for train events and rides. */
-export const useTrainEvents = create<TrainEventsState>((set) => ({
+export const useTrainEvents = create<TrainEventsState>((set, get) => ({
     allEvents: [],
     rides: {},
     loadEvents: async (url) => {
+        if (get().allEvents.length) return;
         const resp = await fetch(url);
         const text = await resp.text();
         const { data } = Papa.parse<TrainEvent>(text, {
@@ -168,4 +169,6 @@ export function useEndedRides(graceMs = 0) {
         const s = classifyRideStatus(r, t, graceMs);
         return s === "ENDED" || s === "CANCELED_ENDED";
     });
+    
 }
+
