@@ -1,7 +1,7 @@
 import { create } from "zustand";
 
 // Define available speeds
-export const SPEEDS = [1, 10, 100, 1000, 10000, 100000, 1000000] as const;
+export const SPEEDS = [1, 10, 100, 1000] as const;
 export type Speed = typeof SPEEDS[number];
 
 // Fetch range start and end from months.json

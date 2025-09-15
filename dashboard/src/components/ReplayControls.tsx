@@ -28,32 +28,42 @@ export default function ReplayControls() {
             {/* Speed controls */}
             <div className="speed">
                 <span>Speed</span>
-                {SPEEDS.slice(0, 3).map((s) => (
-                    <button
-                        key={s}
-                        className={`speed-btn ${speed === s ? "active" : ""}`}
-                        onClick={() => setSpeed(s)}
-                    >
-                        {s}×
-                    </button>
-                ))}
-
-                {/* Dropdown for the remaining speeds */}
-                {SPEEDS.length > 3 && (
-                    <select
-                        value={SPEEDS.slice(3).includes(speed) ? speed : ""}
-                        onChange={(e) => setSpeed(Number(e.target.value) as typeof SPEEDS[number])}
-                        className={`speed-select${SPEEDS.slice(3).includes(speed) ? " active" : ""}`}
-                    >
-                        <option value="" disabled>
-                            More...
-                        </option>
-                        {SPEEDS.slice(3).map((s) => (
-                            <option key={s} value={s}>
+                {SPEEDS.length <= 3 ? (
+                    SPEEDS.map((s) => (
+                        <button
+                            key={s}
+                            className={`speed-btn ${speed === s ? "active" : ""}`}
+                            onClick={() => setSpeed(s)}
+                        >
+                            {s}×
+                        </button>
+                    ))
+                ) : (
+                    <>
+                        {SPEEDS.slice(0, 2).map((s) => (
+                            <button
+                                key={s}
+                                className={`speed-btn ${speed === s ? "active" : ""}`}
+                                onClick={() => setSpeed(s)}
+                            >
                                 {s}×
-                            </option>
+                            </button>
                         ))}
-                    </select>
+                        <select
+                            value={SPEEDS.slice(2).includes(speed) ? speed : ""}
+                            onChange={(e) => setSpeed(Number(e.target.value) as typeof SPEEDS[number])}
+                            className={`speed-select${SPEEDS.slice(2).includes(speed) ? " active" : ""}`}
+                        >
+                            <option value="" disabled>
+                                More...
+                            </option>
+                            {SPEEDS.slice(2).map((s) => (
+                                <option key={s} value={s}>
+                                    {s}×
+                                </option>
+                            ))}
+                        </select>
+                    </>
                 )}
             </div>
         </div>

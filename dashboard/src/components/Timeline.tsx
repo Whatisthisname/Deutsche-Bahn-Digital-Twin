@@ -19,13 +19,13 @@ export default function Timeline() {
       useSimStore.setState((state) => {
         if (state.cursorTs == null || state.rangeEnd == null) return state;
 
-        const next = state.cursorTs + 1000 * state.speed; // +1s per tick * speed multiplier
+        const next = state.cursorTs + 1000; // +1s per tick
         if (next >= state.rangeEnd) {
           return { cursorTs: state.rangeEnd, isPlaying: false }; // stop at end
         }
         return { cursorTs: next };
       });
-    }, 1000); // tick every real second
+    }, 1000 / speed);
 
     return () => clearInterval(interval);
   }, [isPlaying, speed]);
