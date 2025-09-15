@@ -16,6 +16,6 @@
     "events-2025-08.csv"
   ],
   "default": "events-2024-07.csv",
-  "rangeStart": 1719792000000,
-  "rangeEnd": 1756684740000
+  "rangeStart": 1719792060000,
+  "rangeEnd": 1722470340000
 }
