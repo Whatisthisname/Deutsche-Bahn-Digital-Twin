@@ -1,4 +1,4 @@
-import { Outlet, Navigate, useLocation, Link } from "react-router-dom";
+import { Outlet, Navigate, useLocation } from "react-router-dom";
 import { Routes, Route } from "react-router";
 import Menu from "./components/Menu";
 import MapPage from "@/pages/Map/MapPage";
