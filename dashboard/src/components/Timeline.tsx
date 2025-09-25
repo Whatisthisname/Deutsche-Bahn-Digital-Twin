@@ -11,23 +11,38 @@ export default function Timeline() {
         setCursorTs(newTimestamp);
     };
 
-    // Effect to handle playback
+    // Effect to handle playback with optimized update frequency
     useEffect(() => {
         if (!isPlaying) return;
 
-        const interval = setInterval(() => {
-            useSimStore.setState((state) => {
-                if (state.cursorTs == null || state.rangeEnd == null) return state;
+        // Use requestAnimationFrame for smoother updates instead of setInterval
+        let animationFrameId: number;
+        let lastUpdateTime = 0;
+        const updateInterval = Math.max(100, 1000 / speed); // Minimum 100ms between updates
 
-                const next = state.cursorTs + 60 * 1000;
-                if (next >= state.rangeEnd) {
-                    return { cursorTs: state.rangeEnd, isPlaying: false }; // stop at end
-                }
-                return { cursorTs: next };
-            });
-        }, 1000 / speed);
+        const updateCursor = (currentTime: number) => {
+            if (currentTime - lastUpdateTime >= updateInterval) {
+                useSimStore.setState((state) => {
+                    if (state.cursorTs == null || state.rangeEnd == null) return state;
 
-        return () => clearInterval(interval);
+                    const next = state.cursorTs + 60 * 1000;
+                    if (next >= state.rangeEnd) {
+                        return { cursorTs: state.rangeEnd, isPlaying: false }; // stop at end
+                    }
+                    return { cursorTs: next };
+                });
+                lastUpdateTime = currentTime;
+            }
+            animationFrameId = requestAnimationFrame(updateCursor);
+        };
+
+        animationFrameId = requestAnimationFrame(updateCursor);
+
+        return () => {
+            if (animationFrameId) {
+                cancelAnimationFrame(animationFrameId);
+            }
+        };
     }, [isPlaying, speed]);
 
     return (

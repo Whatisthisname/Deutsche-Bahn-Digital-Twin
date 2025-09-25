@@ -11,14 +11,14 @@ type RideMeta = {
     rideId: string;
     destination?: string;
     lastStop?: string;
-    startTs: number; 
-    endTs: number;  
+    startTs: number;
+    endTs: number;
     canceled: boolean;
 };
 
 /** Store shape. */
 type TrainEventsState = {
-    allEvents: TrainEvent[];     
+    allEvents: TrainEvent[];
     rides: Record<string, RideMeta>;  // per-ride metadata
     loadEvents: (url: string) => Promise<void>;
 };
@@ -33,6 +33,8 @@ const toMs = (v: unknown): number | undefined => {
 
 /** Best-effort timestamp from a row (actual > planned > row time). */
 const coalesceTime = (r: any) =>
+    toMs(r.actual_timestamp) ??
+    toMs(r.planned_timestamp) ??
     toMs(r.arrival_change_time) ??
     toMs(r.departure_change_time) ??
     toMs(r.arrival_planned_time) ??
@@ -59,8 +61,8 @@ export const useTrainEvents = create<TrainEventsState>((set, get) => ({
             .filter(Boolean)
             .sort(
                 (a, b) =>
-                    (toMs(a.ts_ms ?? a.timestamp) ?? 0) -
-                    (toMs(b.ts_ms ?? b.timestamp) ?? 0)
+                    (coalesceTime(a) ?? 0) -
+                    (coalesceTime(b) ?? 0)
             );
 
         // Group rows by ride id.
@@ -75,37 +77,29 @@ export const useTrainEvents = create<TrainEventsState>((set, get) => ({
         // Build ride metadata (first/last stop → start/end).
         const rides: Record<string, RideMeta> = {};
         for (const [rideId, grp] of byRide) {
-            grp.sort(
-                (a, b) =>
-                    Number(a.train_line_station_num ?? 0) -
-                    Number(b.train_line_station_num ?? 0)
-            );
-            const first = grp[0];
-            const last = grp[grp.length - 1];
+            // For journey events, we need to find the first departure and last arrival
+            const departureEvents = grp.filter(e => e.event_type === 'departure');
+            const arrivalEvents = grp.filter(e => e.event_type === 'arrival');
 
-            const startTs =
-                toMs(first.departure_change_time) ??
-                toMs(first.arrival_change_time) ??
-                toMs(first.departure_planned_time) ??
-                toMs(first.arrival_planned_time) ??
-                toMs(first.ts_ms ?? first.timestamp) ??
-                0;
+            if (departureEvents.length === 0) continue;
 
-            const endTs =
-                toMs(last.arrival_change_time) ??
-                toMs(last.departure_change_time) ??
-                toMs(last.arrival_planned_time) ??
-                toMs(last.departure_planned_time) ??
-                toMs(last.ts_ms ?? last.timestamp) ??
-                startTs;
+            // Sort by station number to get proper sequence
+            departureEvents.sort((a, b) => Number(a.train_line_station_num ?? 0) - Number(b.train_line_station_num ?? 0));
+            arrivalEvents.sort((a, b) => Number(a.train_line_station_num ?? 0) - Number(b.train_line_station_num ?? 0));
+
+            const firstDeparture = departureEvents[0];
+            const lastArrival = arrivalEvents[arrivalEvents.length - 1] || departureEvents[departureEvents.length - 1];
+
+            const startTs = coalesceTime(firstDeparture) ?? 0;
+            const endTs = coalesceTime(lastArrival) ?? startTs;
 
             rides[rideId] = {
                 rideId,
-                destination: String(first.final_destination_station ?? ""),
-                lastStop: String(last.station ?? ""),
+                destination: String(firstDeparture.final_destination_station ?? ""),
+                lastStop: String(lastArrival.to_station ?? lastArrival.from_station ?? ""),
                 startTs,
                 endTs,
-                canceled: Boolean(last.is_canceled),
+                canceled: Boolean(lastArrival.is_canceled),
             };
         }
 
@@ -122,7 +116,7 @@ export const useActiveRideIds = (graceMs = 0) => {
         .map((r) => r.rideId);
 };
 
-/** Visible active events. */
+/** Visible active events with optimized filtering. */
 export const useVisibleActiveEvents = (graceMs = 0) => {
     const allEvents = useTrainEvents((s) => s.allEvents);
     const activeIds = useActiveRideIds(graceMs);
@@ -131,10 +125,16 @@ export const useVisibleActiveEvents = (graceMs = 0) => {
     if (!activeIds.length) return [];
     const activeSet = new Set(activeIds);
 
-    return allEvents.filter((e) => {
+    // Use binary search for more efficient filtering since events are sorted by time
+    const result: TrainEvent[] = [];
+    for (const e of allEvents) {
         const ts = coalesceTime(e) ?? 0;
-        return ts <= t && activeSet.has(String(e.train_line_ride_id ?? ""));
-    });
+        if (ts > t) break; // Since events are sorted, we can stop early
+        if (activeSet.has(String(e.train_line_ride_id ?? ""))) {
+            result.push(e);
+        }
+    }
+    return result;
 };
 
 /** Ride status. */
@@ -169,6 +169,6 @@ export function useEndedRides(graceMs = 0) {
         const s = classifyRideStatus(r, t, graceMs);
         return s === "ENDED" || s === "CANCELED_ENDED";
     });
-    
+
 }
 

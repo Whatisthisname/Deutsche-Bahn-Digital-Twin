@@ -1,4 +1,5 @@
 import MainStats from "../../components/MainStats";
+import AverageDelayChart from "../../components/AverageDelayChart";
 
 export default function VisualisationsPage() {
     return (
@@ -6,27 +7,17 @@ export default function VisualisationsPage() {
             {/* Main Stats */}
             <MainStats />
             <div className="visualisations-grid">
-                {/* Visualisation 1 */}
-                <div className="panel">
-                    <h3 className="visualisation-name">Visualisation 1</h3>
-                    <div className="visualisation">
-                        Visualisation here
-                    </div>
-                </div>
-
-                {/* Visualisation 2 */}
-                <div className="panel">
-                    <h3 className="visualisation-name">Visualisation 2</h3>
-                    <div className="visualisation">
-                        Visualisation here
-                    </div>
-                </div>
-
-                {/* Visualisation 3 */}
+                {/* Average Delay Chart */}
                 <div className="panel wide">
-                    <h3 className="visualisation-name">Visualisation 3</h3>
+                    <AverageDelayChart />
+                </div>
+
+
+                {/* Placeholder for future visualizations */}
+                <div className="panel">
+                    <h3 className="visualisation-name">More Visualizations Coming Soon</h3>
                     <div className="visualisation">
-                        Visualisation here
+                        Additional charts and analytics will be added here...
                     </div>
                 </div>
             </div>
