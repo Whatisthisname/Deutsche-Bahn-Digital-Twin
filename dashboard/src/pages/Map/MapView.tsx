@@ -5,14 +5,17 @@ import {
   NavigationControl,
   Source,
   Layer,
+  Marker,
 } from "@vis.gl/react-maplibre";
-import type { FeatureCollection, Feature, Point, LineString } from "geojson";
+import type { FeatureCollection, Feature, LineString } from "geojson";
 import "maplibre-gl/dist/maplibre-gl.css";
 
 import { useGraphStructure } from "@/state/useGraphStructure";
-import { useVisibleActiveEvents, useActiveRides } from "@/state/useTrainEvents";
+import { useVisibleActiveEvents, useActiveRides } from "@/hooks/useStreamingTrainEvents";
+import { useIncrementalRides } from "@/state/useIncrementalRides";
 import { useSimStore } from "@/state/useSimStore";
 import { useDynamicStationFeatures } from "@/state/useStationFeatures";
+import { formatTime, toMs } from "@/utils/time";
 
 type JourneyEvent = {
   event_type?: 'departure' | 'arrival';
@@ -36,41 +39,42 @@ function edgeColor(delay?: number) {
 }
 
 // Helper function to convert timestamps to milliseconds
-const toMs = (n: any): number | undefined => {
-  if (!Number.isFinite(n)) return undefined;
-  return String(Math.trunc(n)).length === 10 ? n * 1000 : n;
-};
+// const toMs = (n: any): number | undefined => {
+//   if (!Number.isFinite(n)) return undefined;
+//   return String(Math.trunc(n)).length === 10 ? n * 1000 : n;
+// };
 
 export default function MapView() {
   const { graph, loaded } = useGraphStructure();
-  const events = useVisibleActiveEvents(0) as JourneyEvent[];
+  const events = useVisibleActiveEvents() as JourneyEvent[];
   const playhead = useSimStore(s => s.cursorTs) ?? 0;
   const { getStationFeatures } = useDynamicStationFeatures();
 
   // Debug: Check active rides
   const activeRides = useActiveRides();
-  console.log('Active rides at', new Date(playhead).toISOString(), ':', activeRides.map(r => ({
-    rideId: r.rideId,
-    startTs: new Date(r.startTs).toISOString(),
-    endTs: new Date(r.endTs).toISOString(),
-    canceled: r.canceled
-  })));
+  const allRides = useIncrementalRides(state => state.rides);
 
-  // State for popup
-  const [popupInfo, setPopupInfo] = useState<{
+  console.log(`🔍 MapView: Active rides at ${formatTime(playhead)}:`, activeRides.map(r => ({
+    rideId: r.rideId,
+    startTs: formatTime(r.startTs),
+    endTs: r.endTs ? formatTime(r.endTs) : 'null',
+    isCanceled: r.isCanceled,
+    status: r.status
+  })));
+  console.log(`🔍 MapView: All rides count: ${allRides.size}`);
+
+  // State for hover popup
+  const [hoveredStationInfo, setHoveredStationInfo] = useState<{
     stationName: string;
     stationId: number;
     features: any;
     coordinates: [number, number];
   } | null>(null);
 
-  // State for hover
-  const [hoveredStation, setHoveredStation] = useState<number | null>(null);
 
-  const { stationFC, edgeFC, backgroundEdgeFC, counts } = useMemo(() => {
+  const { edgeFC, backgroundEdgeFC, counts } = useMemo(() => {
     if (!graph) {
       return {
-        stationFC: { type: "FeatureCollection" as const, features: [] },
         edgeFC: { type: "FeatureCollection" as const, features: [] },
         backgroundEdgeFC: { type: "FeatureCollection" as const, features: [] },
         counts: { stations: 0, events: 0, edges: 0, backgroundEdges: 0 }
@@ -96,23 +100,6 @@ export default function MapView() {
       playheadMs: playhead
     });
 
-    // Stations FC - only show the 91 ICE stations
-    const stationFeatures: Feature<Point, { name: string; degree: number; centrality: number; stationId: number }>[] =
-      Object.entries(graph.stations).map(([stationIdStr, station]) => ({
-        type: "Feature",
-        geometry: { type: "Point", coordinates: [station.lon, station.lat] },
-        properties: {
-          name: station.name,
-          degree: station.degree,
-          centrality: station.closenessCentrality,
-          stationId: parseInt(stationIdStr)
-        },
-      }));
-
-    const stationFC: FeatureCollection<Point, { name: string; degree: number; centrality: number; stationId: number }> = {
-      type: "FeatureCollection",
-      features: stationFeatures
-    };
 
     // Background edges FC - all possible edges from graph structure
     const backgroundEdgeFeatures: Feature<LineString, { fromStation: string; toStation: string; distance: number; frequency: number }>[] =
@@ -237,7 +224,6 @@ export default function MapView() {
     };
 
     return {
-      stationFC,
       edgeFC,
       backgroundEdgeFC,
       counts: {
@@ -249,47 +235,6 @@ export default function MapView() {
     };
   }, [graph, events.length, playhead]); // Only depend on events.length, not full events array
 
-  // Handle station click
-  const handleStationClick = (event: any) => {
-    console.log('Map click event:', {
-      features: event.features?.map((f: any) => ({
-        layerId: f.layer?.id,
-        sourceId: f.source,
-        properties: f.properties
-      })),
-      lngLat: event.lngLat
-    });
-
-    const stationFeature = event.features?.find((f: any) => f.layer.id === 'stations-dots');
-    if (!stationFeature || !graph) {
-      console.log('No station feature found or graph not loaded');
-      return;
-    }
-
-    const stationId = stationFeature.properties.stationId;
-    const stationName = stationFeature.properties.name;
-    const features = getStationFeatures(stationId);
-    const coordinates = event.lngLat;
-
-    console.log('Station clicked:', { stationId, stationName, features });
-
-    setPopupInfo({
-      stationName,
-      stationId,
-      features,
-      coordinates: [coordinates.lng, coordinates.lat]
-    });
-  };
-
-  // Handle station hover
-  const handleStationHover = (event: any) => {
-    const stationFeature = event.features?.find((f: any) => f.layer.id === 'stations-dots');
-    if (stationFeature) {
-      setHoveredStation(stationFeature.properties.stationId);
-    } else {
-      setHoveredStation(null);
-    }
-  };
 
   return (
     <div className="map-view" style={{ position: "relative" }}>
@@ -305,8 +250,6 @@ export default function MapView() {
       <MapGL
         initialViewState={{ longitude: 10, latitude: 51, zoom: 5 }}
         mapStyle="https://basemaps.cartocdn.com/gl/positron-gl-style/style.json"
-        onClick={handleStationClick}
-        onMouseMove={handleStationHover}
       >
         <NavigationControl position="top-right" />
 
@@ -332,25 +275,49 @@ export default function MapView() {
               }} />
             </Source>
 
-            <Source id="stations" type="geojson" data={stationFC}>
-              <Layer id="stations-dots" type="circle" paint={{
-                "circle-radius": [
-                  "case",
-                  ["==", ["get", "stationId"], hoveredStation],
-                  6, // Larger when hovered
-                  3 // Uniform size for all stations
-                ],
-                "circle-color": "#3b82f6", // Uniform blue color for all stations
-                "circle-stroke-color": "#fff",
-                "circle-stroke-width": 0.5
-              }} />
-            </Source>
+            {/* Station Markers - Individual interactive markers */}
+            {graph && Object.entries(graph.stations).map(([stationIdStr, station]) => {
+              const stationId = parseInt(stationIdStr);
+
+              return (
+                <Marker
+                  key={stationId}
+                  longitude={station.lon}
+                  latitude={station.lat}
+                >
+                  <div
+                    style={{
+                      width: '10px',
+                      height: '10px',
+                      backgroundColor: '#3b82f6',
+                      border: '2px solid #fff',
+                      borderRadius: '50%',
+                      cursor: 'pointer',
+                      transition: 'all 0.2s ease',
+                      boxShadow: '0 2px 4px rgba(0,0,0,0.2)'
+                    }}
+                    onMouseEnter={() => {
+                      const features = getStationFeatures(stationId);
+                      setHoveredStationInfo({
+                        stationName: station.name,
+                        stationId,
+                        features,
+                        coordinates: [station.lon, station.lat]
+                      });
+                    }}
+                    onMouseLeave={() => {
+                      setHoveredStationInfo(null);
+                    }}
+                  />
+                </Marker>
+              );
+            })}
           </>
         )}
       </MapGL>
 
-      {/* Station Popup */}
-      {popupInfo && (
+      {/* Station Hover Popup */}
+      {hoveredStationInfo && (
         <div style={{
           position: 'absolute',
           top: '50%',
@@ -363,48 +330,34 @@ export default function MapView() {
           boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
           zIndex: 1000,
           minWidth: '250px',
-          maxWidth: '300px'
+          maxWidth: '300px',
+          pointerEvents: 'none' // Prevent popup from interfering with mouse events
         }}>
           <div style={{ marginBottom: '8px' }}>
             <h3 style={{ margin: 0, fontSize: '16px', fontWeight: 'bold', color: '#333' }}>
-              {popupInfo.stationName}
+              {hoveredStationInfo.stationName}
             </h3>
-            <button
-              onClick={() => setPopupInfo(null)}
-              style={{
-                position: 'absolute',
-                top: '8px',
-                right: '8px',
-                background: 'none',
-                border: 'none',
-                fontSize: '18px',
-                cursor: 'pointer',
-                color: '#666'
-              }}
-            >
-              ×
-            </button>
           </div>
 
-          {popupInfo.features ? (
+          {hoveredStationInfo.features ? (
             <div style={{ fontSize: '14px', lineHeight: '1.4' }}>
               <div style={{ marginBottom: '8px' }}>
-                <strong>Rides:</strong> {popupInfo.features.rideCount}
+                <strong>Rides:</strong> {hoveredStationInfo.features.rideCount}
               </div>
               <div style={{ marginBottom: '8px' }}>
-                <strong>Average Delay:</strong> {popupInfo.features.averageDelay.toFixed(1)} min
+                <strong>Average Delay:</strong> {hoveredStationInfo.features.averageDelay.toFixed(1)} min
               </div>
               <div style={{ marginBottom: '8px' }}>
-                <strong>Current Delay:</strong> {popupInfo.features.currentDelay.toFixed(1)} min
+                <strong>Current Delay:</strong> {hoveredStationInfo.features.currentDelay.toFixed(1)} min
               </div>
               <div style={{ marginBottom: '8px' }}>
-                <strong>Max Delay:</strong> {popupInfo.features.maxDelay.toFixed(1)} min
+                <strong>Max Delay:</strong> {hoveredStationInfo.features.maxDelay.toFixed(1)} min
               </div>
               <div style={{ marginBottom: '8px' }}>
-                <strong>Punctuality:</strong> {popupInfo.features.punctualityRate.toFixed(1)}%
+                <strong>Punctuality:</strong> {hoveredStationInfo.features.punctualityRate.toFixed(1)}%
               </div>
               <div style={{ fontSize: '12px', color: '#666', marginTop: '8px' }}>
-                Last updated: {new Date(popupInfo.features.lastUpdated).toLocaleTimeString()}
+                Last updated: {new Date(hoveredStationInfo.features.lastUpdated).toLocaleTimeString()}
               </div>
             </div>
           ) : (

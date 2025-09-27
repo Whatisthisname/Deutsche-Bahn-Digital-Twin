@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import { useMemo } from "react";
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Tooltip, CartesianGrid } from "recharts";
 import { useSimStore } from "@/state/useSimStore";
 import { useDynamicStationFeatures } from "@/state/useStationFeatures";
@@ -6,7 +6,7 @@ import { useGraphStructure } from "@/state/useGraphStructure";
 
 export default function AverageDelayChart() {
     const cursorTs = useSimStore(state => state.cursorTs);
-    const { graph, loaded } = useGraphStructure();
+    const { loaded } = useGraphStructure();
     const { getAllStationFeatures, features, lastUpdateTime } = useDynamicStationFeatures();
 
     const currentTime = cursorTs ? new Date(cursorTs).toLocaleTimeString() : '—';

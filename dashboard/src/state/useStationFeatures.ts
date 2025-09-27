@@ -1,7 +1,7 @@
 import React from "react";
 import { create } from "zustand";
 import { useGraphStructure } from "./useGraphStructure";
-import { useVisibleActiveEvents } from "./useTrainEvents";
+import { useVisibleActiveEvents } from "@/hooks/useStreamingTrainEvents";
 
 // Dynamic station features that update in real-time
 export interface DynamicStationFeatures {
@@ -71,7 +71,7 @@ export const useStationFeatures = create<StationFeaturesState>()((set, get) => (
         const newFeatures = new Map<number, DynamicStationFeatures>();
 
         // Initialize features for all stations with fresh defaults
-        Object.entries(graph.stations).forEach(([stationIdStr, station]) => {
+        Object.entries(graph.stations).forEach(([stationIdStr]) => {
             const stationId = parseInt(stationIdStr);
 
             // Always start with fresh defaults - no accumulation of historical data
@@ -109,7 +109,7 @@ export const useStationFeatures = create<StationFeaturesState>()((set, get) => (
         }
 
         // Process each ride and update station features
-        for (const [rideId, rideEvents] of byRide) {
+        for (const [, rideEvents] of byRide) {
             if (rideEvents.length === 0) continue;
 
             // For journey events, calculate delay per journey segment
@@ -128,7 +128,7 @@ export const useStationFeatures = create<StationFeaturesState>()((set, get) => (
             const stationsCountedForThisRide = new Set<number>();
 
             // Process each journey segment
-            for (const [segmentKey, segmentEvents] of journeySegments) {
+            for (const [, segmentEvents] of journeySegments) {
                 const segmentDelay = calculateRideDelay(segmentEvents);
 
                 // Update features for both from_station and to_station

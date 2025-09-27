@@ -1,7 +1,8 @@
 import { create } from "zustand";
-import { useTrainEvents } from "./useTrainEvents";
+import { useAllRides } from "@/hooks/useStreamingTrainEvents";
 import { useSimStore } from "./useSimStore";
 import { calculateRideDelays, calculateAnalyticsFromRideDelays } from "@/lib/delayCalculations";
+import { useProcessedEvents } from "./useEventStream";
 
 // Analytics data structure
 export type AnalyticsData = {
@@ -18,7 +19,7 @@ type AnalyticsState = {
     computeAnalytics: () => void;
 };
 
-// Helper function to normalize time values (copied from useTrainEvents)
+// Helper function to normalize time values
 const toMs = (v: unknown): number | undefined => {
     if (v == null || v === "") return undefined;
     const n = typeof v === "number" ? v : Number(v);
@@ -26,8 +27,19 @@ const toMs = (v: unknown): number | undefined => {
     return String(Math.trunc(n)).length === 10 ? n * 1000 : n;
 };
 
+// Best-effort timestamp from a row
+const coalesceTime = (r: any) =>
+    toMs(r.actual_timestamp) ??
+    toMs(r.planned_timestamp) ??
+    toMs(r.arrival_change_time) ??
+    toMs(r.departure_change_time) ??
+    toMs(r.arrival_planned_time) ??
+    toMs(r.departure_planned_time) ??
+    toMs(r.ts_ms) ??
+    toMs(r.timestamp);
+
 // Create the analytics store
-export const useAnalytics = create<AnalyticsState>((set, get) => ({
+export const useAnalytics = create<AnalyticsState>((set) => ({
     analytics: {
         activeTrainCount: 0,
         averageDelay: 0,
@@ -38,37 +50,24 @@ export const useAnalytics = create<AnalyticsState>((set, get) => ({
 
     computeAnalytics: () => {
         // Get current state from other stores
-        const trainEventsState = useTrainEvents.getState();
         const simState = useSimStore.getState();
+        const processedEvents = useProcessedEvents();
+        const currentTime = simState.cursorTs ?? 0;
 
-        // Use the existing proven logic for active rides
-        const rides = trainEventsState.rides;
-        const t = simState.cursorTs ?? 0;
-
-        // Replicate the classifyRideStatus logic
-        const activeRides = Object.values(rides).filter(ride => {
-            if (ride.canceled && t >= ride.endTs) return false; // CANCELED_ENDED
-            if (t < ride.startTs) return false; // UPCOMING
-            if (t < ride.endTs) return true; // ACTIVE
-            return false; // ENDED
-        });
-
-        // Get visible events using the existing logic
-        const allEvents = trainEventsState.allEvents;
-        const activeRideIds = new Set(activeRides.map(r => r.rideId));
-
-        const visibleEvents = allEvents.filter(event => {
-            const eventTime = toMs(event.arrival_change_time) ??
-                toMs(event.departure_change_time) ??
-                toMs(event.arrival_planned_time) ??
-                toMs(event.departure_planned_time) ??
-                toMs(event.ts_ms ?? event.timestamp) ?? 0;
-
-            return eventTime <= t && activeRideIds.has(String(event.train_line_ride_id ?? ""));
-        });
+        // Get active rides from the incremental rides system
+        const activeRides = useAllRides();
 
         // Count active trains
         const activeTrainCount = activeRides.length;
+
+        // Get visible events for analytics calculation
+        const activeRideIds = new Set(activeRides.map(r => r.rideId));
+        const visibleEvents = processedEvents.filter(event => {
+            const eventTime = coalesceTime(event) ?? 0;
+            const rideId = String(event.train_line_ride_id ?? "");
+
+            return eventTime <= currentTime && activeRideIds.has(rideId);
+        });
 
         // Calculate delays using helper function
         const rideDelays = calculateRideDelays(visibleEvents);
@@ -79,7 +78,7 @@ export const useAnalytics = create<AnalyticsState>((set, get) => ({
             averageDelay: analytics.averageDelay,
             punctualityRate: analytics.punctualityRate,
             totalEvents: visibleEvents.length,
-            lastUpdated: simState.cursorTs ?? 0,
+            lastUpdated: currentTime,
         };
 
         set({ analytics: newAnalytics });
@@ -91,13 +90,13 @@ export const useCurrentAnalytics = () => {
     const analytics = useAnalytics(state => state.analytics);
     const computeAnalytics = useAnalytics(state => state.computeAnalytics);
     const cursorTs = useSimStore(state => state.cursorTs);
-    const allEvents = useTrainEvents(state => state.allEvents);
-    const rides = useTrainEvents(state => state.rides);
+    const processedEvents = useProcessedEvents();
+    const activeRides = useAllRides();
 
     // Recompute analytics when cursor time or data changes
     React.useEffect(() => {
         computeAnalytics();
-    }, [cursorTs, allEvents, rides, computeAnalytics]);
+    }, [cursorTs, processedEvents.length, activeRides.length, computeAnalytics]);
 
     return analytics;
 };

@@ -1,14 +1,15 @@
-import React, { useMemo } from "react";
-import { useCurrentAnalytics } from "@/state/useAnalytics";
+import { useMemo } from "react";
 import { useSimStore } from "@/state/useSimStore";
 import { useDynamicStationFeatures } from "@/state/useStationFeatures";
-import { useActiveRides } from "@/state/useTrainEvents";
+import { useActiveRides } from "@/hooks/useStreamingTrainEvents"; // Use new streaming system
 
 export default function MainStats() {
-    const analytics = useCurrentAnalytics();
+    // const analytics = useCurrentAnalytics();
     const cursorTs = useSimStore(state => state.cursorTs);
     const { getAllStationFeatures } = useDynamicStationFeatures();
     const activeRides = useActiveRides();
+
+    console.log(`🔍 MainStats: Active rides count: ${activeRides.length}`);
 
     const currentTime = cursorTs ? new Date(cursorTs).toLocaleTimeString() : '—';
 

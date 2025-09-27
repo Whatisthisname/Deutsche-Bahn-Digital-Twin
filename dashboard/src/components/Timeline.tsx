@@ -1,36 +1,47 @@
-import { useEffect } from "react";
+import { useEffect, useCallback, useRef } from "react";
 import { useSimStore } from "@/state/useSimStore";
+import { TIME_CONSTANTS } from "@/utils/time";
 
 export default function Timeline() {
-    const { isPlaying, speed, rangeStart, rangeEnd, cursorTs, setCursorTs, setIsPlaying } = useSimStore();
+    const { isPlaying, speed, rangeStart, rangeEnd, cursorTs, setIsPlaying, scrubToTime, isScrubbing, setCursorTs } = useSimStore();
     const disabled = !rangeStart || !rangeEnd; // disable if no data
 
-    // when user interacts with the timeline, pause playback and set the cursor to the new value
-    const onInput = (newTimestamp: number) => {
+    // Use ref to track current cursorTs value without causing effect re-runs
+    const cursorTsRef = useRef(cursorTs);
+    cursorTsRef.current = cursorTs;
+
+    // when user interacts with the timeline, pause playback and scrub to the new value
+    const onInput = useCallback(async (newTimestamp: number) => {
         setIsPlaying(false);
-        setCursorTs(newTimestamp);
-    };
+        await scrubToTime(newTimestamp);
+    }, [setIsPlaying, scrubToTime]);
 
     // Effect to handle playback with optimized update frequency
     useEffect(() => {
-        if (!isPlaying) return;
+        if (!isPlaying || isScrubbing) return;
 
         // Use requestAnimationFrame for smoother updates instead of setInterval
         let animationFrameId: number;
         let lastUpdateTime = 0;
-        const updateInterval = Math.max(100, 1000 / speed); // Minimum 100ms between updates
+        const updateInterval = Math.max(TIME_CONSTANTS.MIN_TIMELINE_UPDATE_MS, 1000 / speed); // Minimum 100ms between updates
 
         const updateCursor = (currentTime: number) => {
             if (currentTime - lastUpdateTime >= updateInterval) {
-                useSimStore.setState((state) => {
-                    if (state.cursorTs == null || state.rangeEnd == null) return state;
+                const currentCursorTs = cursorTsRef.current;
+                if (currentCursorTs == null || rangeEnd == null) return;
 
-                    const next = state.cursorTs + 60 * 1000;
-                    if (next >= state.rangeEnd) {
-                        return { cursorTs: state.rangeEnd, isPlaying: false }; // stop at end
-                    }
-                    return { cursorTs: next };
-                });
+                // Advance time by the correct increment based on speed
+                const timeIncrement = TIME_CONSTANTS.TIME_INCREMENT_PER_SECOND_MS * speed;
+                const next = currentCursorTs + timeIncrement;
+
+                // Timeline advancement - removed noisy logging
+
+                if (next >= rangeEnd) {
+                    setIsPlaying(false); // stop at end
+                    setCursorTs(rangeEnd);
+                } else {
+                    setCursorTs(next);
+                }
                 lastUpdateTime = currentTime;
             }
             animationFrameId = requestAnimationFrame(updateCursor);
@@ -43,7 +54,7 @@ export default function Timeline() {
                 cancelAnimationFrame(animationFrameId);
             }
         };
-    }, [isPlaying, speed]);
+    }, [isPlaying, speed, isScrubbing, setCursorTs, setIsPlaying, rangeEnd]);
 
     return (
         <div className="timeline">
@@ -53,12 +64,13 @@ export default function Timeline() {
                 max={rangeEnd ?? 100} // maximum is end of range or 100 if no data
                 value={cursorTs ?? 0} // value is current cursor or 0 if no data
                 onChange={(e) => onInput(Number(e.target.value))}
-                disabled={disabled}
+                disabled={disabled || isScrubbing}
             />
             <div className="timeline-labels">
                 <span>{rangeStart ? new Date(rangeStart).toLocaleString() : "—"}</span>
                 <span>{cursorTs ? new Date(cursorTs).toLocaleString() : "—"}</span>
                 <span>{rangeEnd ? new Date(rangeEnd).toLocaleString() : "—"}</span>
+                {isScrubbing && <span style={{ color: '#ff9800' }}>Catching up...</span>}
             </div>
         </div>
     );
