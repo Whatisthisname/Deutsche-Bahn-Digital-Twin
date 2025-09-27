@@ -251,13 +251,27 @@ export default function MapView() {
 
   // Handle station click
   const handleStationClick = (event: any) => {
+    console.log('Map click event:', {
+      features: event.features?.map((f: any) => ({
+        layerId: f.layer?.id,
+        sourceId: f.source,
+        properties: f.properties
+      })),
+      lngLat: event.lngLat
+    });
+
     const stationFeature = event.features?.find((f: any) => f.layer.id === 'stations-dots');
-    if (!stationFeature || !graph) return;
+    if (!stationFeature || !graph) {
+      console.log('No station feature found or graph not loaded');
+      return;
+    }
 
     const stationId = stationFeature.properties.stationId;
     const stationName = stationFeature.properties.name;
     const features = getStationFeatures(stationId);
     const coordinates = event.lngLat;
+
+    console.log('Station clicked:', { stationId, stationName, features });
 
     setPopupInfo({
       stationName,
@@ -299,32 +313,6 @@ export default function MapView() {
         {/* Only render layers if stations are loaded */}
         {loaded && (
           <>
-            <Source id="stations" type="geojson" data={stationFC}>
-              <Layer id="stations-dots" type="circle" paint={{
-                "circle-radius": [
-                  "case",
-                  ["==", ["get", "stationId"], hoveredStation],
-                  6, // Larger when hovered
-                  [
-                    "interpolate",
-                    ["linear"],
-                    ["get", "centrality"],
-                    0, 2,
-                    0.5, 4
-                  ]
-                ],
-                "circle-color": [
-                  "interpolate",
-                  ["linear"],
-                  ["get", "degree"],
-                  0, "#e5e7eb",
-                  10, "#3b82f6",
-                  20, "#1d4ed8"
-                ],
-                "circle-stroke-color": "#fff",
-                "circle-stroke-width": 0.5
-              }} />
-            </Source>
 
             {/* Background edges - all possible connections */}
             <Source id="background-edges" type="geojson" data={backgroundEdgeFC}>
@@ -341,6 +329,20 @@ export default function MapView() {
                 "line-color": ["get", "color"],
                 "line-width": ["get", "width"],
                 "line-opacity": 0.9
+              }} />
+            </Source>
+
+            <Source id="stations" type="geojson" data={stationFC}>
+              <Layer id="stations-dots" type="circle" paint={{
+                "circle-radius": [
+                  "case",
+                  ["==", ["get", "stationId"], hoveredStation],
+                  6, // Larger when hovered
+                  3 // Uniform size for all stations
+                ],
+                "circle-color": "#3b82f6", // Uniform blue color for all stations
+                "circle-stroke-color": "#fff",
+                "circle-stroke-width": 0.5
               }} />
             </Source>
           </>
