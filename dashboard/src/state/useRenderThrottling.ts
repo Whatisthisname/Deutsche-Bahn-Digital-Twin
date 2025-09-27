@@ -17,12 +17,10 @@ export const useRenderThrottling = create<RenderThrottlingState>((set) => ({
     shouldThrottleRenders: true,
 
     startCatchUp: () => {
-        console.log('RenderThrottling: Starting catch-up, throttling renders');
         set({ isCatchingUp: true });
     },
 
     endCatchUp: () => {
-        console.log('RenderThrottling: Ending catch-up, enabling renders');
         set({ isCatchingUp: false });
     },
 

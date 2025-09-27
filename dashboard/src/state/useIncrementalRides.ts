@@ -88,10 +88,6 @@ export const useIncrementalRides = create<IncrementalRidesState>((set, get) => (
 
         // Use set() to update state properly
         set((state) => {
-            // Essential debugging for ride creation
-            if (!state.rides.has(rideId)) {
-                console.log(`🚂 Creating new ride: ${rideId} (${event.event_type} from ${fromStation} to ${toStation})`);
-            }
 
             // Get or create ride
             let ride = state.rides.get(rideId);
@@ -108,7 +104,6 @@ export const useIncrementalRides = create<IncrementalRidesState>((set, get) => (
                     eventCount: 0
                 };
                 state.rides.set(rideId, ride);
-                console.log(`🔍 IncrementalRides: Ride created successfully - total rides: ${state.rides.size}`);
             }
 
             // Update ride metadata
@@ -131,11 +126,9 @@ export const useIncrementalRides = create<IncrementalRidesState>((set, get) => (
             // Check for cancellation - handle string "False"/"True" from CSV
             const isCanceled = event.is_canceled === true || event.is_canceled === "True" || event.is_canceled === "true";
             if (isCanceled) {
-                console.log(`🚫 IncrementalRides: Ride ${rideId} marked as CANCELED - event.is_canceled: ${event.is_canceled} (parsed as: ${isCanceled})`);
                 ride.isCanceled = true;
                 ride.status = "CANCELED";
                 state._moveRideToCanceled(rideId);
-                console.log(`🚫 IncrementalRides: Ride ${rideId} moved to canceled rides`);
                 return state; // Early return after moving to canceled
             }
 
@@ -170,30 +163,17 @@ export const useIncrementalRides = create<IncrementalRidesState>((set, get) => (
             if (event.event_type === 'arrival' &&
                 toStation === ride.destination &&
                 segment.isComplete) {
-                console.log(`🏁 IncrementalRides: Ride ${rideId} FINISHED - arrived at ${ride.destination}`);
                 ride.status = "FINISHED";
                 state._moveRideToFinished(rideId);
-                console.log(`🏁 IncrementalRides: Ride ${rideId} moved to finished rides`);
                 return state; // Early return after moving to finished
             }
 
-            // CRITICAL DEBUG: Check if ride should be finished but isn't
-            if (ride.destination && toStation === ride.destination && event.event_type === 'arrival') {
-                console.log(`🚨 CRITICAL: Ride ${rideId} arrived at destination ${ride.destination} but segment.isComplete=${segment.isComplete}, status=${ride.status}`);
-            }
 
             // Update ride status based on current simulation time
             const currentTime = useSimStore.getState().cursorTs ?? eventTime;
 
             state._updateRideStatus(ride, currentTime);
 
-            // Debug: Check if ride should be moved but wasn't
-            if (ride.status === "FINISHED" && state.rides.has(rideId)) {
-                console.log(`🚨 IncrementalRides: WARNING - Ride ${rideId} is FINISHED but still in rides Map!`);
-            }
-            if (ride.status === "CANCELED" && state.rides.has(rideId)) {
-                console.log(`🚨 IncrementalRides: WARNING - Ride ${rideId} is CANCELED but still in rides Map!`);
-            }
 
             return state;
         });
@@ -221,13 +201,11 @@ export const useIncrementalRides = create<IncrementalRidesState>((set, get) => (
     },
 
     reset: () => {
-        console.log(`🔍 IncrementalRides: RESET called - clearing all rides`);
         set({
             rides: new Map(),
             finishedRides: new Map(),
             canceledRides: new Map()
         });
-        console.log(`🔍 IncrementalRides: RESET completed - all maps cleared`);
     },
 
     // AUDIT FUNCTION: Check for inconsistencies using centralized status determination
@@ -242,44 +220,16 @@ export const useIncrementalRides = create<IncrementalRidesState>((set, get) => (
             return acc;
         }, {} as Record<string, number>);
 
-        console.log(`🔍 AUDIT: Total rides audit (using centralized status determination):`, {
-            ridesMap: state.rides.size,
-            finishedMap: state.finishedRides.size,
-            canceledMap: state.canceledRides.size,
-            total: state.rides.size + state.finishedRides.size + state.canceledRides.size,
-            ridesInMapBreakdown: statusBreakdown,
-            inconsistentRides: ridesInMap.filter(ride => {
-                const determinedStatus = determineRideStatus(ride);
-                return determinedStatus !== ride.status;
-            }).map(ride => ({
-                rideId: ride.rideId,
-                storedStatus: ride.status,
-                determinedStatus: determineRideStatus(ride),
-                isCanceled: ride.isCanceled,
-                endTs: ride.endTs,
-                destination: ride.destination
-            }))
-        });
     },
 
     _updateRideStatus: (ride: IncrementalRide, currentTime: number) => {
-        console.log(`IncrementalRides: _updateRideStatus for ${ride.rideId}:`, {
-            currentTime: new Date(currentTime).toISOString(),
-            startTs: new Date(ride.startTs).toISOString(),
-            endTs: ride.endTs ? new Date(ride.endTs).toISOString() : 'null',
-            currentStatus: ride.status,
-            isCanceled: ride.isCanceled,
-            destination: ride.destination
-        });
 
         if (ride.isCanceled) {
             ride.status = "CANCELED";
-            console.log(`IncrementalRides: Ride ${ride.rideId} marked as CANCELED`);
             return;
         }
 
         if (ride.status === "FINISHED" || ride.status === "CANCELED") {
-            console.log(`IncrementalRides: Ride ${ride.rideId} already ${ride.status}, skipping`);
             return; // Don't change finished/canceled rides
         }
 
@@ -289,45 +239,29 @@ export const useIncrementalRides = create<IncrementalRidesState>((set, get) => (
                 segment.isComplete && segment.toStation === ride.destination
             );
 
-            console.log(`IncrementalRides: Ride ${ride.rideId} currentTime >= endTs, checking destination:`, {
-                hasArrivedAtDestination,
-                segments: Array.from(ride.segments.values()).map(s => ({
-                    fromStation: s.fromStation,
-                    toStation: s.toStation,
-                    isComplete: s.isComplete
-                })),
-                destination: ride.destination
-            });
 
             if (hasArrivedAtDestination) {
                 ride.status = "FINISHED";
-                console.log(`IncrementalRides: Ride ${ride.rideId} marked as FINISHED and moved to finished rides`);
                 get()._moveRideToFinished(ride.rideId);
             } else {
                 ride.status = "ACTIVE"; // Still active if not at destination
-                console.log(`IncrementalRides: Ride ${ride.rideId} marked as ACTIVE (not at destination yet)`);
             }
         } else {
             ride.status = "ACTIVE";
-            console.log(`IncrementalRides: Ride ${ride.rideId} marked as ACTIVE (within time range)`);
         }
     },
 
     _moveRideToFinished: (rideId: string) => {
-        console.log(`🔍 _moveRideToFinished: Moving ride ${rideId} to finished`);
         const state = get();
         const ride = state.rides.get(rideId);
         if (!ride) {
-            console.log(`🔍 _moveRideToFinished: Ride ${rideId} not found in active rides`);
             return;
         }
 
-        console.log(`🔍 _moveRideToFinished: Ride ${rideId} found, moving from active (${state.rides.size}) to finished (${state.finishedRides.size})`);
         ride.status = "FINISHED";
         state.finishedRides.set(rideId, ride);
         state.rides.delete(rideId);
 
-        console.log(`🔍 _moveRideToFinished: After move - active: ${state.rides.size}, finished: ${state.finishedRides.size}`);
         set({
             rides: new Map(state.rides),
             finishedRides: new Map(state.finishedRides)
@@ -335,20 +269,16 @@ export const useIncrementalRides = create<IncrementalRidesState>((set, get) => (
     },
 
     _moveRideToCanceled: (rideId: string) => {
-        console.log(`🔍 _moveRideToCanceled: Moving ride ${rideId} to canceled`);
         const state = get();
         const ride = state.rides.get(rideId);
         if (!ride) {
-            console.log(`🔍 _moveRideToCanceled: Ride ${rideId} not found in active rides`);
             return;
         }
 
-        console.log(`🔍 _moveRideToCanceled: Ride ${rideId} found, moving from active (${state.rides.size}) to canceled (${state.canceledRides.size})`);
         ride.status = "CANCELED";
         state.canceledRides.set(rideId, ride);
         state.rides.delete(rideId);
 
-        console.log(`🔍 _moveRideToCanceled: After move - active: ${state.rides.size}, canceled: ${state.canceledRides.size}`);
         set({
             rides: new Map(state.rides),
             canceledRides: new Map(state.canceledRides)
@@ -378,12 +308,6 @@ export const useActiveIncrementalRides = () => {
             }
         }
 
-        // Only log when active rides count changes significantly
-        if (activeRides.length > 0) {
-            console.log(`🎯 Active rides: ${activeRides.length}/${rides.size} (${new Date(currentTime).toISOString()})`);
-        } else {
-            console.log(`🔍 useActiveIncrementalRides: No active rides found (total: ${rides.size})`);
-        }
         return activeRides;
     }, [rides, currentTime]);
 };

@@ -9,7 +9,6 @@ export default function MainStats() {
     const { getAllStationFeatures } = useDynamicStationFeatures();
     const activeRides = useActiveRides();
 
-    console.log(`🔍 MainStats: Active rides count: ${activeRides.length}`);
 
     const currentTime = cursorTs ? new Date(cursorTs).toLocaleTimeString() : '—';
 

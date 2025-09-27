@@ -55,7 +55,6 @@ export const useSimStore = create<SimState>((set, get) => ({
 
         if (cursorTs == null || rangeStart == null || rangeEnd == null) return;
 
-        console.log(`SimStore: Scrubbing from ${new Date(cursorTs).toISOString()} to ${new Date(targetTime).toISOString()}`);
 
         set({ isScrubbing: true });
 
@@ -66,7 +65,6 @@ export const useSimStore = create<SimState>((set, get) => ({
 
             if (targetTime < cursorTs) {
                 // Going backward - reset everything and catch up
-                console.log('SimStore: Going backward, resetting ride data');
                 renderThrottling.startCatchUp();
 
                 // Reset ride data
@@ -87,7 +85,6 @@ export const useSimStore = create<SimState>((set, get) => ({
                 renderThrottling.endCatchUp();
             } else {
                 // Going forward - catch up with existing rides
-                console.log('SimStore: Going forward, catching up');
                 renderThrottling.startCatchUp();
 
                 // Catch up events to target time

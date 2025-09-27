@@ -54,14 +54,6 @@ export default function MapView() {
   const activeRides = useActiveRides();
   const allRides = useIncrementalRides(state => state.rides);
 
-  console.log(`🔍 MapView: Active rides at ${formatTime(playhead)}:`, activeRides.map(r => ({
-    rideId: r.rideId,
-    startTs: formatTime(r.startTs),
-    endTs: r.endTs ? formatTime(r.endTs) : 'null',
-    isCanceled: r.isCanceled,
-    status: r.status
-  })));
-  console.log(`🔍 MapView: All rides count: ${allRides.size}`);
 
   // State for hover popup
   const [hoveredStationInfo, setHoveredStationInfo] = useState<{
@@ -81,24 +73,6 @@ export default function MapView() {
       };
     }
 
-    // Debug: Log what events we're getting
-    console.log('MapView Debug:', {
-      totalEvents: events.length,
-      events: events.map(e => ({
-        eventType: e.event_type,
-        rideId: e.train_line_ride_id,
-        fromStation: e.from_station,
-        toStation: e.to_station,
-        stationNum: e.train_line_station_num,
-        delay: e.delay_in_min,
-        actualTimestamp: e.actual_timestamp,
-        plannedTimestamp: e.planned_timestamp,
-        expectedArrivalTimestamp: e.expected_arrival_timestamp,
-        expectedDepartureTimestamp: e.expected_departure_timestamp
-      })),
-      playhead: new Date(playhead).toISOString(),
-      playheadMs: playhead
-    });
 
 
     // Background edges FC - all possible edges from graph structure
@@ -161,14 +135,12 @@ export default function MapView() {
       }
     }
 
-    console.log(`Found ${journeySegments.size} journey segments`);
 
     // Check each segment for active journeys
     for (const [segmentKey, segment] of journeySegments) {
       const { departure, arrival } = segment;
 
       if (!departure) {
-        console.log(`No departure event for segment ${segmentKey}`);
         continue;
       }
 
@@ -178,16 +150,8 @@ export default function MapView() {
 
       const isJourneyActive = departureTime <= playhead && arrivalTime > playhead;
 
-      console.log(`Journey ${segmentKey}:`, {
-        departureTime: new Date(departureTime).toISOString(),
-        arrivalTime: new Date(arrivalTime).toISOString(),
-        currentTime: new Date(playhead).toISOString(),
-        isActive: isJourneyActive,
-        hasArrivalEvent: !!arrival
-      });
 
       if (!isJourneyActive) {
-        console.log(`Journey ${segmentKey} not active, skipping`);
         continue;
       }
 
@@ -196,7 +160,6 @@ export default function MapView() {
       const toStationId = graph.stationNameToId[departure.to_station!];
 
       if (fromStationId === undefined || toStationId === undefined) {
-        console.log(`Station not found in graph: ${departure.from_station} (${fromStationId}) or ${departure.to_station} (${toStationId})`);
         continue;
       }
 
@@ -204,12 +167,10 @@ export default function MapView() {
       const toStation = graph.stations[toStationId.toString()];
 
       if (!fromStation || !toStation) {
-        console.log(`Station coordinates not found: ${departure.from_station} or ${departure.to_station}`);
         continue;
       }
 
       const delay = Number(departure.delay_in_min ?? 0);
-      console.log(`Creating ACTIVE journey edge: ${departure.from_station} → ${departure.to_station} (delay: ${delay}min)`);
 
       edgeFeatures.push({
         type: "Feature",

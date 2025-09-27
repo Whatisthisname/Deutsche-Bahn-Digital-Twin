@@ -45,7 +45,6 @@ export const useEventStream = create<EventStreamState>((set, get) => ({
         const state = get();
         if (state.allEvents.length > 0) return;
 
-        console.log('EventStream: Loading all events from', url);
         const resp = await fetch(url);
         const text = await resp.text();
         const { data } = Papa.parse<TrainEvent>(text, {
@@ -63,7 +62,6 @@ export const useEventStream = create<EventStreamState>((set, get) => ({
                     (coalesceTime(b) ?? 0)
             );
 
-        console.log(`EventStream: Loaded ${rows.length} events`);
         set({
             allEvents: rows,
             processedEvents: [],
@@ -75,7 +73,6 @@ export const useEventStream = create<EventStreamState>((set, get) => ({
         const state = get();
         if (state.isStreaming || state._pollingTimer) return;
 
-        console.log('EventStream: Starting streaming');
         set({ isStreaming: true });
 
         const poll = () => {
@@ -89,7 +86,6 @@ export const useEventStream = create<EventStreamState>((set, get) => ({
 
             // Don't process events when paused
             if (!isPlaying) {
-                console.log(`🔍 EventStream: Skipping poll - simulation is paused`);
                 // Schedule next poll anyway to check again later
                 const timer = setTimeout(poll, state.pollingInterval);
                 set({ _pollingTimer: timer });
@@ -100,7 +96,6 @@ export const useEventStream = create<EventStreamState>((set, get) => ({
             const { allEvents, _currentEventIndex } = get();
             let eventsToProcess = 0;
 
-            console.log(`🔍 EventStream: Checking events from index ${_currentEventIndex} to ${allEvents.length} (currentTime: ${new Date(currentTime).toISOString()})`);
 
             for (let i = _currentEventIndex; i < allEvents.length; i++) {
                 const event = allEvents[i];
@@ -114,7 +109,6 @@ export const useEventStream = create<EventStreamState>((set, get) => ({
             }
 
             if (eventsToProcess > 0) {
-                console.log(`🔍 EventStream: Found ${eventsToProcess} events to process (currentTime: ${new Date(currentTime).toISOString()})`);
 
                 // Get simulation state to check if we're scrubbing
                 const simState = useSimStore.getState();
@@ -124,7 +118,6 @@ export const useEventStream = create<EventStreamState>((set, get) => ({
                 // During catch-up (scrubbing): process in batches to prevent UI freezing
                 const batchSize = isScrubbing ? Math.min(eventsToProcess, 200) : eventsToProcess;
 
-                console.log(`🔍 EventStream: Processing ${batchSize} events (${isScrubbing ? 'catch-up mode' : 'normal streaming'})`);
 
                 const eventsToAdd = [];
 
@@ -136,7 +129,6 @@ export const useEventStream = create<EventStreamState>((set, get) => ({
                 }
 
                 if (eventsToAdd.length > 0) {
-                    console.log(`🔍 EventStream: Adding ${eventsToAdd.length} events to processedEvents (total will be ${state.processedEvents.length + eventsToAdd.length})`);
                     // Update state once with all new events
                     const newProcessedEvents = [...state.processedEvents, ...eventsToAdd];
                     set({
@@ -144,22 +136,18 @@ export const useEventStream = create<EventStreamState>((set, get) => ({
                         _currentEventIndex: state._currentEventIndex + eventsToAdd.length
                     });
                 }
-            } else {
-                console.log(`🔍 EventStream: No events to process (currentTime: ${new Date(currentTime).toISOString()}, _currentEventIndex: ${state._currentEventIndex})`);
-            }
 
-            // Schedule next poll
-            const timer = setTimeout(poll, state.pollingInterval);
-            set({ _pollingTimer: timer });
-        };
+                // Schedule next poll
+                const timer = setTimeout(poll, state.pollingInterval);
+                set({ _pollingTimer: timer });
+            };
 
-        // Start polling immediately
-        poll();
-    },
+            // Start polling immediately
+            poll();
+        },
 
-    stopStreaming: () => {
+            stopStreaming: () => {
         const state = get();
-        console.log('EventStream: Stopping streaming');
 
         if (state._pollingTimer) {
             clearTimeout(state._pollingTimer);
@@ -174,7 +162,6 @@ export const useEventStream = create<EventStreamState>((set, get) => ({
 
     catchUpToTime: async (targetTime: number) => {
         const state = get();
-        console.log(`EventStream: Catching up to ${new Date(targetTime).toISOString()}`);
 
         set({ isCatchingUp: true });
 
@@ -232,7 +219,6 @@ export const useEventStream = create<EventStreamState>((set, get) => ({
                 });
             }
 
-            console.log(`EventStream: Caught up to target time, processed ${processedCount} events`);
         } finally {
             set({ isCatchingUp: false });
         }
@@ -240,7 +226,6 @@ export const useEventStream = create<EventStreamState>((set, get) => ({
 
     resetToTime: (targetTime: number) => {
         const state = get();
-        console.log(`🔍 EventStream: Resetting to ${new Date(targetTime).toISOString()}`);
 
         // Find the index of the first event after targetTime
         const resetIndex = state.allEvents.findIndex(event => {
@@ -256,7 +241,6 @@ export const useEventStream = create<EventStreamState>((set, get) => ({
             _currentEventIndex: resetIndex
         });
 
-        console.log(`🔍 EventStream: Reset to index ${resetIndex}, keeping ${eventsUpToTarget.length} events`);
     }
 }));
 
