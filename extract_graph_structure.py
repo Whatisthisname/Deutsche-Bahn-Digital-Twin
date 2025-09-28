@@ -19,7 +19,7 @@ from datetime import datetime
 import convert_to_journey_events as ctje
 
 
-def load_stations_index(stations_file: str) -> dict[str, tuple[float, float]]:
+def load_stations_index(stations_file: str) -> dict[str, dict[str, str | float | None]]:
     """Load station coordinates."""
     with open(stations_file, "r", encoding="utf-8") as f:
         return json.load(f)
@@ -43,11 +43,22 @@ def calculate_distance(lat1: float, lon1: float, lat2: float, lon2: float) -> fl
     return R * c
 
 
-@dataclasses.dataclass(frozen=True)
 class Station:
-    name: str
-    lat: float
-    lon: float
+    def __init__(self, name: str, lat: float, lon: float):
+        self.name = name
+        self.lat = lat
+        self.lon = lon
+        self.degree: int | None = None
+        self.closenessCentrality: float | None = None
+
+    def to_dict(self):
+        return {
+            "name": self.name,
+            "lat": self.lat,
+            "lon": self.lon,
+            "degree": self.degree,
+            "closenessCentrality": self.closenessCentrality,
+        }
 
 
 @dataclasses.dataclass(frozen=True)
@@ -62,7 +73,7 @@ def order(a, b):
 
 
 def extract_stations_and_edges(
-    csv_file: str, stations_locations: dict[str, tuple[float, float]]
+    csv_file: str, stations_locations: dict[str, dict[str, str | float | None]]
 ) -> tuple[dict[int, Station], dict[tuple[int, int], float], dict[str, int], dict[tuple[int, int], int]]:
     """Extract stations and edges from CSV data."""
 
@@ -109,12 +120,18 @@ def extract_stations_and_edges(
             coords = stations_locations.get(station_name)
             if coords is None:
                 raise ValueError(f"Station {station_name} not found in stations_locations")
+            lat = coords["lat"]
+            lon = coords["lon"]
+            if lat is None or lon is None:
+                raise ValueError(f"Station {station_name} has missing coordinates")
             stations[hash(station_name)] = Station(
                 name=station_name,
-                lat=coords[0],
-                lon=coords[1],
+                lat=float(lat),
+                lon=float(lon),
             )
             station_name_to_id[station_name] = hash(station_name)
+
+    for event in events:
         if order(hash(event.from_station), hash(event.station)) not in seen_edges:
             seen_edges.add(order(hash(event.from_station), hash(event.station)))
             edge_distances[order(hash(event.from_station), hash(event.station))] = calculate_distance(
@@ -182,11 +199,36 @@ def calculate_closeness_centrality(adjacency: dict[int, set[int]], num_stations:
     return closeness
 
 
+def print_statistics(stations: dict[int, Station], edges: dict[tuple[int, int], float]):
+    # Print some statistics
+    print("\nTop 5 stations by degree centrality:")
+    sorted_stations: list[tuple[int, Station]] = sorted(
+        stations.items(), key=lambda x: x[1].degree or 0, reverse=True
+    )
+    for i, (station_id, station_data) in enumerate(sorted_stations[:5]):
+        print(f"  {i+1}. {station_data.name} (degree: {station_data.degree})")
+
+    print("\nBottom 5 stations by degree centrality:")
+    for i, (station_id, station_data) in enumerate(sorted_stations[-5:]):
+        print(f"  {i+1}. {station_data.name} (degree: {station_data.degree})")
+
+    print("\nTop 5 stations by closeness centrality:")
+    sorted_closeness: list[tuple[int, Station]] = sorted(
+        stations.items(), key=lambda x: x[1].closenessCentrality or 0.0, reverse=True
+    )
+    for i, (station_id, station_data) in enumerate(sorted_closeness[:5]):
+        print(f"  {i+1}. {station_data.name} (closeness: {station_data.closenessCentrality:.3f})")
+
+    print("\nBottom 5 stations by closeness centrality:")
+    for i, (station_id, station_data) in enumerate(sorted_closeness[-5:]):
+        print(f"  {i+1}. {station_data.name} (closeness: {station_data.closenessCentrality:.3f})")
+
+
 if __name__ == "__main__":
     # File paths
     csv_file = "dashboard/src/data/ice_journey_events_WIP.csv"
     mapping_file = "dashboard/src/data/alternative_station_name_to_station_name.json"
-    stations_file = "dashboard/src/data/stations_index.json"
+    stations_file = "station_cache/stations_index.json"
     output_file = "dashboard/src/data/graph_structure_WIP.json"
 
     print("=== Deutsche Bahn Graph Structure Extractor ===")
@@ -215,8 +257,8 @@ if __name__ == "__main__":
     # Add centrality measures to stations
     for station_id_str, station_data in stations.items():
         station_id = int(station_id_str)
-        station_data["degree"] = degree_centrality.get(station_id, 0)
-        station_data["closenessCentrality"] = closeness_centrality.get(station_id, 0.0)
+        station_data.degree = degree_centrality.get(station_id, 0)
+        station_data.closenessCentrality = closeness_centrality.get(station_id, 0.0)
 
     # Create final graph structure
     graph_structure = {
@@ -227,8 +269,8 @@ if __name__ == "__main__":
             "totalEdges": len(edges),
             "description": "Static graph structure for Deutsche Bahn network",
         },
-        "stations": stations,
-        "edges": edges,
+        "stations": {station_id: station.to_dict() for station_id, station in stations.items()},
+        "edges": [(edge[0], edge[1], distance) for edge, distance in edges.items()],
         "stationNameToId": station_name_to_id,
     }
 
@@ -243,13 +285,4 @@ if __name__ == "__main__":
     print(f"Edges: {len(edges)}")
     print(f"Output written to: {output_file}")
 
-    # Print some statistics
-    print("\nTop 5 stations by degree centrality:")
-    sorted_stations = sorted(stations.items(), key=lambda x: x[1]["degree"], reverse=True)
-    for i, (station_id, station_data) in enumerate(sorted_stations[:5]):
-        print(f"  {i+1}. {station_data['name']} (degree: {station_data['degree']})")
-
-    print("\nTop 5 stations by closeness centrality:")
-    sorted_closeness = sorted(stations.items(), key=lambda x: x[1]["closenessCentrality"], reverse=True)
-    for i, (station_id, station_data) in enumerate(sorted_closeness[:5]):
-        print(f"  {i+1}. {station_data['name']} (closeness: {station_data['closenessCentrality']:.3f})")
+    print_statistics(stations, edges)
