@@ -9,30 +9,20 @@ Phase 1: Extract stations and edges from CSV
 Phase 2: Compute centrality measures using sparse adjacency
 """
 
+import dataclasses
 import json
 import csv
 import math
 from collections import defaultdict, Counter
-from typing import Dict, List, Set, Tuple, Any
 import sys
 from datetime import datetime
+import convert_to_journey_events as ctje
 
 
-def load_station_mapping(mapping_file: str) -> Dict[str, str]:
-    """Load the alternative station name mapping."""
-    with open(mapping_file, "r", encoding="utf-8") as f:
-        return json.load(f)
-
-
-def load_stations_index(stations_file: str) -> Dict[str, Dict[str, float]]:
+def load_stations_index(stations_file: str) -> dict[str, tuple[float, float]]:
     """Load station coordinates."""
     with open(stations_file, "r", encoding="utf-8") as f:
         return json.load(f)
-
-
-def normalize_station_name(name: str, mapping: Dict[str, str]) -> str:
-    """Normalize station name using the mapping file."""
-    return mapping.get(name, name)
 
 
 def calculate_distance(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
@@ -53,146 +43,103 @@ def calculate_distance(lat1: float, lon1: float, lat2: float, lon2: float) -> fl
     return R * c
 
 
+@dataclasses.dataclass(frozen=True)
+class Station:
+    name: str
+    lat: float
+    lon: float
+
+
+@dataclasses.dataclass(frozen=True)
+class Edge:
+    from_station: int
+    to_station: int
+    distance_km: float
+
+
+def order(a, b):
+    return (b, a) if a > b else (a, b)
+
+
 def extract_stations_and_edges(
-    csv_file: str, mapping: Dict[str, str], stations_index: Dict[str, Dict[str, float]]
-) -> Tuple[Dict[str, Dict], Dict[str, Dict], Dict[str, int]]:
+    csv_file: str, stations_locations: dict[str, tuple[float, float]]
+) -> tuple[dict[int, Station], dict[tuple[int, int], float], dict[str, int], dict[tuple[int, int], int]]:
     """Extract stations and edges from CSV data."""
 
-    print("Loading CSV data...")
+    events: list[ctje.Arrival_or_Departure_Event] = []
+    # Load the CSV back into a list of Arrival_or_Departure_Event objects
+    with open(csv_file, encoding="utf-8") as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            # Convert string fields to proper types
+            actual_time = datetime.fromisoformat(row["actual_time"])
+            expected_time = datetime.fromisoformat(row["expected_time"])
+            event_type = ctje.EventType[row["event_type"].split(".")[1]]
+
+            event = ctje.Arrival_or_Departure_Event(
+                event_type=event_type,
+                id_=int(row["id_"]),
+                train_name=row["train_name"],
+                delay_min=int(row["delay_min"]),
+                from_station=row["from_station"],
+                station=row["station"],
+                station_num=int(row["station_num"]),
+                actual_time=actual_time,
+                expected_time=expected_time,
+                final_destination_station=row["final_destination_station"],
+            )
+            events.append(event)
 
     # Track unique stations and their coordinates
-    stations = {}
-    station_name_to_id = {}
-    next_station_id = 0
+    stations: dict[int, Station] = {}
+    edge_distances: dict[tuple[int, int], float] = dict()
+    station_name_to_id: dict[str, int] = {}
 
     # Track edges (station pairs) and their frequencies
-    edge_frequencies = Counter()
-    edge_distances = {}
+    edge_counter: dict[tuple[int, int], int] = defaultdict(int)
 
     # Track which stations we've seen
-    seen_stations = set()
+    seen_stations = set[str]()
+    seen_edges = set[tuple[int, int]]()
 
-    with open(csv_file, "r", encoding="utf-8") as f:
-        reader = csv.DictReader(f)
-
-        for row_num, row in enumerate(reader):
-            if row_num % 10000 == 0:
-                print(f"Processed {row_num} rows...")
-
-            # Get station name and normalize it
-            station_name = row.get("station", "").strip()
-            if not station_name:
-                continue
-
-            normalized_name = normalize_station_name(station_name, mapping)
-
-            # Add station if not seen before
-            if normalized_name not in seen_stations:
-                seen_stations.add(normalized_name)
-
-                # Get coordinates
-                coords = stations_index.get(normalized_name, {"lat": 0.0, "lon": 0.0})
-
-                stations[str(next_station_id)] = {
-                    "name": normalized_name,
-                    "lat": coords["lat"],
-                    "lon": coords["lon"],
-                }
-
-                station_name_to_id[normalized_name] = next_station_id
-                next_station_id += 1
+    for event in events:
+        station_name = event.station
+        if station_name not in seen_stations:
+            seen_stations.add(station_name)
+            coords = stations_locations.get(station_name)
+            if coords is None:
+                raise ValueError(f"Station {station_name} not found in stations_locations")
+            stations[hash(station_name)] = Station(
+                name=station_name,
+                lat=coords[0],
+                lon=coords[1],
+            )
+            station_name_to_id[station_name] = hash(station_name)
+        if order(hash(event.from_station), hash(event.station)) not in seen_edges:
+            seen_edges.add(order(hash(event.from_station), hash(event.station)))
+            edge_distances[order(hash(event.from_station), hash(event.station))] = calculate_distance(
+                stations[hash(event.from_station)].lat,
+                stations[hash(event.from_station)].lon,
+                stations[hash(event.station)].lat,
+                stations[hash(event.station)].lon,
+            )
+        edge_counter[order(hash(event.from_station), hash(event.station))] += 1
 
     print(f"Found {len(stations)} unique stations")
 
-    # Now process rides to extract edges
-    print("Extracting edges from rides...")
+    # assert no self loops
+    for edge in edge_distances.keys():
+        assert edge[0] != edge[1]
 
-    with open(csv_file, "r", encoding="utf-8") as f:
-        reader = csv.DictReader(f)
-
-        # Group events by ride
-        rides = defaultdict(list)
-
-        for row in reader:
-            ride_id = row.get("train_line_ride_id", "").strip()
-            station_name = row.get("station", "").strip()
-            station_num = row.get("train_line_station_num", "0")
-
-            if not ride_id or not station_name:
-                continue
-
-            normalized_name = normalize_station_name(station_name, mapping)
-
-            if normalized_name in station_name_to_id:
-                rides[ride_id].append(
-                    {
-                        "station": normalized_name,
-                        "station_id": station_name_to_id[normalized_name],
-                        "station_num": int(station_num) if station_num.isdigit() else 0,
-                    }
-                )
-
-    print(f"Found {len(rides)} unique rides")
-
-    # Process each ride to extract edges
-    for ride_id, events in rides.items():
-        if len(events) < 2:
-            continue
-
-        # Sort by station number to get correct sequence
-        events.sort(key=lambda x: x["station_num"])
-
-        # Create edges between consecutive stations
-        for i in range(len(events) - 1):
-            station1 = events[i]["station"]
-            station2 = events[i + 1]["station"]
-
-            # Create undirected edge (smaller ID first)
-            station1_id = station_name_to_id[station1]
-            station2_id = station_name_to_id[station2]
-
-            edge_key = tuple(sorted([station1_id, station2_id]))
-            edge_frequencies[edge_key] += 1
-
-            # Calculate distance if not already calculated
-            if edge_key not in edge_distances:
-                station1_coords = stations[str(station1_id)]
-                station2_coords = stations[str(station2_id)]
-
-                distance = calculate_distance(
-                    station1_coords["lat"],
-                    station1_coords["lon"],
-                    station2_coords["lat"],
-                    station2_coords["lon"],
-                )
-
-                edge_distances[edge_key] = distance
-
-    # Convert edges to final format
-    edges = {}
-    next_edge_id = 0
-
-    for (station1_id, station2_id), frequency in edge_frequencies.items():
-        edges[str(next_edge_id)] = {
-            "from": station1_id,
-            "to": station2_id,
-            "distance": edge_distances[(station1_id, station2_id)],
-            "frequency": frequency,
-        }
-        next_edge_id += 1
-
-    print(f"Found {len(edges)} unique edges")
-
-    return stations, edges, station_name_to_id
+    return stations, edge_distances, station_name_to_id, edge_counter
 
 
-def build_sparse_adjacency(stations: Dict[str, Dict], edges: Dict[str, Dict]) -> Dict[int, Set[int]]:
+def build_sparse_adjacency(edges: dict[tuple[int, int], float]) -> dict[int, set[int]]:
     """Build sparse adjacency list from stations and edges."""
     adjacency = defaultdict(set)
-
-    for edge in edges.values():
-        from_id = edge["from"]
-        to_id = edge["to"]
+    for edge in edges.keys():
+        from_id = edge[0]
+        to_id = edge[1]
 
         # Undirected graph
         adjacency[from_id].add(to_id)
@@ -201,12 +148,12 @@ def build_sparse_adjacency(stations: Dict[str, Dict], edges: Dict[str, Dict]) ->
     return dict(adjacency)
 
 
-def calculate_degree_centrality(adjacency: Dict[int, Set[int]]) -> Dict[int, int]:
+def calculate_degree_centrality(adjacency: dict[int, set[int]]) -> dict[int, int]:
     """Calculate degree centrality for each station."""
     return {station_id: len(neighbors) for station_id, neighbors in adjacency.items()}
 
 
-def calculate_closeness_centrality(adjacency: Dict[int, Set[int]], num_stations: int) -> Dict[int, float]:
+def calculate_closeness_centrality(adjacency: dict[int, set[int]], num_stations: int) -> dict[int, float]:
     """Calculate closeness centrality using BFS."""
     closeness = {}
 
@@ -235,14 +182,12 @@ def calculate_closeness_centrality(adjacency: Dict[int, Set[int]], num_stations:
     return closeness
 
 
-def main():
-    """Main function to extract graph structure."""
-
+if __name__ == "__main__":
     # File paths
-    csv_file = "dashboard/src/data/ice.csv"
+    csv_file = "dashboard/src/data/ice_journey_events_WIP.csv"
     mapping_file = "dashboard/src/data/alternative_station_name_to_station_name.json"
     stations_file = "dashboard/src/data/stations_index.json"
-    output_file = "dashboard/src/data/graph_structure.json"
+    output_file = "dashboard/src/data/graph_structure_WIP.json"
 
     print("=== Deutsche Bahn Graph Structure Extractor ===")
     print(f"Processing CSV: {csv_file}")
@@ -253,15 +198,14 @@ def main():
 
     # Load mapping and station data
     print("Loading station mapping and coordinates...")
-    mapping = load_station_mapping(mapping_file)
     stations_index = load_stations_index(stations_file)
 
     # Extract stations and edges
-    stations, edges, station_name_to_id = extract_stations_and_edges(csv_file, mapping, stations_index)
+    stations, edges, station_name_to_id, edge_counter = extract_stations_and_edges(csv_file, stations_index)
 
     # Build sparse adjacency structure
     print("Building sparse adjacency structure...")
-    adjacency = build_sparse_adjacency(stations, edges)
+    adjacency = build_sparse_adjacency(edges)
 
     # Calculate centrality measures
     print("Calculating centrality measures...")
@@ -309,7 +253,3 @@ def main():
     sorted_closeness = sorted(stations.items(), key=lambda x: x[1]["closenessCentrality"], reverse=True)
     for i, (station_id, station_data) in enumerate(sorted_closeness[:5]):
         print(f"  {i+1}. {station_data['name']} (closeness: {station_data['closenessCentrality']:.3f})")
-
-
-if __name__ == "__main__":
-    main()

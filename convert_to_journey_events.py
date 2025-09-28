@@ -5,6 +5,7 @@ Convert station-based CSV to journey-based CSV with separate departure/arrival e
 
 import csv
 from enum import Enum
+import json
 import sys
 from datetime import datetime
 import dataclasses
@@ -92,7 +93,7 @@ def build_arrival_cancellation_event(
     return event
 
 
-def convert_to_journey_events(input_file: str, output_file: str):
+def convert_to_journey_events(input_file: str, output_file: str, name_mapping: dict[str, str]):
     """Convert station-based events to journey-based events."""
 
     # Read the original CSV
@@ -110,12 +111,14 @@ def convert_to_journey_events(input_file: str, output_file: str):
         departure_planned_time = jointevent_["departure_planned_time"]
         arrival_change_time = jointevent_["arrival_change_time"]
         arrival_planned_time = jointevent_["arrival_planned_time"]
+        station = jointevent_["station"]
+        final_destination_station = jointevent_["final_destination_station"]
         segments.append(
             JointEvent(
                 id_=hash(jointevent_["train_line_ride_id"]),
                 station_num=station_num,
                 train_name=jointevent_["train_name"],
-                station=jointevent_["station"],
+                station=name_mapping.get(station, station),
                 actual_departure_time=datetime.fromisoformat(departure_change_time)
                 if departure_change_time
                 else None,
@@ -128,7 +131,9 @@ def convert_to_journey_events(input_file: str, output_file: str):
                 else None,
                 delay_in_min=int(jointevent_["delay_in_min"]),
                 is_canceled=jointevent_["is_canceled"] == "True",  # wack code for boolean
-                final_destination_station=jointevent_["final_destination_station"],
+                final_destination_station=name_mapping.get(
+                    final_destination_station, final_destination_station
+                ),
             )
         )
 
@@ -171,6 +176,14 @@ def convert_to_journey_events(input_file: str, output_file: str):
 
     print(f"Generated {len(journey_events)} journey events")
 
+    # Count unique stations:
+    unique_stations = set()
+    for event in journey_events:
+        unique_stations.add(event.station)
+        if event.from_station:  # Add from_station if it exists
+            unique_stations.add(event.from_station)
+    print(f"\nFound {len(unique_stations)} unique stations")
+
     # Count event types
     departure_count = len([e for e in journey_events if e.event_type == EventType.DEPARTURE])
     arrival_count = len([e for e in journey_events if e.event_type == EventType.ARRIVAL])
@@ -178,7 +191,7 @@ def convert_to_journey_events(input_file: str, output_file: str):
     print(
         f"Event types: departure={departure_count}, arrival={arrival_count}, cancellation={cancellation_count}"
     )
-    print(f"Sum of arrival and cancellation events: {arrival_count + cancellation_count}")
+    assert arrival_count + cancellation_count == departure_count
 
     # Write to new CSV
     fieldnames = list(Arrival_or_Departure_Event.__dataclass_fields__.keys())
@@ -211,12 +224,21 @@ def convert_to_journey_events(input_file: str, output_file: str):
     return journey_events
 
 
+def load_station_mapping(mapping_file: str) -> Dict[str, str]:
+    """Load the alternative station name mapping."""
+    with open(mapping_file, encoding="utf-8") as f:
+        return json.load(f)
+
+
 def main():
     input_file = "dashboard/src/data/ice.csv"
     output_file = "dashboard/src/data/ice_journey_events_WIP.csv"
 
     try:
-        journey_events = convert_to_journey_events(input_file, output_file)
+        name_mapping = load_station_mapping(
+            "dashboard/src/data/alternative_station_name_to_station_name.json"
+        )
+        journey_events = convert_to_journey_events(input_file, output_file, name_mapping)
         print(f"\n✅ Successfully converted {input_file} to {output_file}")
         print(f"📊 Generated {len(journey_events)} journey events")
 
