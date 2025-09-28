@@ -1,9 +1,20 @@
 // src/components/DebugRides.tsx
 import { useMemo } from 'react'
-import { useIncrementalRides } from '@/state/useIncrementalRides'
+import { useIncrementalRides, type RideStatus } from '@/state/useIncrementalRides'
 import { useEventStream } from '@/state/useEventStream'
 import { useSimStore } from '@/state/useSimStore'
 import { useActiveRides } from '@/hooks/useStreamingTrainEvents'
+
+type RideInfo = {
+    rideId: number;
+    destination: string | undefined;
+    startTs: string;
+    endTs: string | null;
+    status: RideStatus;
+    eventCount: number;
+    isCanceled: boolean;
+    segments: number;
+}
 
 export default function DebugRides() {
     const rides = useIncrementalRides(state => state.rides)
@@ -37,6 +48,8 @@ export default function DebugRides() {
             shouldBeActive: ridesInMap.filter(r => r.status === "ACTIVE").length
         });
 
+
+
         const info = {
             timestamp: new Date().toISOString(),
             currentTime: currentTime ? new Date(currentTime).toISOString() : 'null',
@@ -56,7 +69,7 @@ export default function DebugRides() {
                 eventCount: ride.eventCount,
                 isCanceled: ride.isCanceled,
                 segments: ride.segments.size
-            })),
+            })) as RideInfo[],
             // Debug: Show status breakdown
             statusBreakdown: statusCounts,
             audit: {
@@ -69,7 +82,7 @@ export default function DebugRides() {
 
         console.log('🔍 DebugRides Info:', info)
         return info
-    }, [rides.size, finishedRides.size, canceledRides.size, processedEvents.length, currentTime, activeRides.length])
+    }, [rides, finishedRides, canceledRides, processedEvents, activeRides, currentTime])
 
     return (
         <div style={{
@@ -103,7 +116,7 @@ export default function DebugRides() {
             {debugInfo.ridesDetails && debugInfo.ridesDetails.length > 0 && (
                 <div>
                     <strong>Ride Details:</strong>
-                    {debugInfo.ridesDetails.map((ride: any, index: number) => (
+                    {debugInfo.ridesDetails.map((ride: RideInfo, index: number) => (
                         <div key={index} style={{ marginLeft: '10px', fontSize: '10px' }}>
                             {ride.rideId}: {ride.status} ({ride.eventCount} events)
                         </div>
@@ -115,7 +128,7 @@ export default function DebugRides() {
                 <div>
                     <strong>Last Event:</strong><br />
                     <div style={{ fontSize: '10px', marginLeft: '10px' }}>
-                        {debugInfo.lastProcessedEvent.train_line_ride_id}: {debugInfo.lastProcessedEvent.event_type}
+                        {debugInfo.lastProcessedEvent.id_}: {debugInfo.lastProcessedEvent.event_type}
                     </div>
                 </div>
             )}

@@ -2,6 +2,7 @@ import React from "react";
 import { create } from "zustand";
 import { useGraphStructure } from "./useGraphStructure";
 import { useVisibleActiveEvents } from "@/hooks/useStreamingTrainEvents";
+import type { JourneyEvent } from "@/types/ride";
 
 // Dynamic station features that update in real-time
 export interface DynamicStationFeatures {
@@ -29,7 +30,7 @@ type StationFeaturesState = {
     lastUpdateTime: number;
 
     // Actions
-    updateFeatures: (events: any[]) => void;
+    updateFeatures: (events: JourneyEvent[]) => void;
     getStationFeatures: (stationId: number) => DynamicStationFeatures | null;
     getAllStationFeatures: () => Array<{
         stationId: number;
@@ -40,18 +41,18 @@ type StationFeaturesState = {
 };
 
 // Helper function to calculate delay for a ride
-function calculateRideDelay(events: any[]): number {
+function calculateRideDelay(events: JourneyEvent[]): number {
     if (events.length === 0) return 0;
 
     // Sort by station number to get correct sequence
     const sortedEvents = events.slice().sort(
-        (a, b) => Number(a.train_line_station_num ?? 0) - Number(b.train_line_station_num ?? 0)
+        (a, b) => Number(a.station_num ?? 0) - Number(b.station_num ?? 0)
     );
 
     // Calculate max delay for this ride (same logic as map)
     let maxDelay = 0;
     for (const event of sortedEvents) {
-        const delay = Number(event.delay_in_min ?? 0);
+        const delay = Number(event.delay_min ?? 0);
         maxDelay = Math.max(maxDelay, delay);
     }
 
@@ -63,7 +64,7 @@ export const useStationFeatures = create<StationFeaturesState>()((set, get) => (
     features: new Map(),
     lastUpdateTime: 0,
 
-    updateFeatures: (events: any[]) => {
+    updateFeatures: (events: JourneyEvent[]) => {
         const graph = useGraphStructure.getState().graph;
         if (!graph) return;
 
@@ -91,9 +92,9 @@ export const useStationFeatures = create<StationFeaturesState>()((set, get) => (
         });
 
         // Group events by ride and process journey segments
-        const byRide = new Map<string, any[]>();
+        const byRide = new Map<string, JourneyEvent[]>();
         for (const event of events) {
-            const rideId = String(event.train_line_ride_id ?? "");
+            const rideId = String(event.id_ ?? "");
             if (!rideId) continue;
 
             // For journey events, we need to handle both from_station and to_station
@@ -113,7 +114,7 @@ export const useStationFeatures = create<StationFeaturesState>()((set, get) => (
             if (rideEvents.length === 0) continue;
 
             // For journey events, calculate delay per journey segment
-            const journeySegments = new Map<string, any[]>();
+            const journeySegments = new Map<string, JourneyEvent[]>();
 
             // Group events by journey segment (from_station → to_station)
             for (const event of rideEvents) {
@@ -197,13 +198,21 @@ export const useStationFeatures = create<StationFeaturesState>()((set, get) => (
 
     getAllStationFeatures: () => {
         const graph = useGraphStructure.getState().graph;
-        if (!graph) return [];
+        if (!graph) {
+            // Return empty array if graph is not loaded yet
+            return [];
+        }
 
-        return Array.from(get().features.entries()).map(([stationId, features]) => ({
-            stationId,
-            stationName: graph.stations[stationId.toString()]?.name || `Station ${stationId}`,
-            features,
-        }));
+        const result = Array.from(get().features.entries()).map(([stationId, features]) => {
+            const stationName = graph.stations[stationId]?.name || `Station ${stationId}`;
+            return {
+                stationId,
+                stationName,
+                features,
+            };
+        });
+
+        return result;
     },
 
     reset: () => {

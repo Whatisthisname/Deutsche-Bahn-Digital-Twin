@@ -2,17 +2,14 @@
 import { create } from "zustand";
 import Papa from "papaparse";
 import { useSimStore } from "./useSimStore";
-import { coalesceTime, TIME_CONSTANTS } from "@/utils/time";
+import { ISO_to_ms, TIME_CONSTANTS } from "@/utils/time";
 import type { JourneyEvent } from "@/types/ride";
-
-/** Raw CSV row - using JourneyEvent for better type safety */
-type TrainEvent = JourneyEvent;
 
 /** Event stream state */
 type EventStreamState = {
     // Data
-    allEvents: TrainEvent[];
-    processedEvents: TrainEvent[];
+    allEvents: JourneyEvent[];
+    processedEvents: JourneyEvent[];
 
     // Stream control
     isStreaming: boolean;
@@ -48,19 +45,19 @@ export const useEventStream = create<EventStreamState>((set, get) => ({
 
         const resp = await fetch(url);
         const text = await resp.text();
-        const { data } = Papa.parse<TrainEvent>(text, {
+        const { data } = Papa.parse<JourneyEvent>(text, {
             header: true,
             dynamicTyping: true,
             skipEmptyLines: true,
         });
 
         // Keep only truthy rows and sort globally by time (ascending)
-        const rows = (data as TrainEvent[])
+        const rows = (data as JourneyEvent[])
             .filter(Boolean)
             .sort(
                 (a, b) =>
-                    (coalesceTime(a) ?? 0) -
-                    (coalesceTime(b) ?? 0)
+                    (ISO_to_ms(a.timestamp) ?? 0) -
+                    (ISO_to_ms(b.timestamp) ?? 0)
             );
 
         set({
@@ -99,7 +96,7 @@ export const useEventStream = create<EventStreamState>((set, get) => ({
 
             for (let i = _currentEventIndex; i < allEvents.length; i++) {
                 const event = allEvents[i];
-                const eventTime = coalesceTime(event) ?? 0;
+                const eventTime = ISO_to_ms(event.timestamp) ?? 0;
 
                 if (eventTime <= currentTime) {
                     eventsToProcess++;
@@ -168,7 +165,6 @@ export const useEventStream = create<EventStreamState>((set, get) => ({
             const { allEvents, _currentEventIndex } = state;
             const batchSize = 50; // Process up to 50 events per batch
             let currentIndex = _currentEventIndex;
-            let processedCount = 0;
 
             // Process events in batches until we reach the target time
             while (currentIndex < allEvents.length) {
@@ -177,14 +173,14 @@ export const useEventStream = create<EventStreamState>((set, get) => ({
 
                 // Check if any event in this batch exceeds our target time
                 const batchExceedsTarget = batch.some(event => {
-                    const eventTime = coalesceTime(event) ?? 0;
+                    const eventTime = ISO_to_ms(event.timestamp) ?? 0;
                     return eventTime > targetTime;
                 });
 
                 if (batchExceedsTarget) {
                     // Process only events up to the target time
                     const eventsUpToTarget = batch.filter(event => {
-                        const eventTime = coalesceTime(event) ?? 0;
+                        const eventTime = ISO_to_ms(event.timestamp) ?? 0;
                         return eventTime <= targetTime;
                     });
 
@@ -194,7 +190,6 @@ export const useEventStream = create<EventStreamState>((set, get) => ({
                             processedEvents: newProcessedEvents,
                             _currentEventIndex: currentIndex + eventsUpToTarget.length
                         });
-                        processedCount += eventsUpToTarget.length;
                     }
                     break;
                 } else {
@@ -204,7 +199,6 @@ export const useEventStream = create<EventStreamState>((set, get) => ({
                         processedEvents: newProcessedEvents,
                         _currentEventIndex: batchEndIndex
                     });
-                    processedCount += batch.length;
                     currentIndex = batchEndIndex;
                 }
 
@@ -228,7 +222,7 @@ export const useEventStream = create<EventStreamState>((set, get) => ({
 
         // Find the index of the first event after targetTime
         const resetIndex = state.allEvents.findIndex(event => {
-            const eventTime = coalesceTime(event) ?? 0;
+            const eventTime = ISO_to_ms(event.timestamp) ?? 0;
             return eventTime > targetTime;
         });
 

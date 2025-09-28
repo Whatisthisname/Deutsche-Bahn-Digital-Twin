@@ -7,7 +7,7 @@ import { useGraphStructure } from "@/state/useGraphStructure";
 export default function AverageDelayChart() {
     const cursorTs = useSimStore(state => state.cursorTs);
     const { loaded } = useGraphStructure();
-    const { getAllStationFeatures, features, lastUpdateTime } = useDynamicStationFeatures();
+    const { getAllStationFeatures } = useDynamicStationFeatures();
 
     const currentTime = cursorTs ? new Date(cursorTs).toLocaleTimeString() : '—';
 
@@ -34,7 +34,7 @@ export default function AverageDelayChart() {
             .slice(0, 10); // Top 10 stations
 
         return { chartData, stationFeatures };
-    }, [loaded, getAllStationFeatures, features, lastUpdateTime]); // Include actual data dependencies
+    }, [loaded, getAllStationFeatures]); // Include actual data dependencies
 
     return (
         <div className="analytics-card chart-card">

@@ -1,18 +1,33 @@
+import type { JourneyEvent } from "@/types/ride";
+
+type RideDelay = {
+    rideId: number;
+    maxDelay: number;
+    stations: string[];
+    eventCount: number;
+};
+
+type Analytics = {
+    averageDelay: number;
+    punctualityRate: number;
+    delayedRides: number;
+    totalRides: number;
+};
+
 // Helper function to calculate ride delays using map logic
-export function calculateRideDelays(events: any[]) {
+export function calculateRideDelays(events: JourneyEvent[]): RideDelay[] {
     // Group events by ride ID
-    const byRide = new Map<string, any[]>();
+    const byRide = new Map<number, JourneyEvent[]>();
     for (const e of events) {
-        const id = String(e.train_line_ride_id ?? "");
-        if (!id) continue;
+        const id = e.id_;
         (byRide.get(id) ?? (byRide.set(id, []), byRide.get(id)!)).push(e);
     }
 
-    const rideDelays: { rideId: string; maxDelay: number; stations: string[]; eventCount: number }[] = [];
+    const rideDelays: RideDelay[] = [];
 
     for (const [rideId, grpRaw] of byRide) {
         const grp = grpRaw.slice().sort(
-            (a, b) => Number(a.train_line_station_num ?? 0) - Number(b.train_line_station_num ?? 0)
+            (a, b) => a.station_num - b.station_num
         );
 
         if (grp.length < 2) continue;
@@ -22,26 +37,25 @@ export function calculateRideDelays(events: any[]) {
         const stations = new Set<string>();
 
         for (const event of grp) {
-            const delay = Number(event.delay_in_min ?? 0);
+            const delay = event.delay_min;
             maxDelay = Math.max(maxDelay, delay);
-            if (event.station) {
-                stations.add(event.station);
+            if (event.event_type == "ARRIVAL") {
+                stations.add(event.to_station);
             }
+
+            rideDelays.push({
+                rideId,
+                maxDelay,
+                stations: Array.from(stations),
+                eventCount: grp.length
+            });
         }
-
-        rideDelays.push({
-            rideId,
-            maxDelay,
-            stations: Array.from(stations),
-            eventCount: grp.length
-        });
     }
-
     return rideDelays;
 }
 
 // Helper function to calculate analytics from ride delays
-export function calculateAnalyticsFromRideDelays(rideDelays: { rideId: string; maxDelay: number; eventCount: number }[]) {
+export function calculateAnalyticsFromRideDelays(rideDelays: RideDelay[]): Analytics {
     const totalDelays = rideDelays.reduce((sum, ride) => sum + ride.maxDelay, 0);
     const averageDelay = rideDelays.length > 0 ? totalDelays / rideDelays.length : 0;
 

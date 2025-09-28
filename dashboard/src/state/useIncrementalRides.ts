@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { useMemo } from "react";
 import { useSimStore } from "./useSimStore";
-import { coalesceTime, TIME_CONSTANTS } from "@/utils/time";
+import { ISO_to_ms, TIME_CONSTANTS } from "@/utils/time";
 import type { JourneyEvent, RideSegment } from "@/types/ride";
 
 /** Ride status */
@@ -9,7 +9,7 @@ export type RideStatus = "ACTIVE" | "FINISHED" | "CANCELED";
 
 /** Incremental ride data structure */
 export type IncrementalRide = {
-    rideId: string;
+    rideId: number;
     destination?: string;
     startTs: number;
     endTs: number | null; // null until ride actually finishes
@@ -48,21 +48,21 @@ export const determineRideStatus = (ride: IncrementalRide): RideStatus => {
 
 /** Incremental rides state */
 type IncrementalRidesState = {
-    rides: Map<string, IncrementalRide>;
-    finishedRides: Map<string, IncrementalRide>;
-    canceledRides: Map<string, IncrementalRide>;
+    rides: Map<number, IncrementalRide>;
+    finishedRides: Map<number, IncrementalRide>;
+    canceledRides: Map<number, IncrementalRide>;
 
     // Actions
     processEvent: (event: JourneyEvent) => void;
     getActiveRides: (currentTime: number) => IncrementalRide[];
-    getRideById: (rideId: string) => IncrementalRide | undefined;
+    getRideById: (rideId: number) => IncrementalRide | undefined;
     reset: () => void;
     auditRides: () => void;
 
     // Internal helpers
     _updateRideStatus: (ride: IncrementalRide, currentTime: number) => void;
-    _moveRideToFinished: (rideId: string) => void;
-    _moveRideToCanceled: (rideId: string) => void;
+    _moveRideToFinished: (rideId: number) => void;
+    _moveRideToCanceled: (rideId: number) => void;
 };
 
 export const useIncrementalRides = create<IncrementalRidesState>((set, get) => ({
@@ -71,10 +71,9 @@ export const useIncrementalRides = create<IncrementalRidesState>((set, get) => (
     canceledRides: new Map(),
 
     processEvent: (event: JourneyEvent) => {
-        const rideId = String(event.train_line_ride_id ?? "");
-        if (!rideId) return;
+        const rideId = event.id_;
 
-        const eventTime = coalesceTime(event) ?? 0;
+        const actual_time_ms = ISO_to_ms(event.timestamp);
         const fromStation = event.from_station;
         const toStation = event.to_station;
 
@@ -87,14 +86,14 @@ export const useIncrementalRides = create<IncrementalRidesState>((set, get) => (
             let ride = state.rides.get(rideId);
             if (!ride) {
                 ride = {
-                    rideId,
+                    rideId: event.id_,
                     destination: event.final_destination_station,
-                    startTs: eventTime,
+                    startTs: actual_time_ms,
                     endTs: null, // Will be set when ride finishes
                     status: "ACTIVE", // Immediately active since we only learn about it when it departs
                     isCanceled: false,
                     segments: new Map(),
-                    lastUpdated: eventTime,
+                    lastUpdated: actual_time_ms,
                     eventCount: 0
                 };
                 state.rides.set(rideId, ride);
@@ -102,23 +101,23 @@ export const useIncrementalRides = create<IncrementalRidesState>((set, get) => (
 
             // Update ride metadata
             ride.eventCount++;
-            ride.lastUpdated = eventTime;
-            ride.startTs = Math.min(ride.startTs, eventTime);
+            ride.lastUpdated = actual_time_ms;
+            ride.startTs = Math.min(ride.startTs, actual_time_ms);
 
             // Only update endTs if this event extends the ride duration
             // For arrival events at destination, this might be the actual end
-            if (event.event_type === 'arrival' && toStation === ride.destination) {
-                ride.endTs = eventTime; // This is the actual end of the ride
+            if (event.event_type == "ARRIVAL" && toStation === ride.destination) {
+                ride.endTs = actual_time_ms; // This is the actual end of the ride
             } else if (ride.endTs === null) {
                 // If endTs is null, set it with a buffer
-                ride.endTs = eventTime + TIME_CONSTANTS.RIDE_BUFFER_MS; // 30 minutes buffer
+                ride.endTs = actual_time_ms + TIME_CONSTANTS.RIDE_BUFFER_MS; // 30 minutes buffer
             } else {
                 // For other events, extend the ride duration by a reasonable amount
-                ride.endTs = Math.max(ride.endTs, eventTime + TIME_CONSTANTS.RIDE_BUFFER_MS); // 30 minutes buffer
+                ride.endTs = Math.max(ride.endTs, actual_time_ms + TIME_CONSTANTS.RIDE_BUFFER_MS); // 30 minutes buffer
             }
 
             // Check for cancellation - handle string "False"/"True" from CSV
-            const isCanceled = event.is_canceled === true || event.is_canceled === "True" || event.is_canceled === "true";
+            const isCanceled = event.event_type == "CANCELLATION";
             if (isCanceled) {
                 ride.isCanceled = true;
                 ride.status = "CANCELED";
@@ -133,7 +132,7 @@ export const useIncrementalRides = create<IncrementalRidesState>((set, get) => (
                 segment = {
                     fromStation,
                     toStation,
-                    departureTime: eventTime,
+                    departureTime: actual_time_ms,
                     arrivalTime: undefined,
                     maxDelay: 0,
                     isComplete: false
@@ -142,19 +141,19 @@ export const useIncrementalRides = create<IncrementalRidesState>((set, get) => (
             }
 
             // Update segment based on event type
-            if (event.event_type === 'departure') {
-                segment.departureTime = eventTime;
-            } else if (event.event_type === 'arrival') {
-                segment.arrivalTime = eventTime;
+            if (event.event_type === "DEPARTURE") {
+                segment.departureTime = actual_time_ms;
+            } else if (event.event_type === "ARRIVAL") {
+                segment.arrivalTime = actual_time_ms;
                 segment.isComplete = true;
             }
 
             // Update delay
-            const delay = Number(event.delay_in_min ?? 0);
+            const delay = event.delay_min;
             segment.maxDelay = Math.max(segment.maxDelay, delay);
 
             // Check if ride is finished (arrived at final destination)
-            if (event.event_type === 'arrival' &&
+            if (event.event_type === "ARRIVAL" &&
                 toStation === ride.destination &&
                 segment.isComplete) {
                 ride.status = "FINISHED";
@@ -164,7 +163,7 @@ export const useIncrementalRides = create<IncrementalRidesState>((set, get) => (
 
 
             // Update ride status based on current simulation time
-            const currentTime = useSimStore.getState().cursorTs ?? eventTime;
+            const currentTime = useSimStore.getState().cursorTs ?? actual_time_ms;
 
             state._updateRideStatus(ride, currentTime);
 
@@ -187,7 +186,7 @@ export const useIncrementalRides = create<IncrementalRidesState>((set, get) => (
         return activeRides;
     },
 
-    getRideById: (rideId: string) => {
+    getRideById: (rideId: number) => {
         const state = get();
         return state.rides.get(rideId) ||
             state.finishedRides.get(rideId) ||
@@ -236,7 +235,7 @@ export const useIncrementalRides = create<IncrementalRidesState>((set, get) => (
         }
     },
 
-    _moveRideToFinished: (rideId: string) => {
+    _moveRideToFinished: (rideId: number) => {
         const state = get();
         const ride = state.rides.get(rideId);
         if (!ride) {
@@ -253,7 +252,7 @@ export const useIncrementalRides = create<IncrementalRidesState>((set, get) => (
         });
     },
 
-    _moveRideToCanceled: (rideId: string) => {
+    _moveRideToCanceled: (rideId: number) => {
         const state = get();
         const ride = state.rides.get(rideId);
         if (!ride) {
@@ -274,7 +273,6 @@ export const useIncrementalRides = create<IncrementalRidesState>((set, get) => (
 // Helper hook to get active rides at current time
 export const useActiveIncrementalRides = () => {
     const rides = useIncrementalRides(state => state.rides);
-    const currentTime = useSimStore(state => state.cursorTs) ?? 0;
 
     // Use useMemo to ensure stable reference
     return useMemo(() => {
@@ -294,7 +292,7 @@ export const useActiveIncrementalRides = () => {
         }
 
         return activeRides;
-    }, [rides, currentTime]);
+    }, [rides]);
 };
 
 // Helper hook to get all rides (active + finished + canceled)

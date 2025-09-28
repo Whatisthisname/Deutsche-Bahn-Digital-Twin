@@ -14,11 +14,11 @@ import { useGraphStructure } from "@/state/useGraphStructure";
 import { useVisibleActiveEvents } from "@/hooks/useStreamingTrainEvents";
 import { useSimStore } from "@/state/useSimStore";
 import { useDynamicStationFeatures } from "@/state/useStationFeatures";
-import { toMs } from "@/utils/time";
+import { ISO_to_ms } from "@/utils/time";
 import type { StationInfo, JourneyEvent } from "@/types/ride";
 
 
-function edgeColor(delay?: number) {
+function delay_to_color(delay?: number) {
   if ((delay ?? 0) <= 2) return "#2e7d32";
   if ((delay ?? 0) <= 10) return "#f9a825";
   return "#c62828";
@@ -37,10 +37,8 @@ export default function MapView() {
   const { getStationFeatures } = useDynamicStationFeatures();
 
 
-
   // State for hover popup
   const [hoveredStationInfo, setHoveredStationInfo] = useState<StationInfo | null>(null);
-
 
   const { edgeFC, backgroundEdgeFC, counts } = useMemo(() => {
     if (!graph) {
@@ -51,13 +49,15 @@ export default function MapView() {
       };
     }
 
-
-
     // Background edges FC - all possible edges from graph structure
     const backgroundEdgeFeatures: Feature<LineString, { fromStation: string; toStation: string; distance: number; frequency: number }>[] =
       Object.entries(graph.edges).map(([, edge]) => {
-        const fromStation = graph.stations[edge.from];
-        const toStation = graph.stations[edge.to];
+        const from = edge[0];
+        const to = edge[1];
+        const distance = edge[2];
+        const frequency = edge[3];
+        const fromStation = graph.stations[from];
+        const toStation = graph.stations[to];
 
         if (!fromStation || !toStation) return null;
 
@@ -73,8 +73,8 @@ export default function MapView() {
           properties: {
             fromStation: fromStation.name,
             toStation: toStation.name,
-            distance: edge.distance,
-            frequency: edge.frequency
+            distance: distance,
+            frequency: frequency
           }
         };
       }).filter(Boolean) as Feature<LineString, { fromStation: string; toStation: string; distance: number; frequency: number }>[];
@@ -95,10 +95,10 @@ export default function MapView() {
     const journeySegments: globalThis.Map<string, { departure?: JourneyEvent; arrival?: JourneyEvent }> = new globalThis.Map();
 
     for (const event of events) {
-      if (!event.train_line_ride_id || !event.from_station || !event.to_station) continue;
+      if (!event.id_ || !event.from_station || !event.to_station) continue;
 
       // Create a unique key for each journey segment
-      const segmentKey = `${event.train_line_ride_id}:${event.from_station}→${event.to_station}`;
+      const segmentKey = `${event.id_}:${event.from_station}→${event.to_station}`;
 
       if (!journeySegments.has(segmentKey)) {
         journeySegments.set(segmentKey, {});
@@ -106,9 +106,9 @@ export default function MapView() {
 
       const segment = journeySegments.get(segmentKey)!;
 
-      if (event.event_type === 'departure') {
+      if (event.event_type === "DEPARTURE") {
         segment.departure = event;
-      } else if (event.event_type === 'arrival') {
+      } else if (event.event_type === "ARRIVAL") {
         segment.arrival = event;
       }
     }
@@ -123,10 +123,10 @@ export default function MapView() {
       }
 
       // Check if journey is active
-      const departureTime = toMs(departure.actual_timestamp) ?? 0;
-      const arrivalTime = arrival ? (toMs(arrival.actual_timestamp) ?? 0) : (toMs(departure.expected_arrival_timestamp) ?? 0);
+      const departureTime = ISO_to_ms(departure.timestamp) ?? 0;
+      const arrivalTime = arrival ? (ISO_to_ms(arrival.timestamp) ?? 0) : 0; // TODO sus
 
-      const isJourneyActive = departureTime <= playhead && arrivalTime > playhead;
+      const isJourneyActive = departureTime <= playhead && playhead < arrivalTime;
 
 
       if (!isJourneyActive) {
@@ -141,19 +141,19 @@ export default function MapView() {
         continue;
       }
 
-      const fromStation = graph.stations[fromStationId.toString()];
-      const toStation = graph.stations[toStationId.toString()];
+      const fromStation = graph.stations[fromStationId];
+      const toStation = graph.stations[toStationId];
 
       if (!fromStation || !toStation) {
         continue;
       }
 
-      const delay = Number(departure.delay_in_min ?? 0);
+      const delay = departure.delay_min;
 
       edgeFeatures.push({
         type: "Feature",
         geometry: { type: "LineString", coordinates: [[fromStation.lon, fromStation.lat], [toStation.lon, toStation.lat]] },
-        properties: { color: edgeColor(delay), width: 2, label: `${departure.from_station} → ${departure.to_station}` },
+        properties: { color: delay_to_color(delay), width: 2, label: `${departure.from_station} → ${departure.to_station}` },
       });
     }
 

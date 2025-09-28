@@ -3,8 +3,8 @@ import { useEffect } from "react";
 import { useEventStream } from "@/state/useEventStream";
 import { useSimStore } from "@/state/useSimStore";
 import iceJourneyEventsCsvUrl from "@/data/ice_journey_events.csv?url";
-import { coalesceTime } from "@/utils/time";
 import type { DataLoaderProps } from "@/types/components";
+import { ISO_to_ms } from "@/utils/time";
 
 export default function DataLoader({
     dataUrl = iceJourneyEventsCsvUrl,
@@ -20,15 +20,15 @@ export default function DataLoader({
     // on mount, load the CSV and set the timeline range based on the data
     useEffect(() => {
         loadAllEvents(dataUrl).then(() => {
+            console.log("allEvents loaded");
             const allEvents = useEventStream.getState().allEvents;
             if (allEvents.length) {
                 // Calculate time range from events
                 const firstEvent = allEvents[0];
-                const lastEvent = allEvents.at(-1);
+                const lastEvent = allEvents[allEvents.length - 1];
 
-                // Use the same coalesceTime function as EventStream
-                const first = coalesceTime(firstEvent) ?? 0;
-                const last = coalesceTime(lastEvent) ?? 0;
+                const first = ISO_to_ms(firstEvent.timestamp);
+                const last = ISO_to_ms(lastEvent.timestamp);
 
                 // 👇 start one second before first event, end at last event
                 setRange(first - 1000, last);

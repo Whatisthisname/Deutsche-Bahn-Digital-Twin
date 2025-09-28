@@ -1,8 +1,11 @@
 import { create } from "zustand";
-import { useAllRides } from "@/hooks/useStreamingTrainEvents";
 import { useSimStore } from "./useSimStore";
 import { calculateRideDelays, calculateAnalyticsFromRideDelays } from "@/lib/delayCalculations";
-import { useProcessedEvents } from "./useEventStream";
+import { useEventStream } from "./useEventStream";
+import { useActiveIncrementalRides } from "./useIncrementalRides";
+import type { JourneyEvent } from "@/types/ride";
+import type { IncrementalRide } from "./useIncrementalRides";
+import React from "react";
 
 // Analytics data structure
 export type AnalyticsData = {
@@ -16,7 +19,7 @@ export type AnalyticsData = {
 // Analytics store state
 type AnalyticsState = {
     analytics: AnalyticsData;
-    computeAnalytics: () => void;
+    computeAnalytics: (processedEvents: JourneyEvent[], activeRides: IncrementalRide[], currentTime: number) => void;
 };
 
 // Helper function to normalize time values
@@ -26,17 +29,6 @@ const toMs = (v: unknown): number | undefined => {
     if (!Number.isFinite(n)) return undefined;
     return String(Math.trunc(n)).length === 10 ? n * 1000 : n;
 };
-
-// Best-effort timestamp from a row
-const coalesceTime = (r: any) =>
-    toMs(r.actual_timestamp) ??
-    toMs(r.planned_timestamp) ??
-    toMs(r.arrival_change_time) ??
-    toMs(r.departure_change_time) ??
-    toMs(r.arrival_planned_time) ??
-    toMs(r.departure_planned_time) ??
-    toMs(r.ts_ms) ??
-    toMs(r.timestamp);
 
 // Create the analytics store
 export const useAnalytics = create<AnalyticsState>((set) => ({
@@ -48,25 +40,17 @@ export const useAnalytics = create<AnalyticsState>((set) => ({
         lastUpdated: 0,
     },
 
-    computeAnalytics: () => {
-        // Get current state from other stores
-        const simState = useSimStore.getState();
-        const processedEvents = useProcessedEvents();
-        const currentTime = simState.cursorTs ?? 0;
-
-        // Get active rides from the incremental rides system
-        const activeRides = useAllRides();
-
+    computeAnalytics: (processedEvents, activeRides, currentTime) => {
         // Count active trains
         const activeTrainCount = activeRides.length;
 
         // Get visible events for analytics calculation
         const activeRideIds = new Set(activeRides.map(r => r.rideId));
         const visibleEvents = processedEvents.filter(event => {
-            const eventTime = coalesceTime(event) ?? 0;
-            const rideId = String(event.train_line_ride_id ?? "");
+            const eventTime = toMs(event.timestamp);
+            const rideId = event.id_;
 
-            return eventTime <= currentTime && activeRideIds.has(rideId);
+            return eventTime != null && eventTime <= currentTime && activeRideIds.has(rideId);
         });
 
         // Calculate delays using helper function
@@ -90,16 +74,13 @@ export const useCurrentAnalytics = () => {
     const analytics = useAnalytics(state => state.analytics);
     const computeAnalytics = useAnalytics(state => state.computeAnalytics);
     const cursorTs = useSimStore(state => state.cursorTs);
-    const processedEvents = useProcessedEvents();
-    const activeRides = useAllRides();
+    const processedEvents = useEventStream(state => state.processedEvents);
+    const activeRides = useActiveIncrementalRides();
 
     // Recompute analytics when cursor time or data changes
     React.useEffect(() => {
-        computeAnalytics();
-    }, [cursorTs, processedEvents.length, activeRides.length, computeAnalytics]);
+        computeAnalytics(processedEvents, activeRides, cursorTs ?? 0);
+    }, [cursorTs, processedEvents, activeRides, computeAnalytics]);
 
     return analytics;
 };
-
-// Import React for useEffect
-import React from "react";

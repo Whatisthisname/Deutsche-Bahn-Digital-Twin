@@ -1,27 +1,16 @@
 // utils/time.ts
 // Centralized time utilities for consistent timestamp handling
 
-/** Convert various timestamp formats to milliseconds */
-export const toMs = (value: unknown): number | undefined => {
-    if (value == null || value === "") return undefined;
-    const n = typeof value === "number" ? value : Number(value);
-    if (!Number.isFinite(n)) return undefined;
-    return String(Math.trunc(n)).length === 10 ? n * 1000 : n;
+/** Convert ISO date string to milliseconds */
+export const ISO_to_ms = (value: string): number => {
+    const timestamp = Date.parse(value);
+    if (isNaN(timestamp)) throw new Error(`Invalid date string: ${value}`);
+    return timestamp;
 };
 
 /** Convert milliseconds to seconds (for APIs that expect seconds) */
-export const fromMs = (ms: number): number => Math.floor(ms / 1000);
+export const ms_to_s = (ms: number): number => Math.floor(ms / 1000);
 
-/** Best-effort timestamp extraction from event data */
-export const coalesceTime = (event: any): number | undefined =>
-    toMs(event.actual_timestamp) ??
-    toMs(event.planned_timestamp) ??
-    toMs(event.arrival_change_time) ??
-    toMs(event.departure_change_time) ??
-    toMs(event.arrival_planned_time) ??
-    toMs(event.departure_planned_time) ??
-    toMs(event.ts_ms) ??
-    toMs(event.timestamp);
 
 /** Format timestamp as ISO string */
 export const formatTime = (timestamp: number): string =>
@@ -64,12 +53,12 @@ export const isWithinTimeRange = (
 ): boolean => timestamp >= startTs && timestamp <= endTs;
 
 /** Get the latest timestamp from an array of events */
-export const getLatestEventTime = (events: any[]): number | undefined => {
+export const getLatestEventTime = (events: Array<{ actual_time: string }>): number | undefined => {
     if (events.length === 0) return undefined;
 
     let latest = 0;
     for (const event of events) {
-        const eventTime = coalesceTime(event);
+        const eventTime = ISO_to_ms(event.actual_time);
         if (eventTime && eventTime > latest) {
             latest = eventTime;
         }

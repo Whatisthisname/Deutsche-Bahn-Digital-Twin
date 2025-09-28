@@ -5,22 +5,16 @@ import type { RideStatus } from "@/state/useIncrementalRides";
 
 /** Journey event from CSV data */
 export interface JourneyEvent {
-    event_type?: 'departure' | 'arrival';
-    train_line_ride_id?: string | number;
-    from_station?: string;
-    to_station?: string;
-    train_line_station_num?: number;
-    delay_in_min?: number;
-    actual_timestamp?: number;
-    planned_timestamp?: number;
-    expected_arrival_timestamp?: number;
-    expected_departure_timestamp?: number;
-    final_destination_station?: string;
-    is_canceled?: boolean | string; // Can be boolean or string "True"/"False" from CSV
-
-    // Legacy fields for backward compatibility
-    ts_ms?: number;
-    timestamp?: number;
+    event_type: "DEPARTURE" | "ARRIVAL" | "CANCELLATION";
+    id_: number;
+    train_name: string;
+    delay_min: number;
+    from_station: string;
+    to_station: string;
+    station_num: number;
+    timestamp: string;
+    expected_next_time: string | undefined;
+    final_destination_station: string;
 }
 
 /** Ride segment between two stations */
@@ -35,7 +29,7 @@ export interface RideSegment {
 
 /** Ride with status information for UI components */
 export interface RideWithStatus {
-    rideId: string;
+    rideId: number;
     destination?: string;
     startTs: number;
     endTs: number | null;

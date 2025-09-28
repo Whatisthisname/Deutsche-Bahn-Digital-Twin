@@ -94,10 +94,10 @@ export const useSimStore = create<SimState>((set, get) => ({
                 const processedEvents = eventStream.processedEvents;
                 const currentProcessedCount = state.cursorTs ?
                     processedEvents.filter(e => {
-                        const eventTime = Number(e.actual_timestamp ?? e.planned_timestamp ?? e.ts_ms ?? e.timestamp ?? 0);
+                        const eventTime = Number(e.timestamp);
                         return String(eventTime).length === 10 ? eventTime * 1000 : eventTime;
                     }).filter(e => {
-                        const eventTime = Number(e.actual_timestamp ?? e.planned_timestamp ?? e.ts_ms ?? e.timestamp ?? 0);
+                        const eventTime = Number(e.timestamp);
                         return String(eventTime).length === 10 ? eventTime * 1000 : eventTime;
                     }).length : 0;
 

@@ -14,8 +14,8 @@ export default function ActiveRidesList({
     onRideSelect,
     activeOnly = false
 }: Partial<ActiveRidesListProps> = {}) {
-    // Add currentTime to force re-renders when simulation time changes
-    const currentTime = useSimStore(state => state.cursorTs) ?? 0;
+    // Force re-renders when simulation time changes
+    useSimStore(state => state.cursorTs);
 
     // Direct store access (we know this works)
     const rides = useIncrementalRides(state => state.rides);
@@ -44,7 +44,7 @@ export default function ActiveRidesList({
         }
 
         return combined;
-    }, [rides, finishedRides, canceledRides, currentTime, activeOnly, maxItems]);
+    }, [rides, finishedRides, canceledRides, activeOnly, maxItems]);
 
 
 

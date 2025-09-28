@@ -2,6 +2,7 @@ import MainStats from "../../components/MainStats";
 import AverageDelayChart from "../../components/AverageDelayChart";
 
 export default function VisualisationsPage() {
+
     return (
         <div className="page visualisations-page">
             {/* Main Stats */}

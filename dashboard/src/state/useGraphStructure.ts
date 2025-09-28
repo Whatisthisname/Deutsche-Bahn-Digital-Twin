@@ -24,39 +24,44 @@ export interface GraphStructure {
         totalEdges: number;
         description: string;
     };
-    stations: Record<string, GraphStation>;
-    edges: Record<string, GraphEdge>;
+    stations: Record<number, GraphStation>;
+    edges: [number, number, number, number][]; // [from, to, distance, frequency]
     stationNameToId: Record<string, number>;
 }
 
 // Graph state
 type GraphState = {
-    graph: GraphStructure | null;
+    graph: GraphStructure | undefined;
     loaded: boolean;
     load: () => Promise<void>;
 };
 
 // Create the graph store
 export const useGraphStructure = create<GraphState>()((set, get) => ({
-    graph: null,
+    graph: undefined,
     loaded: false,
     load: async () => {
-        // Don't refetch if we have data
-        if (get().loaded && get().graph) return;
+        const state = get();
+        if (state.loaded && state.graph) {
+            console.log("graph already loaded");
+            return;
+        }
 
+        console.log("Loading graph structure...");
         try {
             const res = await fetch("/src/data/graph_structure.json", { cache: "no-store" });
+            console.log("Fetch response:", res.status, res.statusText);
             if (!res.ok) {
-                console.error("graph_structure.json fetch failed", res.status, res.statusText);
-                set({ loaded: false });
-                return;
+                throw new Error(`graph_structure.json fetch failed: ${res.status} ${res.statusText}`);
             }
             const graph = (await res.json()) as GraphStructure;
             const hasData = graph && Object.keys(graph.stations).length > 0;
-            if (!hasData) console.warn("graph_structure.json loaded but empty");
+            if (!hasData) throw new Error("graph_structure.json loaded but empty");
+            if (!graph) throw new Error("graph still undefined");
             set({ graph, loaded: hasData });
-        } catch (e) {
-            console.error("graph structure load error", e);
+            console.log("Graph loaded successfully with", Object.keys(graph.stations).length, "stations");
+        } catch (error) {
+            console.error("Failed to load graph:", error);
             set({ loaded: false });
         }
     },

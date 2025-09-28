@@ -4,7 +4,7 @@ import { useProcessedEvents } from "@/state/useEventStream";
 import { useActiveIncrementalRides, useIncrementalRides, determineRideStatus } from "@/state/useIncrementalRides";
 import { useSimStore } from "@/state/useSimStore";
 import { useShouldThrottleRenders } from "@/state/useRenderThrottling";
-import { coalesceTime } from "@/utils/time";
+import { ISO_to_ms } from "@/utils/time";
 import type { RideWithStatus } from "@/types/ride";
 
 
@@ -27,8 +27,8 @@ export const useVisibleActiveEvents = () => {
 
         // Filter events to only include those from active rides and within time window
         const visibleEvents = processedEvents.filter(event => {
-            const eventTime = coalesceTime(event) ?? 0;
-            const rideId = String(event.train_line_ride_id ?? "");
+            const eventTime = ISO_to_ms(event.timestamp);
+            const rideId = event.id_;
 
             return eventTime <= currentTime &&
                 activeRideIds.has(rideId);

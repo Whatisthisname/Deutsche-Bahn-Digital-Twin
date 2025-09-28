@@ -4,13 +4,11 @@ Convert station-based CSV to journey-based CSV with separate departure/arrival e
 """
 
 import csv
-from enum import Enum
-import json
-import sys
-from datetime import datetime
 import dataclasses
+from datetime import datetime
+from enum import Enum
 import itertools
-from typing import Dict, List, Mapping
+import json
 
 
 @dataclasses.dataclass
@@ -41,10 +39,10 @@ class Arrival_or_Departure_Event:
     train_name: str
     delay_min: int
     from_station: str
-    station: str
+    to_station: str
     station_num: int
-    actual_time: datetime
-    expected_time: datetime
+    timestamp: datetime
+    expected_next_event_time: datetime | None
     final_destination_station: str
 
 
@@ -59,10 +57,10 @@ def build_departure_event(
         train_name=current_segment.train_name,
         delay_min=current_segment.delay_in_min,
         from_station=current_segment.station,
-        station=next_segment.station,
+        to_station=next_segment.station,
         station_num=current_segment.station_num,
-        actual_time=current_segment.actual_departure_time,
-        expected_time=current_segment.expected_departure_time,
+        timestamp=current_segment.actual_departure_time,
+        expected_next_event_time=next_segment.expected_arrival_time,
         final_destination_station=current_segment.final_destination_station,
     )
 
@@ -76,10 +74,10 @@ def build_arrival_event(current_segment: JointEvent, next_segment: JointEvent) -
         train_name=current_segment.train_name,
         delay_min=current_segment.delay_in_min,
         from_station=current_segment.station,
-        station=next_segment.station,
+        to_station=next_segment.station,
         station_num=next_segment.station_num,
-        actual_time=next_segment.actual_arrival_time,
-        expected_time=next_segment.expected_arrival_time,
+        timestamp=next_segment.actual_arrival_time,
+        expected_next_event_time=next_segment.expected_departure_time,
         final_destination_station=current_segment.final_destination_station,
     )
 
@@ -97,7 +95,7 @@ def convert_to_journey_events(input_file: str, output_file: str, name_mapping: d
     """Convert station-based events to journey-based events."""
 
     # Read the original CSV
-    with open(input_file, "r", encoding="utf-8") as f:
+    with open(input_file, encoding="utf-8") as f:
         reader = csv.DictReader(f)
         original_rows = list(reader)
 
@@ -172,14 +170,14 @@ def convert_to_journey_events(input_file: str, output_file: str, name_mapping: d
                 journey_events.extend([departure_event, arrival_event])
 
     # Sort by actual timestamp
-    journey_events.sort(key=lambda x: x.actual_time)
+    journey_events.sort(key=lambda x: x.timestamp)
 
     print(f"Generated {len(journey_events)} journey events")
 
     # Count unique stations:
     unique_stations = set()
     for event in journey_events:
-        unique_stations.add(event.station)
+        unique_stations.add(event.to_station)
         if event.from_station:  # Add from_station if it exists
             unique_stations.add(event.from_station)
     print(f"\nFound {len(unique_stations)} unique stations")
@@ -206,25 +204,29 @@ def convert_to_journey_events(input_file: str, output_file: str, name_mapping: d
     # Show sample
     print("\nSample of new format:")
     for i, event in enumerate(journey_events[:10]):
-        actual_str = event.actual_time.strftime("%H:%M:%S")
-        planned_str = event.expected_time.strftime("%H:%M:%S")
+        actual_str = event.timestamp.strftime("%H:%M:%S")
+        planned_str = (
+            event.expected_next_event_time.strftime("%H:%M:%S") if event.expected_next_event_time else "N/A"
+        )
 
         # Show expected times for context
         expected_info = ""
-        if event.event_type == EventType.DEPARTURE and event.expected_time:
-            expected_arrival_str = event.expected_time.strftime("%H:%M:%S")
+        if event.event_type == EventType.DEPARTURE and event.expected_next_event_time:
+            expected_arrival_str = event.expected_next_event_time.strftime("%H:%M:%S")
             expected_info = f" (expected arrival: {expected_arrival_str})"
-        elif event.event_type == EventType.ARRIVAL and event.expected_time:
-            expected_departure_str = event.expected_time.strftime("%H:%M:%S")
+        elif event.event_type == EventType.ARRIVAL and event.expected_next_event_time:
+            expected_departure_str = event.expected_next_event_time.strftime("%H:%M:%S")
             expected_info = f" (expected departure: {expected_departure_str})"
 
-        print(f"{i+1:2d}. {event.event_type:9s} {event.id_} {event.from_station:20s} → {event.station:20s}")
+        print(
+            f"{i+1:2d}. {event.event_type:9s} {event.id_} {event.from_station:20s} → {event.to_station:20s}"
+        )
         print(f"    Actual: {actual_str} | Planned: {planned_str}{expected_info}")
 
     return journey_events
 
 
-def load_station_mapping(mapping_file: str) -> Dict[str, str]:
+def load_station_mapping(mapping_file: str) -> dict[str, str]:
     """Load the alternative station name mapping."""
     with open(mapping_file, encoding="utf-8") as f:
         return json.load(f)
@@ -243,7 +245,7 @@ def main():
         print(f"📊 Generated {len(journey_events)} journey events")
 
     except Exception as e:
-        print(f"❌ Error")
+        print("❌ Error")
         raise e
 
 
