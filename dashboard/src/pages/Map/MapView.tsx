@@ -11,26 +11,12 @@ import type { FeatureCollection, Feature, LineString } from "geojson";
 import "maplibre-gl/dist/maplibre-gl.css";
 
 import { useGraphStructure } from "@/state/useGraphStructure";
-import { useVisibleActiveEvents, useActiveRides } from "@/hooks/useStreamingTrainEvents";
-import { useIncrementalRides } from "@/state/useIncrementalRides";
+import { useVisibleActiveEvents } from "@/hooks/useStreamingTrainEvents";
 import { useSimStore } from "@/state/useSimStore";
 import { useDynamicStationFeatures } from "@/state/useStationFeatures";
-import { formatTime, toMs } from "@/utils/time";
+import { toMs } from "@/utils/time";
+import type { StationInfo, JourneyEvent } from "@/types/ride";
 
-type JourneyEvent = {
-  event_type?: 'departure' | 'arrival';
-  train_line_ride_id?: string | number;
-  from_station?: string;
-  to_station?: string;
-  train_line_station_num?: number;
-  delay_in_min?: number;
-  actual_timestamp?: number;
-  planned_timestamp?: number;
-  expected_arrival_timestamp?: number;
-  expected_departure_timestamp?: number;
-  final_destination_station?: string;
-  is_canceled?: boolean;
-};
 
 function edgeColor(delay?: number) {
   if ((delay ?? 0) <= 2) return "#2e7d32";
@@ -46,22 +32,14 @@ function edgeColor(delay?: number) {
 
 export default function MapView() {
   const { graph, loaded } = useGraphStructure();
-  const events = useVisibleActiveEvents() as JourneyEvent[];
+  const events = useVisibleActiveEvents();
   const playhead = useSimStore(s => s.cursorTs) ?? 0;
   const { getStationFeatures } = useDynamicStationFeatures();
 
-  // Debug: Check active rides
-  const activeRides = useActiveRides();
-  const allRides = useIncrementalRides(state => state.rides);
 
 
   // State for hover popup
-  const [hoveredStationInfo, setHoveredStationInfo] = useState<{
-    stationName: string;
-    stationId: number;
-    features: any;
-    coordinates: [number, number];
-  } | null>(null);
+  const [hoveredStationInfo, setHoveredStationInfo] = useState<StationInfo | null>(null);
 
 
   const { edgeFC, backgroundEdgeFC, counts } = useMemo(() => {
@@ -137,7 +115,7 @@ export default function MapView() {
 
 
     // Check each segment for active journeys
-    for (const [segmentKey, segment] of journeySegments) {
+    for (const [, segment] of journeySegments) {
       const { departure, arrival } = segment;
 
       if (!departure) {
@@ -194,7 +172,7 @@ export default function MapView() {
         backgroundEdges: backgroundEdgeFeatures.length
       }
     };
-  }, [graph, events.length, playhead]); // Only depend on events.length, not full events array
+  }, [graph, events, playhead]); // Depend on full events array to catch content changes
 
 
   return (
@@ -258,7 +236,7 @@ export default function MapView() {
                       boxShadow: '0 2px 4px rgba(0,0,0,0.2)'
                     }}
                     onMouseEnter={() => {
-                      const features = getStationFeatures(stationId);
+                      const features = getStationFeatures(stationId) || { rideCount: 0, totalDelaySum: 0, averageDelay: 0 };
                       setHoveredStationInfo({
                         stationName: station.name,
                         stationId,
@@ -309,16 +287,16 @@ export default function MapView() {
                 <strong>Average Delay:</strong> {hoveredStationInfo.features.averageDelay.toFixed(1)} min
               </div>
               <div style={{ marginBottom: '8px' }}>
-                <strong>Current Delay:</strong> {hoveredStationInfo.features.currentDelay.toFixed(1)} min
+                <strong>Current Delay:</strong> {hoveredStationInfo.features.currentDelay?.toFixed(1) || 0} min
               </div>
               <div style={{ marginBottom: '8px' }}>
-                <strong>Max Delay:</strong> {hoveredStationInfo.features.maxDelay.toFixed(1)} min
+                <strong>Max Delay:</strong> {hoveredStationInfo.features.maxDelay?.toFixed(1) || 0} min
               </div>
               <div style={{ marginBottom: '8px' }}>
-                <strong>Punctuality:</strong> {hoveredStationInfo.features.punctualityRate.toFixed(1)}%
+                <strong>Punctuality:</strong> {hoveredStationInfo.features.punctualityRate?.toFixed(1) || 0}%
               </div>
               <div style={{ fontSize: '12px', color: '#666', marginTop: '8px' }}>
-                Last updated: {new Date(hoveredStationInfo.features.lastUpdated).toLocaleTimeString()}
+                Last updated: {hoveredStationInfo.features.lastUpdated ? new Date(hoveredStationInfo.features.lastUpdated).toLocaleTimeString() : 'Never'}
               </div>
             </div>
           ) : (

@@ -2,8 +2,12 @@
 import { useEffect, useRef } from "react";
 import { useEventStream } from "@/state/useEventStream";
 import { useIncrementalRides } from "@/state/useIncrementalRides";
+import type { EventProcessorProps } from "@/types/components";
 
-export default function EventProcessor() {
+export default function EventProcessor({
+    debug = false,
+    batchSize = 1
+}: Partial<EventProcessorProps> = {}) {
     const processedEvents = useEventStream(state => state.processedEvents);
     const processEvent = useIncrementalRides(state => state.processEvent);
     const lastProcessedIndex = useRef(0);
@@ -17,13 +21,21 @@ export default function EventProcessor() {
 
         if (newEvents.length === 0) return; // No new events to process
 
-        for (const event of newEvents) {
-            processEvent(event);
+        if (debug) {
+            console.log(`EventProcessor: Processing ${newEvents.length} new events`);
+        }
+
+        // Process events in batches if specified
+        for (let i = 0; i < newEvents.length; i += batchSize) {
+            const batch = newEvents.slice(i, i + batchSize);
+            for (const event of batch) {
+                processEvent(event);
+            }
         }
 
         // Update the last processed index
         lastProcessedIndex.current = processedEvents.length;
-    }, [processedEvents, processEvent]);
+    }, [processedEvents, processEvent, debug, batchSize]);
 
     // This component doesn't render anything, it just processes events
     return null;

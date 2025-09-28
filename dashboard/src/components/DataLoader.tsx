@@ -4,8 +4,14 @@ import { useEventStream } from "@/state/useEventStream";
 import { useSimStore } from "@/state/useSimStore";
 import iceJourneyEventsCsvUrl from "@/data/ice_journey_events.csv?url";
 import { coalesceTime } from "@/utils/time";
+import type { DataLoaderProps } from "@/types/components";
 
-export default function DataLoader() {
+export default function DataLoader({
+    dataUrl = iceJourneyEventsCsvUrl,
+    autoStart = true,
+    onDataLoaded,
+    onError
+}: Partial<DataLoaderProps> = {}) {
     const loadAllEvents = useEventStream(s => s.loadAllEvents);
     const startStreaming = useEventStream(s => s.startStreaming);
     const setRange = useSimStore(s => s.setRange);
@@ -13,18 +19,16 @@ export default function DataLoader() {
 
     // on mount, load the CSV and set the timeline range based on the data
     useEffect(() => {
-        loadAllEvents(iceJourneyEventsCsvUrl).then(() => {
+        loadAllEvents(dataUrl).then(() => {
             const allEvents = useEventStream.getState().allEvents;
             if (allEvents.length) {
                 // Calculate time range from events
                 const firstEvent = allEvents[0];
                 const lastEvent = allEvents.at(-1);
 
-
                 // Use the same coalesceTime function as EventStream
                 const first = coalesceTime(firstEvent) ?? 0;
                 const last = coalesceTime(lastEvent) ?? 0;
-
 
                 // 👇 start one second before first event, end at last event
                 setRange(first - 1000, last);
@@ -34,12 +38,24 @@ export default function DataLoader() {
 
                 // Use the new scrubbing method to properly initialize the simulation
                 scrubToTime(targetTime).then(() => {
-                    // Start streaming immediately so it's ready when user presses play
-                    startStreaming();
+                    // Start streaming if autoStart is enabled
+                    if (autoStart) {
+                        startStreaming();
+                    }
+
+                    // Call onDataLoaded callback if provided
+                    if (onDataLoaded) {
+                        onDataLoaded();
+                    }
                 });
             }
+        }).catch((error) => {
+            // Call onError callback if provided
+            if (onError) {
+                onError(error);
+            }
         });
-    }, [loadAllEvents, startStreaming, setRange, scrubToTime]);
+    }, [loadAllEvents, startStreaming, setRange, scrubToTime, dataUrl, autoStart, onDataLoaded, onError]);
 
     return null;
 }

@@ -2,6 +2,7 @@ import { create } from "zustand";
 import { useMemo } from "react";
 import { useSimStore } from "./useSimStore";
 import { coalesceTime, TIME_CONSTANTS } from "@/utils/time";
+import type { JourneyEvent, RideSegment } from "@/types/ride";
 
 /** Ride status */
 export type RideStatus = "ACTIVE" | "FINISHED" | "CANCELED";
@@ -16,14 +17,7 @@ export type IncrementalRide = {
     isCanceled: boolean;
 
     // Journey segments (from_station → to_station)
-    segments: Map<string, {
-        fromStation: string;
-        toStation: string;
-        departureTime: number;
-        arrivalTime?: number;
-        maxDelay: number;
-        isComplete: boolean;
-    }>;
+    segments: Map<string, RideSegment>;
 
     // Metadata
     lastUpdated: number;
@@ -59,7 +53,7 @@ type IncrementalRidesState = {
     canceledRides: Map<string, IncrementalRide>;
 
     // Actions
-    processEvent: (event: any) => void;
+    processEvent: (event: JourneyEvent) => void;
     getActiveRides: (currentTime: number) => IncrementalRide[];
     getRideById: (rideId: string) => IncrementalRide | undefined;
     reset: () => void;
@@ -76,7 +70,7 @@ export const useIncrementalRides = create<IncrementalRidesState>((set, get) => (
     finishedRides: new Map(),
     canceledRides: new Map(),
 
-    processEvent: (event: any) => {
+    processEvent: (event: JourneyEvent) => {
         const rideId = String(event.train_line_ride_id ?? "");
         if (!rideId) return;
 
@@ -210,16 +204,7 @@ export const useIncrementalRides = create<IncrementalRidesState>((set, get) => (
 
     // AUDIT FUNCTION: Check for inconsistencies using centralized status determination
     auditRides: () => {
-        const state = get();
-        const ridesInMap = Array.from(state.rides.values());
-
-        // Use centralized status determination for consistency
-        const statusBreakdown = ridesInMap.reduce((acc, ride) => {
-            const determinedStatus = determineRideStatus(ride);
-            acc[determinedStatus] = (acc[determinedStatus] || 0) + 1;
-            return acc;
-        }, {} as Record<string, number>);
-
+        // Audit function for debugging ride consistency
     },
 
     _updateRideStatus: (ride: IncrementalRide, currentTime: number) => {

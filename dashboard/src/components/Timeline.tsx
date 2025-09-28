@@ -1,8 +1,12 @@
 import { useEffect, useCallback, useRef } from "react";
 import { useSimStore } from "@/state/useSimStore";
 import { TIME_CONSTANTS } from "@/utils/time";
+import type { TimelineProps } from "@/types/components";
 
-export default function Timeline() {
+export default function Timeline({
+    showLabels = true,
+    className
+}: Partial<TimelineProps> = {}) {
     const { isPlaying, speed, rangeStart, rangeEnd, cursorTs, setIsPlaying, scrubToTime, isScrubbing, setCursorTs } = useSimStore();
     const disabled = !rangeStart || !rangeEnd; // disable if no data
 
@@ -57,7 +61,7 @@ export default function Timeline() {
     }, [isPlaying, speed, isScrubbing, setCursorTs, setIsPlaying, rangeEnd]);
 
     return (
-        <div className="timeline">
+        <div className={`timeline ${className || ''}`}>
             <input
                 type="range"
                 min={rangeStart ?? 0} // minimum is start of range or 0 if no data
@@ -66,12 +70,14 @@ export default function Timeline() {
                 onChange={(e) => onInput(Number(e.target.value))}
                 disabled={disabled || isScrubbing}
             />
-            <div className="timeline-labels">
-                <span>{rangeStart ? new Date(rangeStart).toLocaleString() : "—"}</span>
-                <span>{cursorTs ? new Date(cursorTs).toLocaleString() : "—"}</span>
-                <span>{rangeEnd ? new Date(rangeEnd).toLocaleString() : "—"}</span>
-                {isScrubbing && <span style={{ color: '#ff9800' }}>Catching up...</span>}
-            </div>
+            {showLabels && (
+                <div className="timeline-labels">
+                    <span>{rangeStart ? new Date(rangeStart).toLocaleString() : "—"}</span>
+                    <span>{cursorTs ? new Date(cursorTs).toLocaleString() : "—"}</span>
+                    <span>{rangeEnd ? new Date(rangeEnd).toLocaleString() : "—"}</span>
+                    {isScrubbing && <span style={{ color: '#ff9800' }}>Catching up...</span>}
+                </div>
+            )}
         </div>
     );
 }

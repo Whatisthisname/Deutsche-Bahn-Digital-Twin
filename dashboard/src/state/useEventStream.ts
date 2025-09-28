@@ -3,21 +3,22 @@ import { create } from "zustand";
 import Papa from "papaparse";
 import { useSimStore } from "./useSimStore";
 import { coalesceTime, TIME_CONSTANTS } from "@/utils/time";
+import type { JourneyEvent } from "@/types/ride";
 
-/** Raw CSV row */
-type TrainEvent = Record<string, any>;
+/** Raw CSV row - using JourneyEvent for better type safety */
+type TrainEvent = JourneyEvent;
 
 /** Event stream state */
 type EventStreamState = {
     // Data
     allEvents: TrainEvent[];
     processedEvents: TrainEvent[];
+
+    // Stream control
     isStreaming: boolean;
     isCatchingUp: boolean;
-
-    // Configuration
-    pollingInterval: number; // milliseconds (always 1 second)
-    timeIncrementPerSecond: number; // milliseconds to advance per second (15 minutes = 15 * 60 * 1000)
+    pollingInterval: number; // Always 1 second
+    timeIncrementPerSecond: number; // 15 minutes per second at 1x speed
 
     // Actions
     loadAllEvents: (url: string) => Promise<void>;
@@ -96,7 +97,6 @@ export const useEventStream = create<EventStreamState>((set, get) => ({
             const { allEvents, _currentEventIndex } = get();
             let eventsToProcess = 0;
 
-
             for (let i = _currentEventIndex; i < allEvents.length; i++) {
                 const event = allEvents[i];
                 const eventTime = coalesceTime(event) ?? 0;
@@ -109,7 +109,6 @@ export const useEventStream = create<EventStreamState>((set, get) => ({
             }
 
             if (eventsToProcess > 0) {
-
                 // Get simulation state to check if we're scrubbing
                 const simState = useSimStore.getState();
                 const isScrubbing = simState.isScrubbing ?? false;
@@ -117,7 +116,6 @@ export const useEventStream = create<EventStreamState>((set, get) => ({
                 // During normal streaming: process ALL events (no batch limit)
                 // During catch-up (scrubbing): process in batches to prevent UI freezing
                 const batchSize = isScrubbing ? Math.min(eventsToProcess, 200) : eventsToProcess;
-
 
                 const eventsToAdd = [];
 
@@ -137,16 +135,18 @@ export const useEventStream = create<EventStreamState>((set, get) => ({
                     });
                 }
 
-                // Schedule next poll
-                const timer = setTimeout(poll, state.pollingInterval);
-                set({ _pollingTimer: timer });
-            };
+            }
 
-            // Start polling immediately
-            poll();
-        },
+            // Schedule next poll
+            const timer = setTimeout(poll, state.pollingInterval);
+            set({ _pollingTimer: timer });
+        };
 
-            stopStreaming: () => {
+        // Start polling immediately
+        poll();
+    },
+
+    stopStreaming: () => {
         const state = get();
 
         if (state._pollingTimer) {
@@ -158,7 +158,6 @@ export const useEventStream = create<EventStreamState>((set, get) => ({
             _pollingTimer: null
         });
     },
-
 
     catchUpToTime: async (targetTime: number) => {
         const state = get();
@@ -240,21 +239,10 @@ export const useEventStream = create<EventStreamState>((set, get) => ({
             processedEvents: eventsUpToTarget,
             _currentEventIndex: resetIndex
         });
-
     }
 }));
 
 // Helper hook to get current processed events
 export const useProcessedEvents = () => {
     return useEventStream(state => state.processedEvents);
-};
-
-// Helper hook to get streaming status
-export const useStreamingStatus = () => {
-    return useEventStream(state => ({
-        isStreaming: state.isStreaming,
-        isCatchingUp: state.isCatchingUp,
-        processedCount: state.processedEvents.length,
-        totalCount: state.allEvents.length
-    }));
 };

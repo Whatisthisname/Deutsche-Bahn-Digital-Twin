@@ -5,22 +5,8 @@ import { useActiveIncrementalRides, useIncrementalRides, determineRideStatus } f
 import { useSimStore } from "@/state/useSimStore";
 import { useShouldThrottleRenders } from "@/state/useRenderThrottling";
 import { coalesceTime } from "@/utils/time";
+import type { RideWithStatus } from "@/types/ride";
 
-/** Journey event type */
-type JourneyEvent = {
-    event_type?: 'departure' | 'arrival';
-    train_line_ride_id?: string | number;
-    from_station?: string;
-    to_station?: string;
-    train_line_station_num?: number;
-    delay_in_min?: number;
-    actual_timestamp?: number;
-    planned_timestamp?: number;
-    expected_arrival_timestamp?: number;
-    expected_departure_timestamp?: number;
-    final_destination_station?: string;
-    is_canceled?: boolean;
-};
 
 /** Hook to get visible active events for the current time */
 export const useVisibleActiveEvents = () => {
@@ -48,7 +34,7 @@ export const useVisibleActiveEvents = () => {
                 activeRideIds.has(rideId);
         });
 
-        return visibleEvents as JourneyEvent[];
+        return visibleEvents;
     }, [processedEvents, activeRides, currentTime, shouldThrottle]);
 };
 
@@ -74,14 +60,14 @@ export const useAllRides = () => {
     const canceledRides = useIncrementalRides(state => state.canceledRides);
     const shouldThrottle = useShouldThrottleRenders();
 
-    return useMemo(() => {
+    return useMemo((): RideWithStatus[] => {
         // If we're throttling renders, return empty array
         if (shouldThrottle) {
             return [];
         }
 
         // Combine all rides with their status
-        const allRides = [
+        const allRides: RideWithStatus[] = [
             ...Array.from(rides.values()).map(ride => ({ ...ride, status: determineRideStatus(ride) })),
             ...Array.from(finishedRides.values()).map(ride => ({ ...ride, status: "FINISHED" as const })),
             ...Array.from(canceledRides.values()).map(ride => ({ ...ride, status: "CANCELED" as const }))

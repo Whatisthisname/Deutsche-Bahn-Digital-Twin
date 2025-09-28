@@ -2,8 +2,18 @@
 import { useSimStore } from "@/state/useSimStore";
 import { useIncrementalRides, determineRideStatus } from "@/state/useIncrementalRides";
 import { useMemo } from 'react';
+import type { RideWithStatus } from "@/types/ride";
+import type { ActiveRidesListProps } from "@/types/components";
+import { getRideStatusColor, formatRideTime, getRideStartStation, getRideEndStation, getRideDurationMinutes } from "@/utils/rideHelpers";
 
-export default function ActiveRidesList() {
+export default function ActiveRidesList({
+    maxItems,
+    showStatus = true,
+    showDuration = true,
+    className,
+    onRideSelect,
+    activeOnly = false
+}: Partial<ActiveRidesListProps> = {}) {
     // Add currentTime to force re-renders when simulation time changes
     const currentTime = useSimStore(state => state.cursorTs) ?? 0;
 
@@ -13,63 +23,42 @@ export default function ActiveRidesList() {
     const canceledRides = useIncrementalRides(state => state.canceledRides);
 
     // Combine all rides with their status using useMemo for proper reactivity
-    const allRides = useMemo(() => {
-        const combined = [
+    const allRides = useMemo((): RideWithStatus[] => {
+        let combined: RideWithStatus[] = [
             ...Array.from(rides.values()).map(ride => ({ ...ride, status: determineRideStatus(ride) })),
             ...Array.from(finishedRides.values()).map(ride => ({ ...ride, status: "FINISHED" as const })),
             ...Array.from(canceledRides.values()).map(ride => ({ ...ride, status: "CANCELED" as const }))
         ];
 
+        // Filter to active only if requested
+        if (activeOnly) {
+            combined = combined.filter(ride => ride.status === "ACTIVE");
+        }
+
         // Sort by start time (newest first)
-        return combined.sort((a, b) => b.startTs - a.startTs);
-    }, [rides, finishedRides, canceledRides, currentTime]);
+        combined = combined.sort((a, b) => b.startTs - a.startTs);
 
-
-    const formatTime = (timestamp: number) => {
-        return new Date(timestamp).toLocaleTimeString('de-DE', {
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit'
-        });
-    };
-
-    const getRideStatus = (ride: any) => {
-        return ride.status;
-    };
-
-    const getStatusColor = (ride: any) => {
-        switch (ride.status) {
-            case "ACTIVE": return "#2e7d32"; // Green
-            case "FINISHED": return "#757575"; // Gray
-            case "CANCELED": return "#d32f2f"; // Red
-            default: return "#757575";
+        // Apply maxItems limit if specified
+        if (maxItems && maxItems > 0) {
+            combined = combined.slice(0, maxItems);
         }
-    };
 
-    const getStartStation = (ride: any) => {
-        // Get the first segment's fromStation
-        const segments = Array.from(ride.segments.values());
-        if (segments.length > 0) {
-            const firstSegment = segments[0] as any;
-            return firstSegment?.fromStation || 'Unknown';
-        }
-        return 'Unknown';
-    };
+        return combined;
+    }, [rides, finishedRides, canceledRides, currentTime, activeOnly, maxItems]);
 
-    const getEndStation = (ride: any) => {
-        // Get the last segment's toStation, or use destination
-        const segments = Array.from(ride.segments.values());
-        if (segments.length > 0) {
-            const lastSegment = segments[segments.length - 1] as any;
-            return lastSegment?.toStation || ride.destination || 'Unknown';
+
+
+    const title = activeOnly ? "Active Rides" : "All Rides";
+    const handleRideClick = (ride: RideWithStatus) => {
+        if (onRideSelect) {
+            onRideSelect(ride);
         }
-        return ride.destination || 'Unknown';
     };
 
     if (allRides.length === 0) {
         return (
-            <div className="panel">
-                <h3>All Rides</h3>
+            <div className={`panel ${className || ''}`}>
+                <h3>{title}</h3>
                 <div className="no-rides">
                     <p>No rides at this time</p>
                 </div>
@@ -78,33 +67,40 @@ export default function ActiveRidesList() {
     }
 
     return (
-        <div className="panel">
-            <h3>All Rides ({allRides.length})</h3>
+        <div className={`panel ${className || ''}`}>
+            <h3>{title} ({allRides.length})</h3>
             <div className="rides-list">
                 {allRides.map((ride) => (
-                    <div key={ride.rideId} className="ride-item">
+                    <div
+                        key={ride.rideId}
+                        className={`ride-item ${onRideSelect ? 'clickable' : ''}`}
+                        onClick={() => handleRideClick(ride)}
+                        style={{ cursor: onRideSelect ? 'pointer' : 'default' }}
+                    >
                         <div className="ride-line-1">
                             <div className="ride-id">{ride.rideId}</div>
-                            <div
-                                className="ride-status"
-                                style={{ color: getStatusColor(ride) }}
-                            >
-                                {getRideStatus(ride)}
-                            </div>
+                            {showStatus && (
+                                <div
+                                    className="ride-status"
+                                    style={{ color: getRideStatusColor(ride.status) }}
+                                >
+                                    {ride.status}
+                                </div>
+                            )}
                         </div>
 
                         <div className="ride-line-2">
                             <div className="ride-route">
-                                <span className="start-station">{getStartStation(ride)}</span>
+                                <span className="start-station">{getRideStartStation(ride)}</span>
                                 <span className="route-separator">→</span>
-                                <span className="end-station">{getEndStation(ride)}</span>
+                                <span className="end-station">{getRideEndStation(ride)}</span>
                             </div>
                             <div className="ride-times">
-                                <span className="time-value">{formatTime(ride.startTs)}</span>
+                                <span className="time-value">{formatRideTime(ride.startTs)}</span>
                                 <span className="time-separator">→</span>
-                                <span className="time-value">{ride.endTs ? formatTime(ride.endTs) : 'Ongoing'}</span>
-                                {ride.endTs && (
-                                    <span className="duration">({Math.round((ride.endTs - ride.startTs) / (1000 * 60))}min)</span>
+                                <span className="time-value">{ride.endTs ? formatRideTime(ride.endTs) : 'Ongoing'}</span>
+                                {showDuration && ride.endTs && (
+                                    <span className="duration">({getRideDurationMinutes(ride.startTs, ride.endTs)}min)</span>
                                 )}
                             </div>
                         </div>
