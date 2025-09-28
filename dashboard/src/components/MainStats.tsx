@@ -31,7 +31,7 @@ export default function MainStats({
         const punctRate = totalRides > 0 ? (punctualRides / totalRides) * 100 : 0;
 
         return { averageDelay: avgDelay, punctualityRate: punctRate };
-    }, [getAllStationFeatures]); // Only depend on function reference
+    }, [getAllStationFeatures]); // Function reference changes when data updates
 
     return (
         <div className={`main-stats ${className || ''}`}>

@@ -26,14 +26,14 @@ export interface DynamicStationFeatures {
 
 // Station features state
 type StationFeaturesState = {
-    features: Map<number, DynamicStationFeatures>; // station ID -> features
+    features: Map<string, DynamicStationFeatures>; // station ID -> features
     lastUpdateTime: number;
 
     // Actions
     updateFeatures: (events: JourneyEvent[]) => void;
-    getStationFeatures: (stationId: number) => DynamicStationFeatures | null;
+    getStationFeatures: (stationId: string) => DynamicStationFeatures | null;
     getAllStationFeatures: () => Array<{
-        stationId: number;
+        stationId: string;
         stationName: string;
         features: DynamicStationFeatures;
     }>;
@@ -69,12 +69,10 @@ export const useStationFeatures = create<StationFeaturesState>()((set, get) => (
         if (!graph) return;
 
         const currentTime = Date.now();
-        const newFeatures = new Map<number, DynamicStationFeatures>();
+        const newFeatures = new Map<string, DynamicStationFeatures>();
 
         // Initialize features for all stations with fresh defaults
-        Object.entries(graph.stations).forEach(([stationIdStr]) => {
-            const stationId = parseInt(stationIdStr);
-
+        Object.entries(graph.stations).forEach(([stationId]) => {
             // Always start with fresh defaults - no accumulation of historical data
             const baseFeatures: DynamicStationFeatures = {
                 totalDelaySum: 0,
@@ -90,6 +88,7 @@ export const useStationFeatures = create<StationFeaturesState>()((set, get) => (
 
             newFeatures.set(stationId, baseFeatures);
         });
+
 
         // Group events by ride and process journey segments
         const byRide = new Map<string, JourneyEvent[]>();
@@ -126,7 +125,7 @@ export const useStationFeatures = create<StationFeaturesState>()((set, get) => (
             }
 
             // Track which stations this ride has already been counted for
-            const stationsCountedForThisRide = new Set<number>();
+            const stationsCountedForThisRide = new Set<string>();
 
             // Process each journey segment
             for (const [, segmentEvents] of journeySegments) {
@@ -141,22 +140,23 @@ export const useStationFeatures = create<StationFeaturesState>()((set, get) => (
                     if (fromStation) {
                         const fromStationId = graph.stationNameToId[fromStation];
                         if (fromStationId !== undefined) {
-                            const features = newFeatures.get(fromStationId)!;
+                            const features = newFeatures.get(fromStationId);
+                            if (features) {
+                                // Only count this ride once per station
+                                if (!stationsCountedForThisRide.has(fromStationId)) {
+                                    features.rideCount++;
+                                    stationsCountedForThisRide.add(fromStationId);
+                                }
 
-                            // Only count this ride once per station
-                            if (!stationsCountedForThisRide.has(fromStationId)) {
-                                features.rideCount++;
-                                stationsCountedForThisRide.add(fromStationId);
+                                features.totalDelaySum += segmentDelay;
+                                features.maxDelay = Math.max(features.maxDelay, segmentDelay);
+                                features.minDelay = Math.min(features.minDelay, segmentDelay);
+                                features.currentDelay = segmentDelay;
+                                features.lastUpdated = currentTime;
+                                features.averageDelay = features.rideCount > 0 ?
+                                    features.totalDelaySum / features.rideCount : 0;
+                                features.punctualityRate = features.averageDelay < 6 ? 100 : 0;
                             }
-
-                            features.totalDelaySum += segmentDelay;
-                            features.maxDelay = Math.max(features.maxDelay, segmentDelay);
-                            features.minDelay = Math.min(features.minDelay, segmentDelay);
-                            features.currentDelay = segmentDelay;
-                            features.lastUpdated = currentTime;
-                            features.averageDelay = features.rideCount > 0 ?
-                                features.totalDelaySum / features.rideCount : 0;
-                            features.punctualityRate = features.averageDelay < 6 ? 100 : 0;
                         }
                     }
 
@@ -164,22 +164,23 @@ export const useStationFeatures = create<StationFeaturesState>()((set, get) => (
                     if (toStation) {
                         const toStationId = graph.stationNameToId[toStation];
                         if (toStationId !== undefined) {
-                            const features = newFeatures.get(toStationId)!;
+                            const features = newFeatures.get(toStationId);
+                            if (features) {
+                                // Only count this ride once per station
+                                if (!stationsCountedForThisRide.has(toStationId)) {
+                                    features.rideCount++;
+                                    stationsCountedForThisRide.add(toStationId);
+                                }
 
-                            // Only count this ride once per station
-                            if (!stationsCountedForThisRide.has(toStationId)) {
-                                features.rideCount++;
-                                stationsCountedForThisRide.add(toStationId);
+                                features.totalDelaySum += segmentDelay;
+                                features.maxDelay = Math.max(features.maxDelay, segmentDelay);
+                                features.minDelay = Math.min(features.minDelay, segmentDelay);
+                                features.currentDelay = segmentDelay;
+                                features.lastUpdated = currentTime;
+                                features.averageDelay = features.rideCount > 0 ?
+                                    features.totalDelaySum / features.rideCount : 0;
+                                features.punctualityRate = features.averageDelay < 6 ? 100 : 0;
                             }
-
-                            features.totalDelaySum += segmentDelay;
-                            features.maxDelay = Math.max(features.maxDelay, segmentDelay);
-                            features.minDelay = Math.min(features.minDelay, segmentDelay);
-                            features.currentDelay = segmentDelay;
-                            features.lastUpdated = currentTime;
-                            features.averageDelay = features.rideCount > 0 ?
-                                features.totalDelaySum / features.rideCount : 0;
-                            features.punctualityRate = features.averageDelay < 6 ? 100 : 0;
                         }
                     }
                 }
@@ -192,7 +193,7 @@ export const useStationFeatures = create<StationFeaturesState>()((set, get) => (
         });
     },
 
-    getStationFeatures: (stationId: number) => {
+    getStationFeatures: (stationId: string) => {
         return get().features.get(stationId) || null;
     },
 
@@ -236,7 +237,7 @@ export function useDynamicStationFeatures() {
 
         const timeoutId = setTimeout(() => {
             updateFeatures(events);
-        }, 150); // Debounce updates by 150ms
+        }, 50); // Reduce debounce to 50ms for more responsive updates
 
         return () => clearTimeout(timeoutId);
     }, [events, updateFeatures]); // Depend on events to trigger updates when timeline changes

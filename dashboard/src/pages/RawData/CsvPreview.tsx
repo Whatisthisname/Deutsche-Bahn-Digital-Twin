@@ -1,5 +1,7 @@
-import { useActiveRides, useVisibleActiveEvents } from "@/hooks/useStreamingTrainEvents";
-import { useIncrementalRides } from "@/state/useIncrementalRides";
+import { useEventStream } from "@/state/useEventStream";
+import { useAllSimpleRides } from "@/state/useSimpleRides";
+import { useSimStore } from "@/state/useSimStore";
+import { ISO_to_ms } from "@/utils/time";
 import type { JourneyEvent } from "@/types/ride";
 import type { CsvPreviewProps } from "@/types/components";
 
@@ -8,12 +10,21 @@ export default function CsvPreview({
     showHeaders = true,
     className
 }: Partial<CsvPreviewProps> = {}) {
-    const visible = useVisibleActiveEvents();
-    const activeRides = useActiveRides(); // array of IncrementalRide
-    const finishedRides = useIncrementalRides(state => state.finishedRides);
-    const canceledRides = useIncrementalRides(state => state.canceledRides);
+    const processedEvents = useEventStream(state => state.processedEvents);
+    const currentTime = useSimStore(state => state.cursorTs) ?? 0;
+    const allRides = useAllSimpleRides(processedEvents, currentTime);
 
-    if (!visible.length) return <div className="loading">No active events…</div>;
+    const activeRides = allRides.filter(ride => ride.status === "ACTIVE");
+    const finishedRides = allRides.filter(ride => ride.status === "FINISHED");
+    const canceledRides = allRides.filter(ride => ride.status === "CANCELED");
+
+    // Get visible events (events that have occurred up to current time)
+    const visible = processedEvents.filter(event => {
+        const eventTime = ISO_to_ms(event.timestamp);
+        return eventTime <= currentTime;
+    });
+
+    if (!visible.length) return <div className="loading">No events at current time…</div>;
 
     const cols = Object.keys(visible[0]);
     const displayEvents = maxRows > 0 ? visible.slice(0, maxRows) : visible;
@@ -23,8 +34,8 @@ export default function CsvPreview({
             <h3>Active ride events</h3>
             <div className="rides">
                 <p>Active rides: {activeRides.length}</p>
-                <p>Finished rides: {finishedRides.size}</p>
-                <p>Canceled rides: {canceledRides.size}</p>
+                <p>Finished rides: {finishedRides.length}</p>
+                <p>Canceled rides: {canceledRides.length}</p>
                 {maxRows > 0 && visible.length > maxRows && (
                     <p>Showing {maxRows} of {visible.length} events</p>
                 )}

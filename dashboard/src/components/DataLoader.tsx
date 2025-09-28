@@ -20,7 +20,6 @@ export default function DataLoader({
     // on mount, load the CSV and set the timeline range based on the data
     useEffect(() => {
         loadAllEvents(dataUrl).then(() => {
-            console.log("allEvents loaded");
             const allEvents = useEventStream.getState().allEvents;
             if (allEvents.length) {
                 // Calculate time range from events

@@ -1,88 +1,59 @@
 // src/components/DebugRides.tsx
 import { useMemo } from 'react'
-import { useIncrementalRides, type RideStatus } from '@/state/useIncrementalRides'
+import { useAllSimpleRides, type RideStatus } from '@/state/useSimpleRides'
 import { useEventStream } from '@/state/useEventStream'
 import { useSimStore } from '@/state/useSimStore'
-import { useActiveRides } from '@/hooks/useStreamingTrainEvents'
 
 type RideInfo = {
-    rideId: number;
+    rideId: string; // Changed from number to string
     destination: string | undefined;
     startTs: string;
     endTs: string | null;
     status: RideStatus;
     eventCount: number;
     isCanceled: boolean;
-    segments: number;
 }
 
 export default function DebugRides() {
-    const rides = useIncrementalRides(state => state.rides)
-    const finishedRides = useIncrementalRides(state => state.finishedRides)
-    const canceledRides = useIncrementalRides(state => state.canceledRides)
     const processedEvents = useEventStream(state => state.processedEvents)
-    const currentTime = useSimStore(state => state.cursorTs)
-    const activeRides = useActiveRides() // Get actual active rides
-    const auditRides = useIncrementalRides(state => state.auditRides)
+    const currentTime = useSimStore(state => state.cursorTs) ?? 0
+    const allRides = useAllSimpleRides(processedEvents, currentTime)
+
+    const activeRides = allRides.filter(ride => ride.status === "ACTIVE")
+    const finishedRides = allRides.filter(ride => ride.status === "FINISHED")
+    const canceledRides = allRides.filter(ride => ride.status === "CANCELED")
 
     const debugInfo = useMemo(() => {
-        console.log(`🔍 DebugRides: Computing debug info (rides: ${rides.size}, finished: ${finishedRides.size}, canceled: ${canceledRides.size}, events: ${processedEvents.length}, active: ${activeRides.length})`);
 
-        // AUDIT: Check what's actually in the rides Map
-        const ridesInMap = Array.from(rides.values());
-        const statusCounts = ridesInMap.reduce((acc, ride) => {
+        const statusCounts = allRides.reduce((acc, ride) => {
             acc[ride.status] = (acc[ride.status] || 0) + 1;
             return acc;
         }, {} as Record<string, number>);
-
-        const isCanceledCount = ridesInMap.filter(r => r.isCanceled).length;
-        const hasEndTsCount = ridesInMap.filter(r => r.endTs !== null).length;
-
-        console.log(`🔍 AUDIT: Rides in Map breakdown:`, {
-            total: ridesInMap.length,
-            statusCounts,
-            isCanceledCount,
-            hasEndTsCount,
-            shouldBeFinished: ridesInMap.filter(r => r.status === "FINISHED").length,
-            shouldBeCanceled: ridesInMap.filter(r => r.status === "CANCELED").length,
-            shouldBeActive: ridesInMap.filter(r => r.status === "ACTIVE").length
-        });
-
-
 
         const info = {
             timestamp: new Date().toISOString(),
             currentTime: currentTime ? new Date(currentTime).toISOString() : 'null',
             processedEventsCount: processedEvents.length,
-            ridesCount: rides.size,
-            activeRidesCount: activeRides.length, // Add actual active rides count
-            finishedRidesCount: finishedRides.size,
-            canceledRidesCount: canceledRides.size,
-            rideIds: Array.from(rides.keys()),
+            totalRidesCount: allRides.length,
+            activeRidesCount: activeRides.length,
+            finishedRidesCount: finishedRides.length,
+            canceledRidesCount: canceledRides.length,
+            rideIds: allRides.map(r => r.rideId),
             lastProcessedEvent: processedEvents[processedEvents.length - 1],
-            ridesDetails: Array.from(rides.values()).map(ride => ({
+            ridesDetails: allRides.map(ride => ({
                 rideId: ride.rideId,
                 destination: ride.destination,
                 startTs: new Date(ride.startTs).toISOString(),
                 endTs: ride.endTs ? new Date(ride.endTs).toISOString() : 'null',
                 status: ride.status,
                 eventCount: ride.eventCount,
-                isCanceled: ride.isCanceled,
-                segments: ride.segments.size
+                isCanceled: ride.isCanceled
             })) as RideInfo[],
-            // Debug: Show status breakdown
-            statusBreakdown: statusCounts,
-            audit: {
-                totalInMap: ridesInMap.length,
-                statusCounts,
-                isCanceledCount,
-                hasEndTsCount
-            }
+            statusBreakdown: statusCounts
         }
 
-        console.log('🔍 DebugRides Info:', info)
         return info
-    }, [rides, finishedRides, canceledRides, processedEvents, activeRides, currentTime])
+    }, [allRides, activeRides, finishedRides, canceledRides, processedEvents, currentTime])
 
     return (
         <div style={{
@@ -99,13 +70,10 @@ export default function DebugRides() {
             zIndex: 9999
         }}>
             <h4>Debug Rides</h4>
-            <button onClick={auditRides} style={{ marginBottom: '10px', padding: '5px' }}>
-                🔍 AUDIT RIDES
-            </button>
             <div>
                 <strong>Current Time:</strong> {debugInfo.currentTime}<br />
                 <strong>Processed Events:</strong> {debugInfo.processedEventsCount}<br />
-                <strong>Total Rides:</strong> {debugInfo.ridesCount + debugInfo.finishedRidesCount + debugInfo.canceledRidesCount}<br />
+                <strong>Total Rides:</strong> {debugInfo.totalRidesCount}<br />
                 <strong>Active Rides:</strong> {debugInfo.activeRidesCount}<br />
                 <strong>Finished Rides:</strong> {debugInfo.finishedRidesCount}<br />
                 <strong>Canceled Rides:</strong> {debugInfo.canceledRidesCount}<br />

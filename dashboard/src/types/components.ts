@@ -1,7 +1,7 @@
 // types/components.ts
 // TypeScript interfaces for React component props
 
-import type { RideWithStatus } from "./ride";
+import type { AggregatedJourney } from "@/state/useSimpleRides";
 
 /** Props for ActiveRidesList component */
 export interface ActiveRidesListProps {
@@ -14,7 +14,7 @@ export interface ActiveRidesListProps {
     /** Custom CSS class name */
     className?: string;
     /** Callback when a ride is selected */
-    onRideSelect?: (ride: RideWithStatus) => void;
+    onRideSelect?: (ride: AggregatedJourney) => void;
     /** Whether to show only active rides (default: shows all) */
     activeOnly?: boolean;
 }

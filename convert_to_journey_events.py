@@ -6,7 +6,7 @@ Convert station-based CSV to journey-based CSV with separate departure/arrival e
 import csv
 import dataclasses
 from datetime import datetime
-from enum import Enum
+from enum import StrEnum
 import itertools
 import json
 
@@ -26,7 +26,7 @@ class JointEvent:
     final_destination_station: str
 
 
-class EventType(Enum):
+class EventType(StrEnum):
     DEPARTURE = "DEPARTURE"
     ARRIVAL = "ARRIVAL"
     CANCELLATION = "CANCELLATION"
@@ -191,13 +191,27 @@ def convert_to_journey_events(input_file: str, output_file: str, name_mapping: d
     )
     assert arrival_count + cancellation_count == departure_count
 
+    # Count final-destination type arrivals (to-station is the final destination station)
+    final_destination_arrivals = len(
+        [
+            e
+            for e in journey_events
+            if e.to_station == e.final_destination_station and e.event_type == EventType.ARRIVAL
+        ]
+    )
+    print(f"Final-destination type arrivals: {final_destination_arrivals}")
+
     # Write to new CSV
     fieldnames = list(Arrival_or_Departure_Event.__dataclass_fields__.keys())
 
     with open(output_file, "w", newline="", encoding="utf-8") as f:
         writer = csv.DictWriter(f, fieldnames=fieldnames)
         writer.writeheader()
-        writer.writerows([event.__dict__ for event in journey_events])
+        # Convert id_ to string to preserve precision in JavaScript
+        for event in journey_events:
+            event_dict = event.__dict__.copy()
+            event_dict["id_"] = str(event_dict["id_"])
+            writer.writerow(event_dict)
 
     print(f"Saved to {output_file}")
 
@@ -219,7 +233,7 @@ def convert_to_journey_events(input_file: str, output_file: str, name_mapping: d
             expected_info = f" (expected departure: {expected_departure_str})"
 
         print(
-            f"{i+1:2d}. {event.event_type:9s} {event.id_} {event.from_station:20s} → {event.to_station:20s}"
+            f"{i + 1:2d}. {event.event_type:9s} {event.id_} {event.from_station:20s} → {event.to_station:20s}"
         )
         print(f"    Actual: {actual_str} | Planned: {planned_str}{expected_info}")
 
@@ -234,7 +248,7 @@ def load_station_mapping(mapping_file: str) -> dict[str, str]:
 
 def main():
     input_file = "dashboard/src/data/ice.csv"
-    output_file = "dashboard/src/data/ice_journey_events_WIP.csv"
+    output_file = "dashboard/src/data/ice_journey_events.csv"
 
     try:
         name_mapping = load_station_mapping(

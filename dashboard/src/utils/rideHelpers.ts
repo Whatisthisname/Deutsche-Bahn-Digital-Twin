@@ -1,7 +1,8 @@
 // utils/rideHelpers.ts
 // Helper functions for ride-related operations
 
-import type { RideStatus, RideWithStatus } from "@/types/ride";
+import type { RideStatus } from "@/types/ride";
+import type { AggregatedJourney } from "@/state/useSimpleRides";
 
 /** Get color for ride status */
 export const getRideStatusColor = (status: RideStatus): string => {
@@ -22,22 +23,20 @@ export const formatRideTime = (timestamp: number): string => {
     });
 };
 
-/** Get start station from ride segments */
-export const getRideStartStation = (ride: RideWithStatus): string => {
-    const segments = Array.from(ride.segments.values());
-    if (segments.length > 0) {
-        const firstSegment = segments[0];
-        return firstSegment?.fromStation || 'Unknown';
+/** Get start station from ride events */
+export const getRideStartStation = (ride: AggregatedJourney): string => {
+    if (ride.events.length > 0) {
+        const firstEvent = ride.events[0];
+        return firstEvent.from_station || 'Unknown';
     }
     return 'Unknown';
 };
 
-/** Get end station from ride segments */
-export const getRideEndStation = (ride: RideWithStatus): string => {
-    const segments = Array.from(ride.segments.values());
-    if (segments.length > 0) {
-        const lastSegment = segments[segments.length - 1];
-        return lastSegment?.toStation || ride.destination || 'Unknown';
+/** Get end station from ride events */
+export const getRideEndStation = (ride: AggregatedJourney): string => {
+    if (ride.events.length > 0) {
+        const lastEvent = ride.events[ride.events.length - 1];
+        return lastEvent.to_station || ride.destination || 'Unknown';
     }
     return ride.destination || 'Unknown';
 };

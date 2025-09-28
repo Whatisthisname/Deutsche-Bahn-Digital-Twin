@@ -1,12 +1,12 @@
 // types/ride.ts
 // TypeScript interfaces for ride-related data structures
 
-import type { RideStatus } from "@/state/useIncrementalRides";
+import type { RideStatus } from "@/state/useSimpleRides";
 
 /** Journey event from CSV data */
 export interface JourneyEvent {
     event_type: "DEPARTURE" | "ARRIVAL" | "CANCELLATION";
-    id_: number;
+    id_: string;
     train_name: string;
     delay_min: number;
     from_station: string;
@@ -54,7 +54,7 @@ export interface StationFeatures {
 /** Station information for map display */
 export interface StationInfo {
     stationName: string;
-    stationId: number;
+    stationId: string;
     features: StationFeatures;
     coordinates: [number, number];
 }

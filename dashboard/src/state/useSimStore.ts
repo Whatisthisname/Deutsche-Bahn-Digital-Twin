@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { useEventStream } from "./useEventStream";
-import { useIncrementalRides } from "./useIncrementalRides";
+// Removed useIncrementalRides import
 import { useRenderThrottling } from "./useRenderThrottling";
 
 // Define available speeds
@@ -60,27 +60,17 @@ export const useSimStore = create<SimState>((set, get) => ({
 
         try {
             const eventStream = useEventStream.getState();
-            const incrementalRides = useIncrementalRides.getState();
             const renderThrottling = useRenderThrottling.getState();
 
             if (targetTime < cursorTs) {
                 // Going backward - reset everything and catch up
                 renderThrottling.startCatchUp();
 
-                // Reset ride data
-                incrementalRides.reset();
-
                 // Reset event stream to target time
                 eventStream.resetToTime(targetTime);
 
                 // Process events up to target time
                 await eventStream.catchUpToTime(targetTime);
-
-                // Process all events to rebuild ride data
-                const processedEvents = eventStream.processedEvents;
-                for (const event of processedEvents) {
-                    incrementalRides.processEvent(event);
-                }
 
                 renderThrottling.endCatchUp();
             } else {
@@ -90,23 +80,6 @@ export const useSimStore = create<SimState>((set, get) => ({
                 // Catch up events to target time
                 await eventStream.catchUpToTime(targetTime);
 
-                // Process new events
-                const processedEvents = eventStream.processedEvents;
-                const currentProcessedCount = state.cursorTs ?
-                    processedEvents.filter(e => {
-                        const eventTime = Number(e.timestamp);
-                        return String(eventTime).length === 10 ? eventTime * 1000 : eventTime;
-                    }).filter(e => {
-                        const eventTime = Number(e.timestamp);
-                        return String(eventTime).length === 10 ? eventTime * 1000 : eventTime;
-                    }).length : 0;
-
-                // Process only new events since last cursor position
-                const newEvents = processedEvents.slice(currentProcessedCount);
-                for (const event of newEvents) {
-                    incrementalRides.processEvent(event);
-                }
-
                 renderThrottling.endCatchUp();
             }
 
@@ -114,7 +87,7 @@ export const useSimStore = create<SimState>((set, get) => ({
             set({ cursorTs: targetTime });
 
         } catch (error) {
-            console.error('SimStore: Error during scrubbing:', error);
+            throw error;
         } finally {
             set({ isScrubbing: false });
         }

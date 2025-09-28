@@ -34,7 +34,7 @@ export default function AverageDelayChart() {
             .slice(0, 10); // Top 10 stations
 
         return { chartData, stationFeatures };
-    }, [loaded, getAllStationFeatures]); // Include actual data dependencies
+    }, [loaded, getAllStationFeatures]); // Function reference changes when data updates
 
     return (
         <div className="analytics-card chart-card">

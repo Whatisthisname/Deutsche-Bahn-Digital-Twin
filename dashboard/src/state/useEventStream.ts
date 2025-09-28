@@ -47,18 +47,24 @@ export const useEventStream = create<EventStreamState>((set, get) => ({
         const text = await resp.text();
         const { data } = Papa.parse<JourneyEvent>(text, {
             header: true,
-            dynamicTyping: true,
+            dynamicTyping: false, // Disable automatic typing
             skipEmptyLines: true,
         });
 
-        // Keep only truthy rows and sort globally by time (ascending)
+        // Keep only truthy rows, convert numeric fields, and sort globally by time (ascending)
         const rows = (data as JourneyEvent[])
             .filter(Boolean)
+            .map(row => ({
+                ...row,
+                delay_min: Number(row.delay_min),
+                station_num: Number(row.station_num),
+                // Keep id_ as string to preserve large integer precision
+            }))
             .sort(
                 (a, b) =>
                     (ISO_to_ms(a.timestamp) ?? 0) -
                     (ISO_to_ms(b.timestamp) ?? 0)
-            );
+            ) as JourneyEvent[];
 
         set({
             allEvents: rows,

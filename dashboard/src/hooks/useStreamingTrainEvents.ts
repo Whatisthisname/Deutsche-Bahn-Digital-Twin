@@ -1,18 +1,18 @@
 // hooks/useStreamingTrainEvents.ts
 import { useMemo } from "react";
-import { useProcessedEvents } from "@/state/useEventStream";
-import { useActiveIncrementalRides, useIncrementalRides, determineRideStatus } from "@/state/useIncrementalRides";
+import { useEventStream } from "@/state/useEventStream";
+import { useAllSimpleRides } from "@/state/useSimpleRides";
 import { useSimStore } from "@/state/useSimStore";
 import { useShouldThrottleRenders } from "@/state/useRenderThrottling";
 import { ISO_to_ms } from "@/utils/time";
-import type { RideWithStatus } from "@/types/ride";
+import type { AggregatedJourney } from "@/state/useSimpleRides";
 
 
 /** Hook to get visible active events for the current time */
 export const useVisibleActiveEvents = () => {
-    const processedEvents = useProcessedEvents();
-    const activeRides = useActiveIncrementalRides();
+    const processedEvents = useEventStream(state => state.processedEvents);
     const currentTime = useSimStore(s => s.cursorTs) ?? 0;
+    const allRides = useAllSimpleRides(processedEvents, currentTime);
     const shouldThrottle = useShouldThrottleRenders();
 
     return useMemo(() => {
@@ -21,6 +21,7 @@ export const useVisibleActiveEvents = () => {
             return [];
         }
 
+        const activeRides = allRides.filter(ride => ride.status === "ACTIVE");
         if (!activeRides.length) return [];
 
         const activeRideIds = new Set(activeRides.map(r => r.rideId));
@@ -35,12 +36,14 @@ export const useVisibleActiveEvents = () => {
         });
 
         return visibleEvents;
-    }, [processedEvents, activeRides, currentTime, shouldThrottle]);
+    }, [processedEvents, allRides, currentTime, shouldThrottle]);
 };
 
 /** Hook to get active rides */
-export const useActiveRides = () => {
-    const activeRides = useActiveIncrementalRides();
+export const useActiveRides = (): AggregatedJourney[] => {
+    const processedEvents = useEventStream(state => state.processedEvents);
+    const currentTime = useSimStore(s => s.cursorTs) ?? 0;
+    const allRides = useAllSimpleRides(processedEvents, currentTime);
     const shouldThrottle = useShouldThrottleRenders();
 
     return useMemo(() => {
@@ -49,31 +52,24 @@ export const useActiveRides = () => {
             return [];
         }
 
-        return activeRides;
-    }, [activeRides, shouldThrottle]);
+        return allRides.filter(ride => ride.status === "ACTIVE");
+    }, [allRides, shouldThrottle]);
 };
 
 /** Hook to get all rides (active + finished + canceled) */
-export const useAllRides = () => {
-    const rides = useIncrementalRides(state => state.rides);
-    const finishedRides = useIncrementalRides(state => state.finishedRides);
-    const canceledRides = useIncrementalRides(state => state.canceledRides);
+export const useAllRides = (): AggregatedJourney[] => {
+    const processedEvents = useEventStream(state => state.processedEvents);
+    const currentTime = useSimStore(s => s.cursorTs) ?? 0;
+    const allRides = useAllSimpleRides(processedEvents, currentTime);
     const shouldThrottle = useShouldThrottleRenders();
 
-    return useMemo((): RideWithStatus[] => {
+    return useMemo(() => {
         // If we're throttling renders, return empty array
         if (shouldThrottle) {
             return [];
         }
 
-        // Combine all rides with their status
-        const allRides: RideWithStatus[] = [
-            ...Array.from(rides.values()).map(ride => ({ ...ride, status: determineRideStatus(ride) })),
-            ...Array.from(finishedRides.values()).map(ride => ({ ...ride, status: "FINISHED" as const })),
-            ...Array.from(canceledRides.values()).map(ride => ({ ...ride, status: "CANCELED" as const }))
-        ];
-
         // Sort by start time (newest first)
         return allRides.sort((a, b) => b.startTs - a.startTs);
-    }, [rides, finishedRides, canceledRides, shouldThrottle]);
+    }, [allRides, shouldThrottle]);
 };

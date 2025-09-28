@@ -2,9 +2,9 @@ import { create } from "zustand";
 import { useSimStore } from "./useSimStore";
 import { calculateRideDelays, calculateAnalyticsFromRideDelays } from "@/lib/delayCalculations";
 import { useEventStream } from "./useEventStream";
-import { useActiveIncrementalRides } from "./useIncrementalRides";
+import { useAllSimpleRides } from "./useSimpleRides";
 import type { JourneyEvent } from "@/types/ride";
-import type { IncrementalRide } from "./useIncrementalRides";
+import type { AggregatedJourney } from "./useSimpleRides";
 import React from "react";
 
 // Analytics data structure
@@ -19,7 +19,7 @@ export type AnalyticsData = {
 // Analytics store state
 type AnalyticsState = {
     analytics: AnalyticsData;
-    computeAnalytics: (processedEvents: JourneyEvent[], activeRides: IncrementalRide[], currentTime: number) => void;
+    computeAnalytics: (processedEvents: JourneyEvent[], allRides: AggregatedJourney[], currentTime: number) => void;
 };
 
 // Helper function to normalize time values
@@ -40,7 +40,10 @@ export const useAnalytics = create<AnalyticsState>((set) => ({
         lastUpdated: 0,
     },
 
-    computeAnalytics: (processedEvents, activeRides, currentTime) => {
+    computeAnalytics: (processedEvents, allRides, currentTime) => {
+        // Filter to active rides
+        const activeRides = allRides.filter(ride => ride.status === "ACTIVE");
+
         // Count active trains
         const activeTrainCount = activeRides.length;
 
@@ -75,12 +78,13 @@ export const useCurrentAnalytics = () => {
     const computeAnalytics = useAnalytics(state => state.computeAnalytics);
     const cursorTs = useSimStore(state => state.cursorTs);
     const processedEvents = useEventStream(state => state.processedEvents);
-    const activeRides = useActiveIncrementalRides();
+    const currentTime = useSimStore(state => state.cursorTs) ?? 0;
+    const allRides = useAllSimpleRides(processedEvents, currentTime);
 
     // Recompute analytics when cursor time or data changes
     React.useEffect(() => {
-        computeAnalytics(processedEvents, activeRides, cursorTs ?? 0);
-    }, [cursorTs, processedEvents, activeRides, computeAnalytics]);
+        computeAnalytics(processedEvents, allRides, cursorTs ?? 0);
+    }, [cursorTs, processedEvents, allRides, computeAnalytics]);
 
     return analytics;
 };

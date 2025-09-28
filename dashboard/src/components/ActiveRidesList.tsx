@@ -1,8 +1,9 @@
 
 import { useSimStore } from "@/state/useSimStore";
-import { useIncrementalRides, determineRideStatus } from "@/state/useIncrementalRides";
+import { useEventStream } from "@/state/useEventStream";
+import { useAllSimpleRides } from "@/state/useSimpleRides";
 import { useMemo } from 'react';
-import type { RideWithStatus } from "@/types/ride";
+import type { AggregatedJourney } from "@/state/useSimpleRides";
 import type { ActiveRidesListProps } from "@/types/components";
 import { getRideStatusColor, formatRideTime, getRideStartStation, getRideEndStation, getRideDurationMinutes } from "@/utils/rideHelpers";
 
@@ -17,18 +18,14 @@ export default function ActiveRidesList({
     // Force re-renders when simulation time changes
     useSimStore(state => state.cursorTs);
 
-    // Direct store access (we know this works)
-    const rides = useIncrementalRides(state => state.rides);
-    const finishedRides = useIncrementalRides(state => state.finishedRides);
-    const canceledRides = useIncrementalRides(state => state.canceledRides);
+    // Get processed events and compute rides on-demand
+    const processedEvents = useEventStream(state => state.processedEvents);
+    const currentTime = useSimStore(state => state.cursorTs) ?? 0;
+    const getAllRides = useAllSimpleRides(processedEvents, currentTime);
 
     // Combine all rides with their status using useMemo for proper reactivity
-    const allRides = useMemo((): RideWithStatus[] => {
-        let combined: RideWithStatus[] = [
-            ...Array.from(rides.values()).map(ride => ({ ...ride, status: determineRideStatus(ride) })),
-            ...Array.from(finishedRides.values()).map(ride => ({ ...ride, status: "FINISHED" as const })),
-            ...Array.from(canceledRides.values()).map(ride => ({ ...ride, status: "CANCELED" as const }))
-        ];
+    const allRides = useMemo((): AggregatedJourney[] => {
+        let combined = getAllRides;
 
         // Filter to active only if requested
         if (activeOnly) {
@@ -44,12 +41,12 @@ export default function ActiveRidesList({
         }
 
         return combined;
-    }, [rides, finishedRides, canceledRides, activeOnly, maxItems]);
+    }, [getAllRides, activeOnly, maxItems]);
 
 
 
     const title = activeOnly ? "Active Rides" : "All Rides";
-    const handleRideClick = (ride: RideWithStatus) => {
+    const handleRideClick = (ride: AggregatedJourney) => {
         if (onRideSelect) {
             onRideSelect(ride);
         }

@@ -6,7 +6,6 @@ import MapPage from "@/pages/Map/MapPage";
 import VisualisationsPage from "@/pages/Visualisations/VisualisationsPage";
 import RawDataPage from "./pages/RawData/RawDataPage";
 import DataLoader from "./components/DataLoader";
-import EventProcessor from "./components/EventProcessor";
 import { useGraphStructure } from "@/state/useGraphStructure";
 
 // Main application component that sets up the layout and routing
@@ -25,7 +24,6 @@ export default function App() {
             <Menu activePath={location.pathname} />
             <div className="app-body">
                 <DataLoader /> {/* loads CSV + sets timeline range */}
-                <EventProcessor /> {/* processes events into ride data */}
 
                 <Routes>
                     <Route path="/" element={<Navigate to="/map" replace />} />

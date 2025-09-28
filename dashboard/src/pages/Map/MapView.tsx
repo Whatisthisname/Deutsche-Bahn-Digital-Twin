@@ -11,11 +11,11 @@ import type { FeatureCollection, Feature, LineString } from "geojson";
 import "maplibre-gl/dist/maplibre-gl.css";
 
 import { useGraphStructure } from "@/state/useGraphStructure";
-import { useVisibleActiveEvents } from "@/hooks/useStreamingTrainEvents";
+import { useActiveRides } from "@/hooks/useStreamingTrainEvents";
 import { useSimStore } from "@/state/useSimStore";
 import { useDynamicStationFeatures } from "@/state/useStationFeatures";
 import { ISO_to_ms } from "@/utils/time";
-import type { StationInfo, JourneyEvent } from "@/types/ride";
+import type { StationInfo } from "@/types/ride";
 
 
 function delay_to_color(delay?: number) {
@@ -32,7 +32,7 @@ function delay_to_color(delay?: number) {
 
 export default function MapView() {
   const { graph, loaded } = useGraphStructure();
-  const events = useVisibleActiveEvents();
+  const activeRides = useActiveRides();
   const playhead = useSimStore(s => s.cursorTs) ?? 0;
   const { getStationFeatures } = useDynamicStationFeatures();
 
@@ -84,58 +84,29 @@ export default function MapView() {
       features: backgroundEdgeFeatures
     };
 
-    // NEW APPROACH: Process journey events to find active journeys
-    // An active journey is one where:
-    // 1. A departure event has occurred (departure.actual_timestamp <= current_time)
-    // 2. The corresponding arrival event has NOT occurred yet (arrival.actual_timestamp > current_time)
+    // NEW APPROACH: Use active rides data to draw edges
+    // For each active ride, find the latest journey segment (latest departure event)
+    // and draw an edge for that segment
 
     const edgeFeatures: Feature<LineString, { color: string; width: number; label: string }>[] = [];
 
-    // Group events by ride and journey segment (from_station → to_station)
-    const journeySegments: globalThis.Map<string, { departure?: JourneyEvent; arrival?: JourneyEvent }> = new globalThis.Map();
-
-    for (const event of events) {
-      if (!event.id_ || !event.from_station || !event.to_station) continue;
-
-      // Create a unique key for each journey segment
-      const segmentKey = `${event.id_}:${event.from_station}→${event.to_station}`;
-
-      if (!journeySegments.has(segmentKey)) {
-        journeySegments.set(segmentKey, {});
-      }
-
-      const segment = journeySegments.get(segmentKey)!;
-
-      if (event.event_type === "DEPARTURE") {
-        segment.departure = event;
-      } else if (event.event_type === "ARRIVAL") {
-        segment.arrival = event;
-      }
-    }
-
-
-    // Check each segment for active journeys
-    for (const [, segment] of journeySegments) {
-      const { departure, arrival } = segment;
-
-      if (!departure) {
+    for (const ride of activeRides) {
+      if (!ride.events || ride.events.length === 0) {
         continue;
       }
 
-      // Check if journey is active
-      const departureTime = ISO_to_ms(departure.timestamp) ?? 0;
-      const arrivalTime = arrival ? (ISO_to_ms(arrival.timestamp) ?? 0) : 0; // TODO sus
+      // Find the latest departure event for this ride
+      const departureEvents = ride.events.filter(event => event.event_type === "DEPARTURE");
+      const latestDeparture = departureEvents
+        .sort((a, b) => (ISO_to_ms(b.timestamp) ?? 0) - (ISO_to_ms(a.timestamp) ?? 0))[0];
 
-      const isJourneyActive = departureTime <= playhead && playhead < arrivalTime;
-
-
-      if (!isJourneyActive) {
+      if (!latestDeparture || !latestDeparture.from_station || !latestDeparture.to_station) {
         continue;
       }
 
       // Look up stations in graph structure
-      const fromStationId = graph.stationNameToId[departure.from_station!];
-      const toStationId = graph.stationNameToId[departure.to_station!];
+      const fromStationId = graph.stationNameToId[latestDeparture.from_station];
+      const toStationId = graph.stationNameToId[latestDeparture.to_station];
 
       if (fromStationId === undefined || toStationId === undefined) {
         continue;
@@ -148,12 +119,12 @@ export default function MapView() {
         continue;
       }
 
-      const delay = departure.delay_min;
+      const delay = latestDeparture.delay_min;
 
       edgeFeatures.push({
         type: "Feature",
         geometry: { type: "LineString", coordinates: [[fromStation.lon, fromStation.lat], [toStation.lon, toStation.lat]] },
-        properties: { color: delay_to_color(delay), width: 2, label: `${departure.from_station} → ${departure.to_station}` },
+        properties: { color: delay_to_color(delay), width: 2, label: `${latestDeparture.from_station} → ${latestDeparture.to_station}` },
       });
     }
 
@@ -167,12 +138,12 @@ export default function MapView() {
       backgroundEdgeFC,
       counts: {
         stations: graph ? Object.keys(graph.stations).length : 0,
-        events: events.length,
+        events: activeRides.reduce((sum, ride) => sum + ride.events.length, 0),
         edges: edgeFeatures.length,
         backgroundEdges: backgroundEdgeFeatures.length
       }
     };
-  }, [graph, events, playhead]); // Depend on full events array to catch content changes
+  }, [graph, activeRides, playhead]); // Depend on activeRides to catch content changes
 
 
   return (
@@ -215,9 +186,7 @@ export default function MapView() {
             </Source>
 
             {/* Station Markers - Individual interactive markers */}
-            {graph && Object.entries(graph.stations).map(([stationIdStr, station]) => {
-              const stationId = parseInt(stationIdStr);
-
+            {graph && Object.entries(graph.stations).map(([stationId, station]) => {
               return (
                 <Marker
                   key={stationId}

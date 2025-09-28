@@ -90,11 +90,11 @@ def extract_stations_and_edges(
                 if row["expected_next_event_time"]
                 else None
             )
-            event_type = ctje.EventType[row["event_type"].split(".")[1]]
+            event_type = ctje.EventType[row["event_type"]]
 
             event = ctje.Arrival_or_Departure_Event(
                 event_type=event_type,
-                id_=int(row["id_"]),
+                id_=int(row["id_"]),  # Convert string back to int for processing
                 train_name=row["train_name"],
                 delay_min=int(row["delay_min"]),
                 from_station=row["from_station"],
@@ -233,10 +233,10 @@ def print_statistics(stations: dict[int, Station], edges: dict[tuple[int, int], 
 
 if __name__ == "__main__":
     # File paths
-    csv_file = "dashboard/src/data/ice_journey_events_WIP.csv"
+    csv_file = "dashboard/src/data/ice_journey_events.csv"
     mapping_file = "dashboard/src/data/alternative_station_name_to_station_name.json"
     stations_file = "station_cache/stations_index.json"
-    output_file = "dashboard/src/data/graph_structure_WIP.json"
+    output_file = "dashboard/src/data/graph_structure.json"
 
     print("=== Deutsche Bahn Graph Structure Extractor ===")
     print(f"Processing CSV: {csv_file}")
@@ -276,9 +276,11 @@ if __name__ == "__main__":
             "totalEdges": len(edges),
             "description": "Static graph structure for Deutsche Bahn network",
         },
-        "stations": {station_id: station.to_dict() for station_id, station in stations.items()},
-        "edges": [(edge[0], edge[1], distance, frequency) for edge, (distance, frequency) in edges.items()],
-        "stationNameToId": station_name_to_id,
+        "stations": {str(station_id): station.to_dict() for station_id, station in stations.items()},
+        "edges": [
+            (str(edge[0]), str(edge[1]), distance, frequency) for edge, (distance, frequency) in edges.items()
+        ],
+        "stationNameToId": {name: str(station_id) for name, station_id in station_name_to_id.items()},
     }
 
     # Write output

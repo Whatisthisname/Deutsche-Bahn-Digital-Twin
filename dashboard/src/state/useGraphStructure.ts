@@ -10,8 +10,8 @@ export interface GraphStation {
 }
 
 export interface GraphEdge {
-    from: number;
-    to: number;
+    from: string;
+    to: string;
     distance: number;
     frequency: number;
 }
@@ -24,9 +24,9 @@ export interface GraphStructure {
         totalEdges: number;
         description: string;
     };
-    stations: Record<number, GraphStation>;
-    edges: [number, number, number, number][]; // [from, to, distance, frequency]
-    stationNameToId: Record<string, number>;
+    stations: Record<string, GraphStation>;
+    edges: [string, string, number, number][]; // [from, to, distance, frequency]
+    stationNameToId: Record<string, string>;
 }
 
 // Graph state

@@ -1,7 +1,7 @@
 import type { JourneyEvent } from "@/types/ride";
 
 type RideDelay = {
-    rideId: number;
+    rideId: string;
     maxDelay: number;
     stations: string[];
     eventCount: number;
@@ -17,9 +17,9 @@ type Analytics = {
 // Helper function to calculate ride delays using map logic
 export function calculateRideDelays(events: JourneyEvent[]): RideDelay[] {
     // Group events by ride ID
-    const byRide = new Map<number, JourneyEvent[]>();
+    const byRide = new Map<string, JourneyEvent[]>();
     for (const e of events) {
-        const id = e.id_;
+        const id = String(e.id_);
         (byRide.get(id) ?? (byRide.set(id, []), byRide.get(id)!)).push(e);
     }
 
@@ -44,7 +44,7 @@ export function calculateRideDelays(events: JourneyEvent[]): RideDelay[] {
             }
 
             rideDelays.push({
-                rideId,
+                rideId: String(rideId),
                 maxDelay,
                 stations: Array.from(stations),
                 eventCount: grp.length
