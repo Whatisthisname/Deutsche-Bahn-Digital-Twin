@@ -56,6 +56,28 @@ export const useActiveRides = (): AggregatedJourney[] => {
     }, [allRides, shouldThrottle]);
 };
 
+const canceledRides = (rides: AggregatedJourney[]) => {
+    return rides.filter(ride => ride.status === "CANCELED");
+}
+
+export const allCanceledRideRate = () => {
+    const processedEvents = useEventStream(state => state.processedEvents);
+    const currentTime = useSimStore(s => s.cursorTs) ?? 0;
+    const allRides = useAllSimpleRides(processedEvents, currentTime);
+    const shouldThrottle = useShouldThrottleRenders();
+
+    return useMemo(() => {
+        // If we're throttling renders, return 0
+        if (shouldThrottle) {
+            return 0;
+        }
+
+        const canceled = canceledRides(allRides);
+        if (allRides.length === 0) return 0;
+        return (canceled.length / allRides.length) * 100;
+    }, [allRides, shouldThrottle]);
+}
+
 /** Hook to get all rides (active + finished + canceled) */
 export const useAllRides = (): AggregatedJourney[] => {
     const processedEvents = useEventStream(state => state.processedEvents);
