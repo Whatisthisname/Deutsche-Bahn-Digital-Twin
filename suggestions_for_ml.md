@@ -9,3 +9,8 @@ $(\text{station\_id}, \text{delay to arrival})_i$ for $i \in \{1, \#\text{known 
 ## Predicting delay on a region-level
 
 We partition the graph into connected clusters and aggregate their delay metrics, and then try to predict the future delay region pattern. This can be done with traditional ML
+
+
+# Features:
+
+Temporal / seasonal
