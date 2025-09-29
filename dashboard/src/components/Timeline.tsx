@@ -1,14 +1,14 @@
 import { useEffect, useCallback, useRef } from "react";
 import { useSimStore } from "@/state/useSimStore";
-import { TIME_CONSTANTS } from "@/utils/time";
 import type { TimelineProps } from "@/types/components";
 
 export default function Timeline({
     showLabels = true,
     className
 }: Partial<TimelineProps> = {}) {
-    const { isPlaying, speed, rangeStart, rangeEnd, cursorTs, setIsPlaying, scrubToTime, isScrubbing, setCursorTs } = useSimStore();
+    const { isPlaying, speed, unit, rangeStart, rangeEnd, cursorTs, setIsPlaying, scrubToTime, isScrubbing, setCursorTs } = useSimStore();
     const disabled = !rangeStart || !rangeEnd; // disable if no data
+    const TICK_SIM_DELTA_MS = unit === "seconds" ? 1000 : unit === "mins" ? 60 * 1000 : 1000; // how much simulated time passes per tick
 
     // Use ref to track current cursorTs value without causing effect re-runs
     const cursorTsRef = useRef(cursorTs);
@@ -22,43 +22,43 @@ export default function Timeline({
 
     // Effect to handle playback with optimized update frequency
     useEffect(() => {
-        if (!isPlaying || isScrubbing) return;
+        if (!isPlaying || isScrubbing || !rangeEnd || !cursorTsRef.current || speed <= 0) return;
 
-        // Use requestAnimationFrame for smoother updates instead of setInterval
-        let animationFrameId: number;
-        let lastUpdateTime = 0;
-        const updateInterval = Math.max(TIME_CONSTANTS.MIN_TIMELINE_UPDATE_MS, 1000 / speed); // Minimum 100ms between updates
+        let rafId: number;
+        let lastNow = performance.now();
+        let accumulator = 0;
 
-        const updateCursor = (currentTime: number) => {
-            if (currentTime - lastUpdateTime >= updateInterval) {
-                const currentCursorTs = cursorTsRef.current;
-                if (currentCursorTs == null || rangeEnd == null) return;
+        // ticks per real second = speed
+        const tickPeriodMs = 1000 / speed; // ms between ticks in real time
 
-                // Advance time by the correct increment based on speed
-                const timeIncrement = TIME_CONSTANTS.TIME_INCREMENT_PER_SECOND_MS * speed;
-                const next = currentCursorTs + timeIncrement;
+        const loop = (now: number) => {
+            const dt = now - lastNow;
+            lastNow = now;
+            accumulator += dt;
 
-                // Timeline advancement - removed noisy logging
+            // emit as many whole ticks as fit in the accumulator
+            while (accumulator >= tickPeriodMs) {
+                const current = cursorTsRef.current!;
+                const next = current + TICK_SIM_DELTA_MS;
 
                 if (next >= rangeEnd) {
-                    setIsPlaying(false); // stop at end
                     setCursorTs(rangeEnd);
-                } else {
-                    setCursorTs(next);
+                    setIsPlaying(false); // stop at end
+                    accumulator = 0;     // clear so we don’t “catch up” after stopping
+                    return;              // end the loop
                 }
-                lastUpdateTime = currentTime;
+
+                setCursorTs(next);
+                accumulator -= tickPeriodMs;
             }
-            animationFrameId = requestAnimationFrame(updateCursor);
+
+            rafId = requestAnimationFrame(loop);
         };
 
-        animationFrameId = requestAnimationFrame(updateCursor);
+        rafId = requestAnimationFrame(loop);
+        return () => cancelAnimationFrame(rafId);
+    }, [isPlaying, isScrubbing, speed, unit, rangeEnd, setCursorTs, setIsPlaying]);
 
-        return () => {
-            if (animationFrameId) {
-                cancelAnimationFrame(animationFrameId);
-            }
-        };
-    }, [isPlaying, speed, isScrubbing, setCursorTs, setIsPlaying, rangeEnd]);
 
     return (
         <div className={`timeline ${className || ''}`}>
@@ -67,6 +67,7 @@ export default function Timeline({
                 min={rangeStart ?? 0} // minimum is start of range or 0 if no data
                 max={rangeEnd ?? 100} // maximum is end of range or 100 if no data
                 value={cursorTs ?? 0} // value is current cursor or 0 if no data
+                step={TICK_SIM_DELTA_MS}
                 onChange={(e) => onInput(Number(e.target.value))}
                 disabled={disabled || isScrubbing}
             />
