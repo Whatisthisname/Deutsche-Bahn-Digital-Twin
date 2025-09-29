@@ -7,6 +7,10 @@ body,
     font-family: var(--font-family);
 }
 
+body {
+    overflow: hidden;
+}
+
 button {
     line-height: 1;
     display: flex;

@@ -16,12 +16,6 @@ export default function MapPage() {
                 {/* Main Stats */}
                 <MainStats />
 
-                {/* Filters */}
-                <div className="panel">
-                    <h3>Filters</h3>
-                    <div>Add filters here.</div>
-                </div>
-
                 {/* Active Rides */}
                 <ActiveRidesList />
             </aside>

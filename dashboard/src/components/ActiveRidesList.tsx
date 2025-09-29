@@ -54,7 +54,7 @@ export default function ActiveRidesList({
 
     if (allRides.length === 0) {
         return (
-            <div className={`panel ${className || ''}`}>
+            <div className={`panel activeRides ${className || ''}`}>
                 <h3>{title}</h3>
                 <div className="no-rides">
                     <p>No rides at this time</p>
@@ -64,7 +64,7 @@ export default function ActiveRidesList({
     }
 
     return (
-        <div className={`panel ${className || ''}`}>
+        <div className={`panel activeRides ${className || ''}`}>
             <h3>{title} ({allRides.length})</h3>
             <div className="rides-list">
                 {allRides.map((ride) => (

@@ -102,12 +102,16 @@
 }
 
 /* Active Rides List */
+.activeRides {
+    flex: 1;
+    overflow-y: auto;
+}
+
 .rides-list {
     display: flex;
     flex-direction: column;
     gap: 8px;
-    max-height: 400px;
-    overflow-y: auto;
+    height: 100%;
 }
 
 .ride-item {
