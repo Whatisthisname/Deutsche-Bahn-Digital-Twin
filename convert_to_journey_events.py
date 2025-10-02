@@ -50,7 +50,11 @@ def build_departure_event(
     current_segment: JointEvent, next_segment: JointEvent
 ) -> Arrival_or_Departure_Event:
     assert current_segment.actual_departure_time is not None
-    assert current_segment.expected_departure_time is not None
+    if (current_segment.expected_arrival_time is None):
+        expected_arrival_time = next_segment.actual_arrival_time
+    else:
+        expected_arrival_time = current_segment.expected_arrival_time
+    assert expected_arrival_time is not None
     return Arrival_or_Departure_Event(
         event_type=EventType.DEPARTURE,
         id_=current_segment.id_,
@@ -60,14 +64,17 @@ def build_departure_event(
         to_station=next_segment.station,
         station_num=current_segment.station_num,
         timestamp=current_segment.actual_departure_time,
-        expected_next_event_time=next_segment.expected_arrival_time,
+        expected_next_event_time = expected_arrival_time,
         final_destination_station=current_segment.final_destination_station,
     )
 
 
 def build_arrival_event(current_segment: JointEvent, next_segment: JointEvent) -> Arrival_or_Departure_Event:
     assert next_segment.actual_arrival_time is not None
-    assert next_segment.expected_arrival_time is not None
+    if (next_segment.expected_departure_time is None):
+        expected_departure_time = None
+    else:
+        expected_departure_time = next_segment.expected_departure_time
     return Arrival_or_Departure_Event(
         event_type=EventType.ARRIVAL,
         id_=current_segment.id_,
@@ -77,7 +84,7 @@ def build_arrival_event(current_segment: JointEvent, next_segment: JointEvent) -
         to_station=next_segment.station,
         station_num=next_segment.station_num,
         timestamp=next_segment.actual_arrival_time,
-        expected_next_event_time=next_segment.expected_departure_time,
+        expected_next_event_time=expected_departure_time,
         final_destination_station=current_segment.final_destination_station,
     )
 
@@ -113,7 +120,7 @@ def convert_to_journey_events(input_file: str, output_file: str, name_mapping: d
         final_destination_station = jointevent_["final_destination_station"]
         segments.append(
             JointEvent(
-                id_=hash(jointevent_["train_line_ride_id"]),
+                id_=jointevent_["train_line_ride_id"],
                 station_num=station_num,
                 train_name=jointevent_["train_name"],
                 station=name_mapping.get(station, station),
@@ -146,28 +153,55 @@ def convert_to_journey_events(input_file: str, output_file: str, name_mapping: d
 
     # Process each ride and convert to journey events
     for ride_id, ride_rows in rides.items():
-        print(f"Processing ride {ride_id} with {len(ride_rows)} stations")
+        #print(f"Processing ride {ride_id} with {len(ride_rows)} stations")
 
         # Sort by station number
         ride_rows.sort(key=lambda x: x.station_num)
         if ride_rows[0].station_num != 1:
             continue  # skip rides that don't start at station 1
-
+        illegal_journey = False
         for current_station, next_station in itertools.pairwise(ride_rows):
-            if current_station.station_num + 1 != next_station.station_num:
-                continue  # skip rides that have gaps in the station numbering
+            if current_station.actual_departure_time > next_station.actual_arrival_time:
+                illegal_journey = True
+                print("First if")
+                break
+            if current_station.actual_arrival_time is not None and current_station.actual_departure_time is not None:
+                if current_station.actual_arrival_time > current_station.actual_departure_time:
+                    illegal_journey = True
+                    print("Second if")
+
+                    break
+        if illegal_journey: continue
+
+
+        
+        
+
+        if ride_id == "-5665409642092229233-2407020558":
+            print(ride_rows)
 
         if ride_rows[-1].station != ride_rows[-1].final_destination_station and not ride_rows[-1].is_canceled:
             continue  # skip rides where the last stop isn't the final destination station (and were not canceled)
+
+        numbers = {station.station_num: i for station, i in zip(ride_rows, range(len(ride_rows)))}
+        print(numbers)
+        to_add = []
 
         for current_station, next_station in itertools.pairwise(ride_rows):
             departure_event = build_departure_event(current_station, next_station)
             if (not current_station.is_canceled) and next_station.is_canceled:
                 cancellation_event = build_arrival_cancellation_event(current_station, next_station)
-                journey_events.extend([departure_event, cancellation_event])
+                to_add.extend([departure_event, cancellation_event])
             else:
                 arrival_event = build_arrival_event(current_station, next_station)
-                journey_events.extend([departure_event, arrival_event])
+                to_add.extend([departure_event, arrival_event])
+
+        for event in to_add:
+            event.station_num = numbers[event.station_num]
+
+        journey_events.extend(to_add)
+            
+
 
     # Sort by actual timestamp
     journey_events.sort(key=lambda x: x.timestamp)
