@@ -39,9 +39,10 @@ class Model_Input:
     from_station: int
     to_station: int
     station_num: int
+    distance: float
 
     def flatten(self) -> list[float]:
-        return [self.event_type] + list(self.expected_next_event_time) + list(self.timestamp) + [self.delay_min, self.from_station, self.to_station, self.station_num]
+        return [self.event_type] + list(self.expected_next_event_time) + list(self.timestamp) + [self.delay_min, self.from_station, self.to_station, self.station_num, self.distance]
 
 def datetime_feature_map(time: datetime) -> tuple[float, float, float, float, float]:
     month = time.month / 12
@@ -77,7 +78,8 @@ def load_csv(input_path: str) -> list[Arrival_or_Departure_Event]:
 
 
 
-
+graph = json.load(open('dashboard/src/data/graph_structure.json', 'r', encoding='utf-8'))
+print(graph.keys())
 rows = load_csv('dashboard/src/data/ice_journey_events.csv')
 
 
@@ -102,6 +104,8 @@ def window(seq, n=2):
 
 rows: list[Model_Input] = []
 delays: list[float] = []
+n = len(graph['stationNameToId'])
+station_name_to_new_id = {station_name: i/n for station_name, i in zip(graph['stationNameToId'].keys(), range(0, n))}
 
 for journey_id, events in event_dict.items():
 
@@ -113,17 +117,32 @@ for journey_id, events in event_dict.items():
         map_ = {EventType.DEPARTURE: 1.0, EventType.ARRIVAL: 0.0, EventType.CANCELLATION: -1.0}
         mapped_value = map_[current_event.event_type]
         delay = ((current_event.timestamp - past_event.expected_next_event_time).total_seconds()) / 60
+        from_station_id = graph['stationNameToId'][current_event.from_station]
+        to_station_id = graph['stationNameToId'][current_event.to_station]
+        # Find the edge between from_station_id and to_station_id (order doesn't matter)
+        edge = next(
+            (e for e in graph['edges'] if 
+             (str(from_station_id) == str(e[0]) and str(to_station_id) == str(e[1])) or
+             (str(from_station_id) == str(e[1]) and str(to_station_id) == str(e[0]))
+            ),
+            None
+        )
+
+        # edge will be a list like [from_id, to_id, distance, duration]
         rows.append(Model_Input(event_type=mapped_value, 
                                 expected_next_event_time= datetime_feature_map(current_event.expected_next_event_time),
                                 timestamp=datetime_feature_map(current_event.timestamp),
                                 delay_min=delay,
-                                from_station=0,
-                                to_station=0,
-                                station_num=current_event.station_num
+                                from_station=station_name_to_new_id[current_event.from_station],
+                                to_station=station_name_to_new_id[current_event.to_station],
+                                station_num=current_event.station_num,
+                                distance=edge[2]
                                 ).flatten())
         actual_delay =((next_event.timestamp - current_event.expected_next_event_time).total_seconds()) / 60
         delays.append(actual_delay)
 
-
-
 print(delays)
+with open('dataset.csv', 'w', encoding='utf-8') as f:
+    for x, y in zip(rows, delays):
+        f.write(",".join([str(i) for i in x+[y]]))
+        f.write("\n")
