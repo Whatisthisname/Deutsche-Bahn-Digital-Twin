@@ -13,7 +13,7 @@ export interface JourneyEvent {
     to_station: string;
     station_num: number;
     timestamp: string;
-    expected_next_time: string | undefined;
+    expected_next_event_time: string | undefined;
     final_destination_station: string;
 }
 

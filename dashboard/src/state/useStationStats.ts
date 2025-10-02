@@ -1,5 +1,5 @@
 // useStationStats.ts
-import React, { useEffect, useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { create } from "zustand";
 import { useGraphStructure } from "./useGraphStructure";
 import { useVisibleActiveEvents } from "@/hooks/useStreamingTrainEvents";
@@ -48,7 +48,7 @@ function computeSegmentDelayMin(events: JourneyEvent[]): number {
     return maxDelay;
 }
 
-export const useStationStatsStore = create<NetworkStatsState>()((set, get) => ({
+export const useStationStatsStore = create<NetworkStatsState>()((set) => ({
     byStation: new Map(),
     lastUpdated: 0,
 
