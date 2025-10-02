@@ -1,4 +1,5 @@
 
+import { useState } from 'react';
 import { useSimStore } from "@/state/useSimStore";
 import { useEventStream } from "@/state/useEventStream";
 import { useAllSimpleRides } from "@/state/useSimpleRides";
@@ -6,6 +7,9 @@ import { useMemo } from 'react';
 import type { AggregatedJourney } from "@/state/useSimpleRides";
 import type { ActiveRidesListProps } from "@/types/components";
 import { getRideStatusColor, formatRideTime, getRideStartStation, getRideEndStation, getRideDurationMinutes } from "@/utils/rideHelpers";
+import { useGraphStructure } from "@/state/useGraphStructure";
+import { predictNextDelay, type PredictionResult } from "@/lib/mlPrediction";
+import DelayPredictionModal from "./DelayPredictionModal";
 
 export default function ActiveRidesList({
     maxItems,
@@ -15,6 +19,19 @@ export default function ActiveRidesList({
     onRideSelect,
     activeOnly = false
 }: Partial<ActiveRidesListProps> = {}) {
+    // Prediction modal state
+    const [predictionModal, setPredictionModal] = useState<{
+        isOpen: boolean;
+        ride: AggregatedJourney | null;
+        prediction: PredictionResult | null;
+        isLoading: boolean;
+    }>({
+        isOpen: false,
+        ride: null,
+        prediction: null,
+        isLoading: false
+    });
+
     // Force re-renders when simulation time changes
     useSimStore(state => state.cursorTs);
 
@@ -22,6 +39,9 @@ export default function ActiveRidesList({
     const processedEvents = useEventStream(state => state.processedEvents);
     const currentTime = useSimStore(state => state.cursorTs) ?? 0;
     const getAllRides = useAllSimpleRides(processedEvents, currentTime);
+
+    // Get graph structure for ML predictions
+    const { graph } = useGraphStructure();
 
     // Combine all rides with their status using useMemo for proper reactivity
     const allRides = useMemo((): AggregatedJourney[] => {
@@ -46,10 +66,49 @@ export default function ActiveRidesList({
 
 
     const title = activeOnly ? "Active Rides" : "All Rides";
-    const handleRideClick = (ride: AggregatedJourney) => {
+
+    const handleRideClick = async (ride: AggregatedJourney) => {
+        // Call the original handler if provided
         if (onRideSelect) {
             onRideSelect(ride);
         }
+
+        // Open ML prediction modal
+        if (graph) {
+            setPredictionModal({
+                isOpen: true,
+                ride,
+                prediction: null,
+                isLoading: true
+            });
+
+            try {
+                const prediction = predictNextDelay(ride.events, graph);
+                setPredictionModal(prev => ({
+                    ...prev,
+                    prediction,
+                    isLoading: false
+                }));
+            } catch (error) {
+                console.error('Prediction failed:', error);
+                setPredictionModal(prev => ({
+                    ...prev,
+                    prediction: null,
+                    isLoading: false
+                }));
+            }
+        } else {
+            console.warn('Graph not loaded, cannot make prediction');
+        }
+    };
+
+    const closePredictionModal = () => {
+        setPredictionModal({
+            isOpen: false,
+            ride: null,
+            prediction: null,
+            isLoading: false
+        });
     };
 
     if (allRides.length === 0) {
@@ -70,12 +129,13 @@ export default function ActiveRidesList({
                 {allRides.map((ride) => (
                     <div
                         key={ride.rideId}
-                        className={`ride-item ${onRideSelect ? 'clickable' : ''}`}
+                        className="ride-item clickable"
                         onClick={() => handleRideClick(ride)}
-                        style={{ cursor: onRideSelect ? 'pointer' : 'default' }}
+                        style={{ cursor: 'pointer' }}
                     >
                         <div className="ride-line-1">
                             <div className="ride-id">{ride.rideId}</div>
+                            <div className="ml-prediction-indicator">🤖 AI</div>
                             {showStatus && (
                                 <div
                                     className="ride-status"
@@ -104,6 +164,15 @@ export default function ActiveRidesList({
                     </div>
                 ))}
             </div>
+
+            {/* ML Prediction Modal */}
+            <DelayPredictionModal
+                ride={predictionModal.ride}
+                prediction={predictionModal.prediction}
+                isOpen={predictionModal.isOpen}
+                onClose={closePredictionModal}
+                isLoading={predictionModal.isLoading}
+            />
         </div>
     );
 }
