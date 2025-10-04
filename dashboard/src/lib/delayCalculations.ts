@@ -1,7 +1,7 @@
 import type { JourneyEvent } from "@/types/ride";
 import { calculateDelayMinutes } from "@/utils/delayUtils";
 
-type RideDelay = {
+type JourneysDelay = {
     rideId: string;
     maxDelay: number;
     stations: string[];
@@ -11,12 +11,12 @@ type RideDelay = {
 type Analytics = {
     averageDelay: number;
     punctualityRate: number;
-    delayedRides: number;
-    totalRides: number;
+    delayedJourneys: number;
+    totalJourneys: number;
 };
 
 // Helper function to calculate ride delays using map logic
-export function calculateRideDelays(events: JourneyEvent[]): RideDelay[] {
+export function calculateRideDelays(events: JourneyEvent[]): JourneysDelay[] {
     // Group events by ride ID
     const byRide = new Map<string, JourneyEvent[]>();
     for (const e of events) {
@@ -24,7 +24,7 @@ export function calculateRideDelays(events: JourneyEvent[]): RideDelay[] {
         (byRide.get(id) ?? (byRide.set(id, []), byRide.get(id)!)).push(e);
     }
 
-    const rideDelays: RideDelay[] = [];
+    const journeyDelays: JourneysDelay[] = [];
 
     for (const [rideId, grpRaw] of byRide) {
         const grp = grpRaw.slice().sort(
@@ -46,7 +46,7 @@ export function calculateRideDelays(events: JourneyEvent[]): RideDelay[] {
                 stations.add(event.to_station);
             }
 
-            rideDelays.push({
+            journeyDelays.push({
                 rideId: String(rideId),
                 maxDelay,
                 stations: Array.from(stations),
@@ -54,23 +54,23 @@ export function calculateRideDelays(events: JourneyEvent[]): RideDelay[] {
             });
         }
     }
-    return rideDelays;
+    return journeyDelays;
 }
 
 // Helper function to calculate analytics from ride delays
-export function calculateAnalyticsFromRideDelays(rideDelays: RideDelay[]): Analytics {
-    const totalDelays = rideDelays.reduce((sum, ride) => sum + ride.maxDelay, 0);
-    const averageDelay = rideDelays.length > 0 ? totalDelays / rideDelays.length : 0;
+export function calculateAnalyticsFromRideDelays(journeyDelays: JourneysDelay[]): Analytics {
+    const totalDelays = journeyDelays.reduce((sum, ride) => sum + ride.maxDelay, 0);
+    const averageDelay = journeyDelays.length > 0 ? totalDelays / journeyDelays.length : 0;
 
-    const punctualRides = rideDelays.filter(ride => ride.maxDelay < 6).length;
-    const punctualityRate = rideDelays.length > 0 ? (punctualRides / rideDelays.length) * 100 : 0;
+    const punctualJourneys = journeyDelays.filter(ride => ride.maxDelay < 6).length;
+    const punctualityRate = journeyDelays.length > 0 ? (punctualJourneys / journeyDelays.length) * 100 : 0;
 
-    const delayedRides = rideDelays.filter(ride => ride.maxDelay > 0).length;
+    const delayedJourneys = journeyDelays.filter(ride => ride.maxDelay > 0).length;
 
     return {
         averageDelay: Math.round(averageDelay * 10) / 10, // Round to 1 decimal
         punctualityRate: Math.round(punctualityRate * 10) / 10, // Round to 1 decimal
-        delayedRides,
-        totalRides: rideDelays.length
+        delayedJourneys: delayedJourneys,
+        totalJourneys: journeyDelays.length
     };
 }

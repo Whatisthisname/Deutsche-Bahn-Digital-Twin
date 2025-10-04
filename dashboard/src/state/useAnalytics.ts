@@ -2,9 +2,9 @@ import { create } from "zustand";
 import { useSimStore } from "./useSimStore";
 import { calculateRideDelays, calculateAnalyticsFromRideDelays } from "@/lib/delayCalculations";
 import { useEventStream } from "./useEventStream";
-import { useAllSimpleRides } from "./useSimpleRides";
+import { useAllJourneys } from "./useAggregatedJourneys";
 import type { JourneyEvent } from "@/types/ride";
-import type { AggregatedJourney } from "./useSimpleRides";
+import type { Journey } from "./useAggregatedJourneys";
 import React from "react";
 
 // Analytics data structure
@@ -19,7 +19,7 @@ export type AnalyticsData = {
 // Analytics store state
 type AnalyticsState = {
     analytics: AnalyticsData;
-    computeAnalytics: (processedEvents: JourneyEvent[], allRides: AggregatedJourney[], currentTime: number) => void;
+    computeAnalytics: (processedEvents: JourneyEvent[], allRides: Journey[], currentTime: number) => void;
 };
 
 // Helper function to normalize time values
@@ -79,7 +79,7 @@ export const useCurrentAnalytics = () => {
     const cursorTs = useSimStore(state => state.cursorTs);
     const processedEvents = useEventStream(state => state.processedEvents);
     const currentTime = useSimStore(state => state.cursorTs) ?? 0;
-    const allRides = useAllSimpleRides(processedEvents, currentTime);
+    const allRides = useAllJourneys(processedEvents, currentTime);
 
     // Recompute analytics when cursor time or data changes
     React.useEffect(() => {

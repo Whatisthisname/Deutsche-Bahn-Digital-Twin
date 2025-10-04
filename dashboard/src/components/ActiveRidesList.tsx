@@ -2,27 +2,27 @@
 import { useState } from 'react';
 import { useSimStore } from "@/state/useSimStore";
 import { useEventStream } from "@/state/useEventStream";
-import { useAllSimpleRides } from "@/state/useSimpleRides";
+import { useAllJourneys } from "@/state/useAggregatedJourneys";
 import { useMemo } from 'react';
-import type { AggregatedJourney } from "@/state/useSimpleRides";
-import type { ActiveRidesListProps } from "@/types/components";
-import { getRideStatusColor, formatRideTime, getRideStartStation, getRideEndStation, getRideDurationMinutes } from "@/utils/rideHelpers";
+import type { Journey } from "@/state/useAggregatedJourneys";
+import type { ActiveJourneysListProps } from "@/types/components";
+import { getRideStatusColor as getJourneyStatusColor, formatRideTime, getRideStartStation, getRideEndStation, getRideDurationMinutes } from "@/utils/rideHelpers";
 import { useGraphStructure } from "@/state/useGraphStructure";
 import { predictNextDelay, type PredictionResult } from "@/lib/mlPrediction";
 import DelayPredictionModal from "./DelayPredictionModal";
 
-export default function ActiveRidesList({
+export default function ActiveJourneysList({
     maxItems,
     showStatus = true,
     showDuration = true,
     className,
     onRideSelect,
     activeOnly = false
-}: Partial<ActiveRidesListProps> = {}) {
+}: Partial<ActiveJourneysListProps> = {}) {
     // Prediction modal state
     const [predictionModal, setPredictionModal] = useState<{
         isOpen: boolean;
-        ride: AggregatedJourney | null;
+        ride: Journey | null;
         prediction: PredictionResult | null;
         isLoading: boolean;
     }>({
@@ -38,13 +38,13 @@ export default function ActiveRidesList({
     // Get processed events and compute rides on-demand
     const processedEvents = useEventStream(state => state.processedEvents);
     const currentTime = useSimStore(state => state.cursorTs) ?? 0;
-    const getAllRides = useAllSimpleRides(processedEvents, currentTime);
+    const getAllRides = useAllJourneys(processedEvents, currentTime);
 
     // Get graph structure for ML predictions
     const { graph } = useGraphStructure();
 
     // Combine all rides with their status using useMemo for proper reactivity
-    const allRides = useMemo((): AggregatedJourney[] => {
+    const allRides = useMemo((): Journey[] => {
         let combined = getAllRides;
 
         // Filter to active only if requested
@@ -67,7 +67,7 @@ export default function ActiveRidesList({
 
     const title = activeOnly ? "Active Rides" : "All Rides";
 
-    const handleRideClick = async (ride: AggregatedJourney) => {
+    const handleRideClick = async (ride: Journey) => {
         // Call the original handler if provided
         if (onRideSelect) {
             onRideSelect(ride);
@@ -139,7 +139,7 @@ export default function ActiveRidesList({
                             {showStatus && (
                                 <div
                                     className="ride-status"
-                                    style={{ color: getRideStatusColor(ride.status) }}
+                                    style={{ color: getJourneyStatusColor(ride.status) }}
                                 >
                                     {ride.status}
                                 </div>
