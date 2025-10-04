@@ -1,10 +1,8 @@
 // types/ride.ts
 // TypeScript interfaces for ride-related data structures
 
-import type { JourneyStatus } from "@/state/useAggregatedJourneys";
-
-/** Journey event from CSV data */
-export interface JourneyEvent {
+/** Split event directly from CSV data */
+export interface ArrivalOrDepartureEvent {
     event_type: "DEPARTURE" | "ARRIVAL" | "CANCELLATION";
     id_: string;
     train_name: string;
@@ -26,19 +24,6 @@ export interface RideSegment {
     isComplete: boolean;
 }
 
-/** Ride with status information for UI components */
-export interface RideWithStatus {
-    rideId: number;
-    destination?: string;
-    startTs: number;
-    endTs: number | null;
-    status: JourneyStatus;
-    isCanceled: boolean;
-    segments: Map<string, RideSegment>;
-    lastUpdated: number;
-    eventCount: number;
-}
-
 /** Station features for map visualization */
 export interface StationFeatures {
     rideCount: number;
@@ -57,6 +42,3 @@ export interface StationInfo {
     features: StationFeatures;
     coordinates: [number, number];
 }
-
-// Re-export RideStatus for convenience
-export type { JourneyStatus as RideStatus };

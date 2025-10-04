@@ -1,11 +1,10 @@
 // utils/rideHelpers.ts
 // Helper functions for ride-related operations
 
-import type { RideStatus } from "@/types/ride";
-import type { Journey } from "@/state/useAggregatedJourneys";
+import type { Journey, JourneyStatus } from "@/state/useAggregatedJourneys";
 
 /** Get color for ride status */
-export const getRideStatusColor = (status: RideStatus): string => {
+export const getRideStatusColor = (status: JourneyStatus): string => {
     switch (status) {
         case "ACTIVE": return "#2e7d32"; // Green
         case "FINISHED": return "#757575"; // Gray

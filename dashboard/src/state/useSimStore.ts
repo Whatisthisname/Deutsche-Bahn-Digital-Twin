@@ -31,7 +31,7 @@ type SimState = {
 export const useSimStore = create<SimState>((set, get) => ({
     isPlaying: false,
     speed: SPEEDS[0],
-    unit: "seconds",
+    unit: "mins",
     rangeStart: null, // Will be set by DataLoader
     rangeEnd: null,   // Will be set by DataLoader
     cursorTs: null,   // Will be set by DataLoader

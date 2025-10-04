@@ -17,15 +17,15 @@ type RideInfo = {
 export default function DebugRides() {
     const processedEvents = useEventStream(state => state.processedEvents)
     const currentTime = useSimStore(state => state.cursorTs) ?? 0
-    const allRides = useAllJourneys(processedEvents, currentTime)
+    const allJourneys = useAllJourneys(processedEvents, currentTime)
 
-    const activeRides = allRides.filter(ride => ride.status === "ACTIVE")
-    const finishedRides = allRides.filter(ride => ride.status === "FINISHED")
-    const canceledRides = allRides.filter(ride => ride.status === "CANCELED")
+    const activeJourneys = allJourneys.filter(ride => ride.status === "ACTIVE")
+    const finishedJourneys = allJourneys.filter(ride => ride.status === "FINISHED")
+    const canceledJourneys = allJourneys.filter(ride => ride.status === "CANCELED")
 
     const debugInfo = useMemo(() => {
 
-        const statusCounts = allRides.reduce((acc, ride) => {
+        const statusCounts = allJourneys.reduce((acc, ride) => {
             acc[ride.status] = (acc[ride.status] || 0) + 1;
             return acc;
         }, {} as Record<string, number>);
@@ -34,13 +34,13 @@ export default function DebugRides() {
             timestamp: new Date().toISOString(),
             currentTime: currentTime ? new Date(currentTime).toISOString() : 'null',
             processedEventsCount: processedEvents.length,
-            totalRidesCount: allRides.length,
-            activeRidesCount: activeRides.length,
-            finishedRidesCount: finishedRides.length,
-            canceledRidesCount: canceledRides.length,
-            rideIds: allRides.map(r => r.rideId),
+            totalJourneysCount: allJourneys.length,
+            activeJourneysCount: activeJourneys.length,
+            finishedJourneysCount: finishedJourneys.length,
+            canceledJourneysCount: canceledJourneys.length,
+            rideIds: allJourneys.map(r => r.rideId),
             lastProcessedEvent: processedEvents[processedEvents.length - 1],
-            ridesDetails: allRides.map(ride => ({
+            ridesDetails: allJourneys.map(ride => ({
                 rideId: ride.rideId,
                 destination: ride.destination,
                 startTs: new Date(ride.startTs).toISOString(),
@@ -53,7 +53,7 @@ export default function DebugRides() {
         }
 
         return info
-    }, [allRides, activeRides, finishedRides, canceledRides, processedEvents, currentTime])
+    }, [allJourneys, activeJourneys, finishedJourneys, canceledJourneys, processedEvents, currentTime])
 
     return (
         <div style={{
@@ -73,10 +73,10 @@ export default function DebugRides() {
             <div>
                 <strong>Current Time:</strong> {debugInfo.currentTime}<br />
                 <strong>Processed Events:</strong> {debugInfo.processedEventsCount}<br />
-                <strong>Total Rides:</strong> {debugInfo.totalRidesCount}<br />
-                <strong>Active Rides:</strong> {debugInfo.activeRidesCount}<br />
-                <strong>Finished Rides:</strong> {debugInfo.finishedRidesCount}<br />
-                <strong>Canceled Rides:</strong> {debugInfo.canceledRidesCount}<br />
+                <strong>Total Rides:</strong> {debugInfo.totalJourneysCount}<br />
+                <strong>Active Rides:</strong> {debugInfo.activeJourneysCount}<br />
+                <strong>Finished Rides:</strong> {debugInfo.finishedJourneysCount}<br />
+                <strong>Canceled Rides:</strong> {debugInfo.canceledJourneysCount}<br />
                 <strong>Ride IDs:</strong> {debugInfo.rideIds?.join(', ') || 'none'}<br />
                 <strong>Status Breakdown:</strong> {JSON.stringify(debugInfo.statusBreakdown)}<br />
             </div>

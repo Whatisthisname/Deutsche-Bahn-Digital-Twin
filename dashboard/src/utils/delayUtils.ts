@@ -1,7 +1,7 @@
 // utils/delayUtils.ts
 // Utilities for calculating delays from journey events
 
-import type { JourneyEvent } from '@/types/ride';
+import type { ArrivalOrDepartureEvent } from '@/types/ride';
 
 /**
  * Calculate delay between events in minutes
@@ -9,7 +9,7 @@ import type { JourneyEvent } from '@/types/ride';
  * @param pastEvent The previous event in the journey (null if first event)
  * @returns Delay in minutes (positive = late, negative = early, 0 = on time)
  */
-export function calculateDelayMinutes(currentEvent: JourneyEvent, pastEvent: JourneyEvent | null): number {
+export function calculateDelayMinutes(currentEvent: ArrivalOrDepartureEvent, pastEvent: ArrivalOrDepartureEvent | null): number {
     if (pastEvent === null) {
         return 0.0; // No previous event
     }
@@ -26,7 +26,7 @@ export function calculateDelayMinutes(currentEvent: JourneyEvent, pastEvent: Jou
  * Calculate delay for a single event using its own expected_next_event_time
  * This is useful when we have expected time for the current event itself
  */
-export function calculateEventDelay(event: JourneyEvent): number {
+export function calculateEventDelay(event: ArrivalOrDepartureEvent): number {
     if (!event.expected_next_event_time) {
         return 0.0; // No expected time available
     }
