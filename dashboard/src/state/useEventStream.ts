@@ -3,13 +3,13 @@ import { create } from "zustand";
 import Papa from "papaparse";
 import { useSimStore } from "./useSimStore";
 import { ISO_to_ms, TIME_CONSTANTS } from "@/utils/time";
-import type { JourneyEvent } from "@/types/ride";
+import type { ArrivalOrDepartureEvent } from "@/types/ride";
 
 /** Event stream state */
 type EventStreamState = {
     // Data
-    allEvents: JourneyEvent[];
-    processedEvents: JourneyEvent[];
+    allEvents: ArrivalOrDepartureEvent[];
+    processedEvents: ArrivalOrDepartureEvent[];
 
     // Stream control
     isStreaming: boolean;
@@ -45,14 +45,14 @@ export const useEventStream = create<EventStreamState>((set, get) => ({
 
         const resp = await fetch(url);
         const text = await resp.text();
-        const { data } = Papa.parse<JourneyEvent>(text, {
+        const { data } = Papa.parse<ArrivalOrDepartureEvent>(text, {
             header: true,
             dynamicTyping: false, // Disable automatic typing
             skipEmptyLines: true,
         });
 
         // Keep only truthy rows, convert numeric fields, and sort globally by time (ascending)
-        const rows = (data as JourneyEvent[])
+        const rows = (data as ArrivalOrDepartureEvent[])
             .filter(Boolean)
             .map(row => ({
                 ...row,
@@ -64,7 +64,7 @@ export const useEventStream = create<EventStreamState>((set, get) => ({
                 (a, b) =>
                     (ISO_to_ms(a.timestamp) ?? 0) -
                     (ISO_to_ms(b.timestamp) ?? 0)
-            ) as JourneyEvent[];
+            ) as ArrivalOrDepartureEvent[];
 
         set({
             allEvents: rows,

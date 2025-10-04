@@ -2,7 +2,7 @@ import { useEventStream } from "@/state/useEventStream";
 import { useAllJourneys } from "@/state/useAggregatedJourneys";
 import { useSimStore } from "@/state/useSimStore";
 import { ISO_to_ms } from "@/utils/time";
-import type { JourneyEvent } from "@/types/ride";
+import type { ArrivalOrDepartureEvent } from "@/types/ride";
 import type { CsvPreviewProps } from "@/types/components";
 
 export default function CsvPreview({
@@ -50,7 +50,7 @@ export default function CsvPreview({
                     {displayEvents.map((r, i) => (
                         <tr key={i}>
                             {cols.map((c) => (
-                                <td key={c}>{String((r as JourneyEvent)[c as keyof JourneyEvent] ?? "")}</td>
+                                <td key={c}>{String((r as ArrivalOrDepartureEvent)[c as keyof ArrivalOrDepartureEvent] ?? "")}</td>
                             ))}
                         </tr>
                     ))}

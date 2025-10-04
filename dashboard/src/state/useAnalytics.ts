@@ -3,7 +3,7 @@ import { useSimStore } from "./useSimStore";
 import { calculateRideDelays, calculateAnalyticsFromRideDelays } from "@/lib/delayCalculations";
 import { useEventStream } from "./useEventStream";
 import { useAllJourneys } from "./useAggregatedJourneys";
-import type { JourneyEvent } from "@/types/ride";
+import type { ArrivalOrDepartureEvent } from "@/types/ride";
 import type { Journey } from "./useAggregatedJourneys";
 import React from "react";
 
@@ -19,7 +19,7 @@ export type AnalyticsData = {
 // Analytics store state
 type AnalyticsState = {
     analytics: AnalyticsData;
-    computeAnalytics: (processedEvents: JourneyEvent[], allRides: Journey[], currentTime: number) => void;
+    computeAnalytics: (processedEvents: ArrivalOrDepartureEvent[], allRides: Journey[], currentTime: number) => void;
 };
 
 // Helper function to normalize time values

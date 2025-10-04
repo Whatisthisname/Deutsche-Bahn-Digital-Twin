@@ -1,7 +1,7 @@
 // src/pages/Map/MapPage.tsx
 import MainStats from "@/components/MainStats";
 import MapView from "./MapView";
-import ActiveJourneysList from "@/components/ActiveRidesList";
+import ActiveJourneysList from "@/components/ActiveJourneysList";
 
 export default function MapPage() {
 

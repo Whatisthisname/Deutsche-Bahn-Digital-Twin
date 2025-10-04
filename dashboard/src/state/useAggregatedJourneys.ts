@@ -1,7 +1,7 @@
 // state/useSimpleRides.ts
 import { useMemo } from "react";
 import { create } from "zustand";
-import type { JourneyEvent as ArrivalOrDepartureEvent } from "@/types/ride";
+import type { ArrivalOrDepartureEvent as ArrivalOrDepartureEvent } from "@/types/ride";
 import { ISO_to_ms } from "@/utils/time";
 
 /** Ride status */

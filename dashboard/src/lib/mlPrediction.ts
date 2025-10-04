@@ -1,5 +1,5 @@
 // ML Prediction utilities for train delay prediction
-import type { JourneyEvent } from '@/types/ride';
+import type { ArrivalOrDepartureEvent } from '@/types/ride';
 import type { GraphStructure } from '@/state/useGraphStructure';
 
 // Import ML model function from JS file
@@ -20,7 +20,7 @@ export interface PredictionResult {
     predictedDelay: number;
     confidence: 'low' | 'medium' | 'high';
     context: {
-        currentEvent: JourneyEvent;
+        currentEvent: ArrivalOrDepartureEvent;
         pastDelay: number;
         distance: number;
         hasNextEvent: boolean;
@@ -49,7 +49,7 @@ function datetimeFeatureMap(time: Date): [number, number, number, number, number
 /**
  * Calculate delay between events in minutes
  */
-function calculateDelayMinutes(currentEvent: JourneyEvent, pastEvent: JourneyEvent | null): number {
+function calculateDelayMinutes(currentEvent: ArrivalOrDepartureEvent, pastEvent: ArrivalOrDepartureEvent | null): number {
     if (pastEvent === null) {
         return 0.0; // No previous event
     }
@@ -97,8 +97,8 @@ function findEdgeDistance(
  * Convert JourneyEvent to ModelInput format
  */
 function toModelInput(
-    currentEvent: JourneyEvent,
-    pastEvent: JourneyEvent | null,
+    currentEvent: ArrivalOrDepartureEvent,
+    pastEvent: ArrivalOrDepartureEvent | null,
     graph: GraphStructure,
     stationNameToNewId: { [key: string]: number }
 ): ModelInput {
@@ -192,7 +192,7 @@ function assessPredictionConfidence(predictedDelay: number, modelInput: ModelInp
  * @returns Prediction result or null if prediction cannot be made
  */
 export function predictNextDelay(
-    events: JourneyEvent[],
+    events: ArrivalOrDepartureEvent[],
     graph: GraphStructure
 ): PredictionResult | null {
     if (events.length < 2) {
