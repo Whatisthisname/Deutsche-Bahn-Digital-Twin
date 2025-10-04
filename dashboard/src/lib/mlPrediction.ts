@@ -90,7 +90,7 @@ function findEdgeDistance(
         throw new Error(`No edge found between ${fromStationName} and ${toStationName}`);
     }
 
-    return edge[2]; // Distance is the third element
+    return edge[2]; // Distance is the third element in the edge quadruple
 }
 
 /**

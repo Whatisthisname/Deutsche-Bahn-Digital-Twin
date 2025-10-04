@@ -2,8 +2,9 @@
 import { useEffect, useMemo } from "react";
 import { create } from "zustand";
 import { useGraphStructure } from "./useGraphStructure";
-import { useVisibleActiveEvents } from "@/hooks/useStreamingTrainEvents";
-import type { JourneyEvent } from "@/types/ride";
+import { useActiveRides } from "@/hooks/useStreamingTrainEvents";
+import type { AggregatedJourney } from "@/state/useSimpleRides";
+import { calculateDelayMinutes } from "@/utils/delayUtils";
 
 const PUNCTUAL_THRESHOLD_MIN = 6; // rides with delay < 6 min are considered punctual
 const UPDATE_DEBOUNCE_MS = 50;
@@ -29,32 +30,33 @@ type StationStatsMap = Map<string, StationRuntimeStats>;
 type NetworkStatsState = {
     byStation: StationStatsMap;
     lastUpdated: number;
-    recomputeFromEvents: (events: JourneyEvent[]) => void;
+    recomputeFromRides: (rides: AggregatedJourney[]) => void;
     reset: () => void;
 };
 
-function segmentKey(ev: JourneyEvent): string {
-    return `${ev.from_station}→${ev.to_station}`;
+
+function computeRideDelayMinutesForEachBit(ride: AggregatedJourney): number[] {
+    if (ride.events.length === 0) return [];
+
+    // Calculate delay using consecutive events from the ride timeline
+    const delays: number[] = [];
+    for (let i = 1; i < ride.events.length; i++) {
+        const currentEvent = ride.events[i];
+        const pastEvent = ride.events[i - 1];
+        const delay = calculateDelayMinutes(currentEvent, pastEvent);
+        delays.push(delay);
+    }
+    return delays;
 }
 
-function computeSegmentDelayMin(events: JourneyEvent[]): number {
-    if (events.length === 0) return 0;
-    // Keep the same “max delay over the segment” logic you used before
-    let maxDelay = 0;
-    for (const ev of events) {
-        const d = Number(ev.delay_min ?? 0);
-        if (d > maxDelay) maxDelay = d;
-    }
-    return maxDelay;
-}
 
 export const useStationStatsStore = create<NetworkStatsState>()((set) => ({
     byStation: new Map(),
     lastUpdated: 0,
 
-    recomputeFromEvents: (events: JourneyEvent[]) => {
+    recomputeFromRides: (events: AggregatedJourney[]) => {
         const graph = useGraphStructure.getState().graph;
-        if (!graph) return;
+        if (!graph) throw new Error("Graph structure not loaded");
 
         const now = Date.now();
         const nextMap: StationStatsMap = new Map();
@@ -75,65 +77,58 @@ export const useStationStatsStore = create<NetworkStatsState>()((set) => ({
             });
         }
 
-        // group events by ride id
-        const eventsByRide = new Map<string, JourneyEvent[]>();
-        for (const ev of events) {
-            const rideId = String(ev.id_ ?? "");
-            if (!rideId) continue;
-            if (!ev.from_station && !ev.to_station) continue;
-            if (!eventsByRide.has(rideId)) eventsByRide.set(rideId, []);
-            eventsByRide.get(rideId)!.push(ev);
-        }
 
         // process each ride
-        for (const [, rideEvents] of eventsByRide) {
-            if (!rideEvents.length) continue;
+        for (const aggJourney of events) {
+            if (!aggJourney.events.length) continue;
+            const rideDelays = computeRideDelayMinutesForEachBit(aggJourney);
 
-            // group into journey segments “from→to”
-            const segments = new Map<string, JourneyEvent[]>();
-            for (const ev of rideEvents) {
-                const key = segmentKey(ev);
-                if (!segments.has(key)) segments.set(key, []);
-                segments.get(key)!.push(ev);
-            }
+            // Track which stations this ride has already been counted for
+            const countedStations = new Set<string>();
 
-            // ensure we count each ride at most once per station
-            const countedOncePerStation = new Set<string>();
+            // Now we have delays for each segment between events
+            for (let i = 1; i < aggJourney.events.length; i++) {
+                const fromEvent = aggJourney.events[i - 1];
+                const toEvent = aggJourney.events[i];
+                const delay = rideDelays[i - 1]; // delay for this segment
+                const stations: string[] = [];
+                if (fromEvent.event_type == "DEPARTURE" && toEvent.event_type == "ARRIVAL") {
+                    // Map station names to station IDs
+                    const fromStationId = graph.stationNameToId?.[fromEvent.to_station];
+                    const toStationId = graph.stationNameToId?.[toEvent.from_station];
+                    if (fromStationId) stations.push(fromStationId);
+                    if (toStationId) stations.push(toStationId);
+                } else if (fromEvent.event_type == "ARRIVAL" && toEvent.event_type == "DEPARTURE") {
+                    // Map station names to station IDs
+                    const fromStationId = graph.stationNameToId?.[fromEvent.to_station];
+                    const toStationId = graph.stationNameToId?.[toEvent.from_station];
+                    if (fromStationId) stations.push(fromStationId);
+                    if (toStationId) stations.push(toStationId);
+                } else {
+                    throw new Error("Unknown event sequence in ride");
+                }
+                for (const stationId of stations) {
+                    const stats = nextMap.get(stationId);
+                    if (!stats) continue; // should not happen
 
-            for (const [, segEvents] of segments) {
-                const segDelay = computeSegmentDelayMin(segEvents);
-                const segIsPunctual = segDelay < PUNCTUAL_THRESHOLD_MIN;
+                    // Count this ride only once per station
+                    if (!countedStations.has(stationId)) {
+                        stats.rideCount += 1;
+                        countedStations.add(stationId);
 
-                // update both endpoints (from_station and to_station)
-                for (const ev of segEvents) {
-                    const endpoints = [ev.from_station, ev.to_station].filter(Boolean) as string[];
-                    for (const stName of endpoints) {
-                        const stationId = (useGraphStructure.getState().graph?.stationNameToId ?? {})[stName];
-                        if (stationId == null) continue;
-
-                        const stats = nextMap.get(stationId);
-                        if (!stats) continue;
-
-                        // Count this RIDE once per STATION (fixes over-count on cancel)
-                        const firstTimeForStation = !countedOncePerStation.has(stationId);
-                        if (firstTimeForStation) {
-                            stats.rideCount++;
-                            countedOncePerStation.add(stationId);
-                        }
-
-                        // Delay aggregates (these can be segment-based; you can refine later)
-                        stats.totalDelaySum += segDelay;
-                        stats.maxDelay = Math.max(stats.maxDelay, segDelay);
-                        stats.minDelay = Math.min(stats.minDelay, segDelay);
-                        stats.currentDelay = segDelay;
-                        stats.lastUpdated = now;
-
-                        // Punctuality approximation: count a punctual segment once per station per ride.
-                        // We tie it to the "first time" guard to avoid segment double counting.
-                        if (firstTimeForStation && segIsPunctual) {
-                            stats.punctualRideCount++;
+                        // For punctuality, check if this ride is punctual (use max delay)
+                        const maxRideDelay = Math.max(...rideDelays);
+                        if (maxRideDelay < PUNCTUAL_THRESHOLD_MIN) {
+                            stats.punctualRideCount += 1;
                         }
                     }
+
+                    // Delay aggregates (accumulate all segment delays for this station)
+                    stats.totalDelaySum += delay / 2; // divide by 2 to avoid double counting
+                    stats.maxDelay = Math.max(stats.maxDelay, delay);
+                    stats.minDelay = Math.min(stats.minDelay, delay);
+                    stats.currentDelay = delay / 2;
+                    stats.lastUpdated = now;
                 }
             }
         }
@@ -156,10 +151,10 @@ export const useStationStats = () => {
     // select only raw slices (stable)
     const byStation = useStationStatsStore((s) => s.byStation);
     const lastUpdated = useStationStatsStore((s) => s.lastUpdated);
-    const recomputeFromEvents = useStationStatsStore((s) => s.recomputeFromEvents);
+    const recomputeFromRides = useStationStatsStore((s) => s.recomputeFromRides);
 
-    // stream of current visible events
-    const events = useVisibleActiveEvents();
+    // stream of current active rides (using AggregatedJourney instead of raw events)
+    const activeRides = useActiveRides();
 
     // derive stations array (memoized, safe)
     const stations = useMemo(() => {
@@ -195,14 +190,14 @@ export const useStationStats = () => {
         };
     }, [stations]);
 
-    // debounced recompute when events change
+    // debounced recompute when active rides change
     useEffect(() => {
-        if (!events || events.length === 0) return;
+        if (!activeRides || activeRides.length === 0) return;
         const id = setTimeout(() => {
-            recomputeFromEvents(events);
+            recomputeFromRides(activeRides);
         }, UPDATE_DEBOUNCE_MS);
         return () => clearTimeout(id);
-    }, [events, recomputeFromEvents]);
+    }, [activeRides, recomputeFromRides]);
 
     return { stations, stats, lastUpdated };
 };

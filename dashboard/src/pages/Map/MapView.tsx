@@ -14,6 +14,7 @@ import { useGraphStructure } from "@/state/useGraphStructure";
 import { useActiveRides } from "@/hooks/useStreamingTrainEvents";
 import { useSimStore } from "@/state/useSimStore";
 import { useStationStats } from "@/state/useStationStats";
+import { calculateDelayMinutes } from "@/utils/delayUtils";
 import { ISO_to_ms } from "@/utils/time";
 import type { StationInfo } from "@/types/ride";
 
@@ -116,7 +117,21 @@ export default function MapView() {
       const toStation = graph.stations[toStationId];
       if (!fromStation || !toStation) continue;
 
-      const delay = latestDeparture.delay_min;
+      // Calculate delay using consecutive events from the ride
+      const sortedEvents = ride.events.slice().sort(
+        (a, b) => (ISO_to_ms(a.timestamp) ?? 0) - (ISO_to_ms(b.timestamp) ?? 0)
+      );
+
+      // Find the position of the latest departure in the sorted events
+      const latestDepartureIndex = sortedEvents.findIndex(e =>
+        e.timestamp === latestDeparture.timestamp &&
+        e.from_station === latestDeparture.from_station &&
+        e.to_station === latestDeparture.to_station
+      );
+
+      // Calculate delay using the previous event (if available)
+      const previousEvent = latestDepartureIndex > 0 ? sortedEvents[latestDepartureIndex - 1] : null;
+      const delay = calculateDelayMinutes(latestDeparture, previousEvent);
 
       edgeFeatures.push({
         type: "Feature",
