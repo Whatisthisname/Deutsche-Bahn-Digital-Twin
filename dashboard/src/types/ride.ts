@@ -8,7 +8,6 @@ export interface JourneyEvent {
     event_type: "DEPARTURE" | "ARRIVAL" | "CANCELLATION";
     id_: string;
     train_name: string;
-    delay_min: number;
     from_station: string;
     to_station: string;
     station_num: number;

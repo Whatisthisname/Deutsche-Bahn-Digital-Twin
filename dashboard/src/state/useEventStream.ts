@@ -56,9 +56,9 @@ export const useEventStream = create<EventStreamState>((set, get) => ({
             .filter(Boolean)
             .map(row => ({
                 ...row,
-                delay_min: Number(row.delay_min),
                 station_num: Number(row.station_num),
                 // Keep id_ as string to preserve large integer precision
+                // Note: delay_min column removed - delays calculated on-demand
             }))
             .sort(
                 (a, b) =>

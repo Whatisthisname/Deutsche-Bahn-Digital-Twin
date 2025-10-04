@@ -57,7 +57,7 @@ export default function DelayPredictionModal({
                             </div>
 
                             <div className="ride-details">
-                                <p><strong>Destination:</strong> {ride.destination}</p>
+                                <p><strong>Final Destination:</strong> {ride.destination}</p>
                                 <p><strong>Events:</strong> {ride.eventCount}</p>
                                 <p><strong>Started:</strong> {new Date(ride.startTs).toLocaleString()}</p>
                             </div>

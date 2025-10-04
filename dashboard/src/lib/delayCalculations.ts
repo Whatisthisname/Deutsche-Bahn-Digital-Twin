@@ -1,4 +1,5 @@
 import type { JourneyEvent } from "@/types/ride";
+import { calculateDelayMinutes } from "@/utils/delayUtils";
 
 type RideDelay = {
     rideId: string;
@@ -32,12 +33,14 @@ export function calculateRideDelays(events: JourneyEvent[]): RideDelay[] {
 
         if (grp.length < 2) continue;
 
-        // Calculate max delay for this ride (same logic as map)
+        // Calculate max delay for this ride using consecutive events
         let maxDelay = 0;
         const stations = new Set<string>();
 
-        for (const event of grp) {
-            const delay = event.delay_min;
+        for (let i = 0; i < grp.length; i++) {
+            const event = grp[i];
+            const previousEvent = i > 0 ? grp[i - 1] : null;
+            const delay = calculateDelayMinutes(event, previousEvent);
             maxDelay = Math.max(maxDelay, delay);
             if (event.event_type == "ARRIVAL") {
                 stations.add(event.to_station);
