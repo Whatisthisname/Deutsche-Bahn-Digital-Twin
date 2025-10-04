@@ -1,3 +1,5 @@
+// This file can probably also be cleaned up a bit just like the useEventStream.ts file, because we no longer jump forward or backward in time.
+
 import { create } from "zustand";
 import { useEventStream } from "./useEventStream";
 // Removed useIncrementalRides import

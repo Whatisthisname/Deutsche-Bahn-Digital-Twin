@@ -2,9 +2,9 @@ import { create } from "zustand";
 import { useSimStore } from "./useSimStore";
 import { calculateRideDelays, calculateAnalyticsFromRideDelays } from "@/lib/delayCalculations";
 import { useEventStream } from "./useEventStream";
-import { useAllJourneys } from "./useAggregatedJourneys";
+import { useAllJourneys } from "./useJourneys";
 import type { ArrivalOrDepartureEvent } from "@/types/ride";
-import type { Journey } from "./useAggregatedJourneys";
+import type { Journey } from "./useJourneys";
 import React from "react";
 
 // Analytics data structure

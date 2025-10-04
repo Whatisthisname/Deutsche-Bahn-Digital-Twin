@@ -1,4 +1,6 @@
-import type { Journey } from '@/state/useAggregatedJourneys';
+// This is the popup thing that shows confidence and AI prediciton when you clikc something in the ActiveJourneysList.
+// The confidence is just a heuristic right now, and the model itself will be improved by us by training on more data and features.
+import type { Journey } from '@/state/useJourneys';
 import type { PredictionResult } from '@/lib/mlPrediction';
 
 interface DelayPredictionModalProps {

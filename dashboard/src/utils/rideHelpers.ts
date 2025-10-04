@@ -1,7 +1,7 @@
 // utils/rideHelpers.ts
 // Helper functions for ride-related operations
 
-import type { Journey, JourneyStatus } from "@/state/useAggregatedJourneys";
+import type { Journey, JourneyStatus } from "@/state/useJourneys";
 
 /** Get color for ride status */
 export const getRideStatusColor = (status: JourneyStatus): string => {

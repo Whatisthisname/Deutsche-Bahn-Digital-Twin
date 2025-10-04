@@ -1,7 +1,7 @@
 // types/components.ts
 // TypeScript interfaces for React component props
 
-import type { Journey } from "@/state/useAggregatedJourneys";
+import type { Journey } from "@/state/useJourneys";
 
 /** Props for ActiveRidesList component */
 export interface ActiveJourneysListProps {

@@ -1,3 +1,4 @@
+
 function score(input) {
     var var0;
     if (input[0] <= 0.5) {

@@ -1,3 +1,5 @@
+// I think this is largely outdated because we can no longer jump forward or backward in time.
+
 // state/useEventStream.ts
 import { create } from "zustand";
 import Papa from "papaparse";
