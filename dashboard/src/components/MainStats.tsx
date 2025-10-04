@@ -1,3 +1,6 @@
+// This file is showing some stats that are shown both on the map page and in the visualization tab. The stats are computed from different sources: delay, puncuality and cancellation get 
+// their data from the "useStationStats", which has per-station stats that update when a train rides to or from that station.
+
 import { allCanceledRideRate, useActiveJourneys } from "@/hooks/useStreamingTrainEvents";
 import { useStationStats } from "@/state/useStationStats";
 import type { MainStatsProps } from "@/types/components";
@@ -7,7 +10,7 @@ export default function MainStats({
     showDetails = false,
 }: Partial<MainStatsProps> = {}) {
     const { stats } = useStationStats();
-    const activeRides = useActiveJourneys();
+    const activeJourneys = useActiveJourneys();
 
     const canceledRate = allCanceledRideRate();
 
@@ -15,7 +18,7 @@ export default function MainStats({
         <div className={`main-stats ${className || ""}`}>
             <div className="statistic">
                 <div className="statistic-title">Active Trains</div>
-                <div className="statistic-value">{activeRides.length}</div>
+                <div className="statistic-value">{activeJourneys.length}</div>
             </div>
 
             <div className="statistic">

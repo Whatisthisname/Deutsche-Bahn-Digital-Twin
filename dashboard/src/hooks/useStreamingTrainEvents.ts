@@ -1,11 +1,11 @@
 // hooks/useStreamingTrainEvents.ts
 import { useMemo } from "react";
 import { useEventStream } from "@/state/useEventStream";
-import { useAllJourneys as internal_useAllJourneys } from "@/state/useAggregatedJourneys";
+import { useAllJourneys as internal_useAllJourneys } from "@/state/useJourneys";
 import { useSimStore } from "@/state/useSimStore";
 import { useShouldThrottleRenders } from "@/state/useRenderThrottling";
 import { ISO_to_ms } from "@/utils/time";
-import type { Journey } from "@/state/useAggregatedJourneys";
+import type { Journey } from "@/state/useJourneys";
 
 
 /** Hook to get visible active events for the current time */
@@ -43,7 +43,7 @@ export const useVisibleActiveEvents = () => {
 export const useActiveJourneys = (): Journey[] => {
     const processedEvents = useEventStream(state => state.processedEvents);
     const currentTime = useSimStore(s => s.cursorTs) ?? 0;
-    const allRides = internal_useAllJourneys(processedEvents, currentTime);
+    const allJourneys = internal_useAllJourneys(processedEvents, currentTime);
     const shouldThrottle = useShouldThrottleRenders();
 
     return useMemo(() => {
@@ -52,8 +52,8 @@ export const useActiveJourneys = (): Journey[] => {
             return [];
         }
 
-        return allRides.filter(ride => ride.status === "ACTIVE");
-    }, [allRides, shouldThrottle]);
+        return allJourneys.filter(ride => ride.status === "ACTIVE");
+    }, [allJourneys, shouldThrottle]);
 };
 
 
@@ -75,7 +75,7 @@ export const allCanceledRideRate = () => {
     }, [allJourneys, shouldThrottle]);
 }
 
-/** Hook to get all rides (active + finished + canceled) */
+/** Hook to get all journeys (active + finished + canceled) */
 export const useAllJourneys = (): Journey[] => {
     const processedEvents = useEventStream(state => state.processedEvents);
     const currentTime = useSimStore(s => s.cursorTs) ?? 0;

@@ -1,10 +1,14 @@
 
+// This file describes the list of active, finished, and canceled journeys. This is the one where you can click and then it generates a prediciton.
+// However ideally we would want it to make predictions automatically on all current journeys, and then see what the actual delay was in the future
+// check the accuracy of the prediction on the dashboard live as the simulation runs.
+
 import { useState } from 'react';
 import { useSimStore } from "@/state/useSimStore";
 import { useEventStream } from "@/state/useEventStream";
-import { useActiveJourneys, useFinishedJourneys, useCanceledJourneys } from "@/state/useAggregatedJourneys";
+import { useActiveJourneys, useFinishedJourneys, useCanceledJourneys } from "@/state/useJourneys";
 import { useMemo } from 'react';
-import type { Journey } from "@/state/useAggregatedJourneys";
+import type { Journey } from "@/state/useJourneys";
 import type { ActiveJourneysListProps } from "@/types/components";
 import { getRideStatusColor as getJourneyStatusColor, formatRideTime, getRideStartStation, getRideEndStation, getRideDurationMinutes } from "@/utils/rideHelpers";
 import { useGraphStructure } from "@/state/useGraphStructure";
@@ -248,8 +252,6 @@ export default function ActiveJourneysList({
         );
     }
 
-    // Show all three lists (default behavior)
-    const totalJourneys = processedActiveJourneys.length + processedFinishedJourneys.length + processedCanceledJourneys.length;
 
     return (
         <div className={`panel activeRides ${className || ''}`}>

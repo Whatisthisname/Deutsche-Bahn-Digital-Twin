@@ -1,5 +1,6 @@
+// I think this one is pretty unused and/or outdated.
 import { useEventStream } from "@/state/useEventStream";
-import { useAllJourneys } from "@/state/useAggregatedJourneys";
+import { useAllJourneys } from "@/state/useJourneys";
 import { useSimStore } from "@/state/useSimStore";
 import { ISO_to_ms } from "@/utils/time";
 import type { ArrivalOrDepartureEvent } from "@/types/ride";

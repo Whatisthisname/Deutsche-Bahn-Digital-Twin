@@ -3,7 +3,7 @@ import { useEffect, useMemo } from "react";
 import { create } from "zustand";
 import { useGraphStructure } from "./useGraphStructure";
 import { useActiveJourneys } from "@/hooks/useStreamingTrainEvents";
-import type { Journey } from "@/state/useAggregatedJourneys";
+import type { Journey } from "@/state/useJourneys";
 import { calculateDelayMinutes } from "@/utils/delayUtils";
 
 const PUNCTUAL_THRESHOLD_MIN = 6; // rides with delay < 6 min are considered punctual
@@ -30,7 +30,7 @@ type StationStatsMap = Map<string, StationRuntimeStats>;
 type NetworkStatsState = {
     byStation: StationStatsMap;
     lastUpdated: number;
-    recomputeFromRides: (rides: Journey[]) => void;
+    calculateStationStats: (rides: Journey[]) => void;
     reset: () => void;
 };
 
@@ -54,7 +54,7 @@ export const useStationStatsStore = create<NetworkStatsState>()((set) => ({
     byStation: new Map(),
     lastUpdated: 0,
 
-    recomputeFromRides: (events: Journey[]) => {
+    calculateStationStats: (events: Journey[]) => {
         const graph = useGraphStructure.getState().graph;
         if (!graph) throw new Error("Graph structure not loaded");
 
@@ -151,7 +151,7 @@ export const useStationStats = () => {
     // select only raw slices (stable)
     const byStation = useStationStatsStore((s) => s.byStation);
     const lastUpdated = useStationStatsStore((s) => s.lastUpdated);
-    const recomputeFromJourneys = useStationStatsStore((s) => s.recomputeFromRides);
+    const recomputeFromJourneys = useStationStatsStore((s) => s.calculateStationStats);
 
     // stream of current active rides (using AggregatedJourney instead of raw events)
     const activeJourneys = useActiveJourneys();

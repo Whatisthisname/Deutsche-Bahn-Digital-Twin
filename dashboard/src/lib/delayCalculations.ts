@@ -1,4 +1,3 @@
-import type { Journey } from "@/state/useAggregatedJourneys";
 import type { ArrivalOrDepartureEvent } from "@/types/ride";
 import { calculateDelayMinutes } from "@/utils/delayUtils";
 
@@ -16,41 +15,7 @@ type Analytics = {
     totalJourneys: number;
 };
 
-// Helper function to calculate journey delays from pre-grouped journeys
-export function calculateJourneyDelays(journeys: Journey[]): JourneysDelay[] {
-    const journeyDelays: JourneysDelay[] = [];
-
-    for (const journey of journeys) {
-        if (journey.events.length < 2) continue;
-
-        // Calculate delays for each segment in the journey
-        let maxDelay = 0;
-        const stations = new Set<string>();
-
-        for (let i = 1; i < journey.events.length; i++) {
-            const currentEvent = journey.events[i];
-            const previousEvent = journey.events[i - 1];
-            const delay = calculateDelayMinutes(currentEvent, previousEvent);
-            maxDelay = Math.max(maxDelay, delay);
-
-            // Collect stations from arrival events
-            if (currentEvent.event_type === "ARRIVAL") {
-                stations.add(currentEvent.to_station);
-            }
-        }
-
-        journeyDelays.push({
-            rideId: journey.rideId,
-            maxDelay,
-            stations: Array.from(stations),
-            eventCount: journey.eventCount
-        });
-    }
-
-    return journeyDelays;
-}
-
-// Legacy function - deprecated, use calculateJourneyDelays instead
+// Helper function to calculate ride delays
 export function calculateRideDelays(events: ArrivalOrDepartureEvent[]): JourneysDelay[] {
     // Group events by ride ID
     const byRide = new Map<string, ArrivalOrDepartureEvent[]>();

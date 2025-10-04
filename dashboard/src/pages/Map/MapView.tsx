@@ -1,3 +1,6 @@
+// This renders the map itself and also draws the lines for the latest event in each active journey. 
+// Also handles hovers on stations to show their "useStationStats" stats.
+
 // src/pages/Map/MapView.tsx
 import { useMemo, useState } from "react";
 import {
@@ -26,7 +29,7 @@ function delay_to_color(delay?: number) {
 
 export default function MapView() {
   const { graph, loaded } = useGraphStructure();
-  const activeRides = useActiveJourneys();
+  const activeJourneys = useActiveJourneys();
   const playhead = useSimStore((s) => s.cursorTs) ?? 0;
 
   // NEW: pull stations (and stats if you ever want them) from the network stats hook
@@ -99,10 +102,10 @@ export default function MapView() {
     // Live edges from active rides: draw latest DEPARTURE segment per ride
     const edgeFeatures: Feature<LineString, { color: string; width: number; label: string }>[] = [];
 
-    for (const ride of activeRides) {
-      if (!ride.events || ride.events.length === 0) continue;
+    for (const journey of activeJourneys) {
+      if (!journey.events || journey.events.length === 0) continue;
 
-      const departureEvents = ride.events.filter((e) => e.event_type === "DEPARTURE");
+      const departureEvents = journey.events.filter((e) => e.event_type === "DEPARTURE");
       const latestDeparture = departureEvents.sort(
         (a, b) => (ISO_to_ms(b.timestamp) ?? 0) - (ISO_to_ms(a.timestamp) ?? 0)
       )[0];
@@ -118,7 +121,7 @@ export default function MapView() {
       if (!fromStation || !toStation) continue;
 
       // Calculate delay using consecutive events from the ride
-      const sortedEvents = ride.events.slice().sort(
+      const sortedEvents = journey.events.slice().sort(
         (a, b) => (ISO_to_ms(a.timestamp) ?? 0) - (ISO_to_ms(b.timestamp) ?? 0)
       );
 
@@ -160,12 +163,12 @@ export default function MapView() {
       backgroundEdgeFC,
       counts: {
         stations: graph ? Object.keys(graph.stations).length : 0,
-        events: activeRides.reduce((sum, ride) => sum + ride.events.length, 0),
+        events: activeJourneys.reduce((sum, ride) => sum + ride.events.length, 0),
         edges: edgeFeatures.length,
         backgroundEdges: backgroundEdgeFeatures.length,
       },
     };
-  }, [graph, activeRides, playhead]);
+  }, [graph, activeJourneys, playhead]);
 
   return (
     <div className="map-view" style={{ position: "relative" }}>
