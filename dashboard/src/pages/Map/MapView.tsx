@@ -11,7 +11,7 @@ import type { FeatureCollection, Feature, LineString } from "geojson";
 import "maplibre-gl/dist/maplibre-gl.css";
 
 import { useGraphStructure } from "@/state/useGraphStructure";
-import { useActiveRides } from "@/hooks/useStreamingTrainEvents";
+import { useActiveJourneys } from "@/hooks/useStreamingTrainEvents";
 import { useSimStore } from "@/state/useSimStore";
 import { useStationStats } from "@/state/useStationStats";
 import { calculateDelayMinutes } from "@/utils/delayUtils";
@@ -26,7 +26,7 @@ function delay_to_color(delay?: number) {
 
 export default function MapView() {
   const { graph, loaded } = useGraphStructure();
-  const activeRides = useActiveRides();
+  const activeRides = useActiveJourneys();
   const playhead = useSimStore((s) => s.cursorTs) ?? 0;
 
   // NEW: pull stations (and stats if you ever want them) from the network stats hook

@@ -2,7 +2,7 @@
 // Helper functions for ride-related operations
 
 import type { RideStatus } from "@/types/ride";
-import type { AggregatedJourney } from "@/state/useSimpleRides";
+import type { Journey } from "@/state/useAggregatedJourneys";
 
 /** Get color for ride status */
 export const getRideStatusColor = (status: RideStatus): string => {
@@ -24,7 +24,7 @@ export const formatRideTime = (timestamp: number): string => {
 };
 
 /** Get start station from ride events */
-export const getRideStartStation = (ride: AggregatedJourney): string => {
+export const getRideStartStation = (ride: Journey): string => {
     if (ride.events.length > 0) {
         const firstEvent = ride.events[0];
         return firstEvent.from_station || 'Unknown';
@@ -33,7 +33,7 @@ export const getRideStartStation = (ride: AggregatedJourney): string => {
 };
 
 /** Get end station from ride events */
-export const getRideEndStation = (ride: AggregatedJourney): string => {
+export const getRideEndStation = (ride: Journey): string => {
     if (ride.events.length > 0) {
         const lastEvent = ride.events[ride.events.length - 1];
         return lastEvent.to_station || ride.destination || 'Unknown';

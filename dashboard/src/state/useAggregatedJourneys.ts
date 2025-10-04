@@ -1,17 +1,17 @@
 // state/useSimpleRides.ts
 import { useMemo } from "react";
 import { create } from "zustand";
-import type { JourneyEvent } from "@/types/ride";
+import type { JourneyEvent as ArrivalOrDepartureEvent } from "@/types/ride";
 import { ISO_to_ms } from "@/utils/time";
 
 /** Ride status */
-export type RideStatus = "ACTIVE" | "FINISHED" | "CANCELED";
+export type JourneyStatus = "ACTIVE" | "FINISHED" | "CANCELED";
 
-/** Simple ride data computed on-demand from JourneyEvents */
-export type AggregatedJourney = {
-    rideId: string; // Large integers that exceed JavaScript's safe integer range
-    status: RideStatus;
-    events: JourneyEvent[];
+
+export type Journey = {
+    rideId: string;
+    status: JourneyStatus;
+    events: ArrivalOrDepartureEvent[];
     // Computed properties
     destination: string;
     startTs: number;
@@ -24,32 +24,32 @@ export type AggregatedJourney = {
 /** Optimized ride computation state */
 type OptimizedRideState = {
     // Cache for computed rides
-    rideCache: Map<string, AggregatedJourney>; // Use string keys for large integers
+    rideCache: Map<string, Journey>;
     // Earliest timestamp of any ongoing ride (sliding window)
     earliestOngoingRideTs: number | null;
     // Last processed event index to avoid recomputation
     lastProcessedIndex: number;
 
     // Actions
-    updateRideCache: (processedEvents: JourneyEvent[], currentTime: number) => void;
-    getCachedRides: () => AggregatedJourney[];
+    updateRideCache: (processedEvents: ArrivalOrDepartureEvent[], currentTime: number) => void;
+    getCachedRides: () => Journey[];
     reset: () => void;
 };
 
 /**
  * Determine ride status from events
  */
-const determineRideStatus = (rideEvents: JourneyEvent[]): RideStatus => {
+const determineRideStatus = (events: ArrivalOrDepartureEvent[]): JourneyStatus => {
     // .log(`🔍 determineRideStatus: Checking ${rideEvents.length} events for ride ${rideEvents[0]?.id_}`);
 
     // 1. CANCELED: Check for cancellation event
-    const hasCancellation = rideEvents.some(e => e.event_type === "CANCELLATION");
+    const hasCancellation = events.some(e => e.event_type === "CANCELLATION");
     if (hasCancellation) {
         return "CANCELED";
     }
 
     // 2. FINISHED: Check for arrival at final destination
-    const hasFinalArrival = rideEvents.some(e =>
+    const hasFinalArrival = events.some(e =>
         e.event_type === "ARRIVAL" &&
         e.to_station === e.final_destination_station
     );
@@ -66,7 +66,7 @@ const determineRideStatus = (rideEvents: JourneyEvent[]): RideStatus => {
 /**
  * Create a SimpleRide from events
  */
-const aggregatedJourney = (rideId: string, events: JourneyEvent[]): AggregatedJourney => {
+const journey = (rideId: string, events: ArrivalOrDepartureEvent[]): Journey => {
     if (events.length === 0) {
         throw new Error(`No events found for ride ${rideId}`);
     }
@@ -111,12 +111,12 @@ const aggregatedJourney = (rideId: string, events: JourneyEvent[]): AggregatedJo
 };
 
 // Optimized Zustand store for ride computation
-export const useOptimizedRides = create<OptimizedRideState>((set, get) => ({
+export const useAggregatedJourneysStore = create<OptimizedRideState>((set, get) => ({
     rideCache: new Map(),
     earliestOngoingRideTs: null,
     lastProcessedIndex: 0,
 
-    updateRideCache: (processedEvents: JourneyEvent[], _currentTime: number) => {
+    updateRideCache: (processedEvents: ArrivalOrDepartureEvent[], _currentTime: number) => {
         const state = get();
         const { rideCache, earliestOngoingRideTs, lastProcessedIndex } = state;
 
@@ -154,7 +154,7 @@ export const useOptimizedRides = create<OptimizedRideState>((set, get) => ({
         if (newEvents.length === 0) return;
 
         // Group new events by ride ID
-        const eventsByRide = new Map<string, JourneyEvent[]>();
+        const eventsByRide = new Map<string, ArrivalOrDepartureEvent[]>();
         for (const event of newEvents) {
             if (!eventsByRide.has(event.id_)) {
                 eventsByRide.set(event.id_, []);
@@ -168,7 +168,7 @@ export const useOptimizedRides = create<OptimizedRideState>((set, get) => ({
 
             // Get existing events for this ride from cache or relevant events
             const existingRide = rideCache.get(rideId);
-            let allRideEvents: JourneyEvent[];
+            let allRideEvents: ArrivalOrDepartureEvent[];
 
             if (existingRide) {
                 // Merge with existing events
@@ -184,7 +184,7 @@ export const useOptimizedRides = create<OptimizedRideState>((set, get) => ({
             allRideEvents.sort((a, b) => (ISO_to_ms(a.timestamp) ?? 0) - (ISO_to_ms(b.timestamp) ?? 0));
 
             // Create updated ride
-            const updatedRide = aggregatedJourney(rideId, allRideEvents);
+            const updatedRide = journey(rideId, allRideEvents);
             rideCache.set(rideId, updatedRide);
 
             // console.log(`🔧 updateRideCache: Ride ${rideId} status: ${updatedRide.status}, destination: ${updatedRide.destination}`);
@@ -232,10 +232,10 @@ export const useOptimizedRides = create<OptimizedRideState>((set, get) => ({
     }
 }));
 
-// Optimized React hooks
-export const useAllSimpleRides = (processedEvents: JourneyEvent[], currentTime: number): AggregatedJourney[] => {
-    const updateRideCache = useOptimizedRides(state => state.updateRideCache);
-    const getCachedRides = useOptimizedRides(state => state.getCachedRides);
+
+export const useAllJourneys = (processedEvents: ArrivalOrDepartureEvent[], currentTime: number): Journey[] => {
+    const updateRideCache = useAggregatedJourneysStore(state => state.updateRideCache);
+    const getCachedRides = useAggregatedJourneysStore(state => state.getCachedRides);
 
     return useMemo(() => {
         // Update cache with new events
@@ -246,24 +246,24 @@ export const useAllSimpleRides = (processedEvents: JourneyEvent[], currentTime: 
     }, [processedEvents, currentTime, updateRideCache, getCachedRides]);
 };
 
-export const useActiveSimpleRides = (processedEvents: JourneyEvent[], currentTime: number): AggregatedJourney[] => {
-    const allRides = useAllSimpleRides(processedEvents, currentTime);
+export const useActiveJourneys = (processedEvents: ArrivalOrDepartureEvent[], currentTime: number): Journey[] => {
+    const allRides = useAllJourneys(processedEvents, currentTime);
 
     return useMemo(() => {
         return allRides.filter(ride => ride.status === "ACTIVE");
     }, [allRides]);
 };
 
-export const useFinishedSimpleRides = (processedEvents: JourneyEvent[], currentTime: number): AggregatedJourney[] => {
-    const allRides = useAllSimpleRides(processedEvents, currentTime);
+export const useFinishedJourneys = (processedEvents: ArrivalOrDepartureEvent[], currentTime: number): Journey[] => {
+    const allRides = useAllJourneys(processedEvents, currentTime);
 
     return useMemo(() => {
         return allRides.filter(ride => ride.status === "FINISHED");
     }, [allRides]);
 };
 
-export const useCanceledSimpleRides = (processedEvents: JourneyEvent[], currentTime: number): AggregatedJourney[] => {
-    const allRides = useAllSimpleRides(processedEvents, currentTime);
+export const useCanceledJourneys = (processedEvents: ArrivalOrDepartureEvent[], currentTime: number): Journey[] => {
+    const allRides = useAllJourneys(processedEvents, currentTime);
 
     return useMemo(() => {
         return allRides.filter(ride => ride.status === "CANCELED");

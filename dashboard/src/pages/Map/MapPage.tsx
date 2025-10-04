@@ -1,7 +1,7 @@
 // src/pages/Map/MapPage.tsx
 import MainStats from "@/components/MainStats";
 import MapView from "./MapView";
-import ActiveRidesList from "@/components/ActiveRidesList";
+import ActiveJourneysList from "@/components/ActiveRidesList";
 
 export default function MapPage() {
 
@@ -17,7 +17,7 @@ export default function MapPage() {
                 <MainStats />
 
                 {/* Active Rides */}
-                <ActiveRidesList />
+                <ActiveJourneysList />
             </aside>
         </div>
     );

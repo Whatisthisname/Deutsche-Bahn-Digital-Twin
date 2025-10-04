@@ -2,8 +2,8 @@
 import { useEffect, useMemo } from "react";
 import { create } from "zustand";
 import { useGraphStructure } from "./useGraphStructure";
-import { useActiveRides } from "@/hooks/useStreamingTrainEvents";
-import type { AggregatedJourney } from "@/state/useSimpleRides";
+import { useActiveJourneys } from "@/hooks/useStreamingTrainEvents";
+import type { Journey } from "@/state/useAggregatedJourneys";
 import { calculateDelayMinutes } from "@/utils/delayUtils";
 
 const PUNCTUAL_THRESHOLD_MIN = 6; // rides with delay < 6 min are considered punctual
@@ -30,12 +30,12 @@ type StationStatsMap = Map<string, StationRuntimeStats>;
 type NetworkStatsState = {
     byStation: StationStatsMap;
     lastUpdated: number;
-    recomputeFromRides: (rides: AggregatedJourney[]) => void;
+    recomputeFromRides: (rides: Journey[]) => void;
     reset: () => void;
 };
 
 
-function computeRideDelayMinutesForEachBit(ride: AggregatedJourney): number[] {
+function computeRideDelayMinutesForEachBit(ride: Journey): number[] {
     if (ride.events.length === 0) return [];
 
     // Calculate delay using consecutive events from the ride timeline
@@ -54,7 +54,7 @@ export const useStationStatsStore = create<NetworkStatsState>()((set) => ({
     byStation: new Map(),
     lastUpdated: 0,
 
-    recomputeFromRides: (events: AggregatedJourney[]) => {
+    recomputeFromRides: (events: Journey[]) => {
         const graph = useGraphStructure.getState().graph;
         if (!graph) throw new Error("Graph structure not loaded");
 
@@ -151,10 +151,10 @@ export const useStationStats = () => {
     // select only raw slices (stable)
     const byStation = useStationStatsStore((s) => s.byStation);
     const lastUpdated = useStationStatsStore((s) => s.lastUpdated);
-    const recomputeFromRides = useStationStatsStore((s) => s.recomputeFromRides);
+    const recomputeFromJourneys = useStationStatsStore((s) => s.recomputeFromRides);
 
     // stream of current active rides (using AggregatedJourney instead of raw events)
-    const activeRides = useActiveRides();
+    const activeJourneys = useActiveJourneys();
 
     // derive stations array (memoized, safe)
     const stations = useMemo(() => {
@@ -173,31 +173,31 @@ export const useStationStats = () => {
         const totalStations = stations.length;
         const activeStationsCount = active.length;
 
-        const totalRides = active.reduce((n, s) => n + s.features.rideCount, 0);
+        const totalJourneys = active.reduce((n, s) => n + s.features.rideCount, 0);
         const totalDelay = active.reduce((n, s) => n + s.features.totalDelaySum, 0);
-        const punctualRides = active.reduce((n, s) => n + s.features.punctualRideCount, 0);
+        const punctualJourneys = active.reduce((n, s) => n + s.features.punctualRideCount, 0);
 
-        const averageDelay = totalRides ? totalDelay / totalRides : 0;
-        const punctualityRate = totalRides ? (punctualRides / totalRides) * 100 : 0;
+        const averageDelay = totalJourneys ? totalDelay / totalJourneys : 0;
+        const punctualityRate = totalJourneys ? (punctualJourneys / totalJourneys) * 100 : 0;
 
         return {
             totalStations,
             activeStationsCount,
-            totalRides,
+            totalJourneys: totalJourneys,
             averageDelay,
             punctualityRate,
-            punctualRides,
+            punctualJourneys: punctualJourneys,
         };
     }, [stations]);
 
     // debounced recompute when active rides change
     useEffect(() => {
-        if (!activeRides || activeRides.length === 0) return;
+        if (!activeJourneys || activeJourneys.length === 0) return;
         const id = setTimeout(() => {
-            recomputeFromRides(activeRides);
+            recomputeFromJourneys(activeJourneys);
         }, UPDATE_DEBOUNCE_MS);
         return () => clearTimeout(id);
-    }, [activeRides, recomputeFromRides]);
+    }, [activeJourneys, recomputeFromJourneys]);
 
     return { stations, stats, lastUpdated };
 };

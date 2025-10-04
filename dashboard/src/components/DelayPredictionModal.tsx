@@ -1,8 +1,8 @@
-import type { AggregatedJourney } from '@/state/useSimpleRides';
+import type { Journey } from '@/state/useAggregatedJourneys';
 import type { PredictionResult } from '@/lib/mlPrediction';
 
 interface DelayPredictionModalProps {
-    ride: AggregatedJourney | null;
+    ride: Journey | null;
     prediction: PredictionResult | null;
     isOpen: boolean;
     onClose: () => void;

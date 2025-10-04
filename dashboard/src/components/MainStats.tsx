@@ -1,4 +1,4 @@
-import { allCanceledRideRate, useActiveRides } from "@/hooks/useStreamingTrainEvents";
+import { allCanceledRideRate, useActiveJourneys } from "@/hooks/useStreamingTrainEvents";
 import { useStationStats } from "@/state/useStationStats";
 import type { MainStatsProps } from "@/types/components";
 
@@ -7,7 +7,7 @@ export default function MainStats({
     showDetails = false,
 }: Partial<MainStatsProps> = {}) {
     const { stats } = useStationStats();
-    const activeRides = useActiveRides();
+    const activeRides = useActiveJourneys();
 
     const canceledRate = allCanceledRideRate();
 
@@ -37,8 +37,8 @@ export default function MainStats({
                 <div className="statistic-details">
                     <div className="detail-item">Total Stations: {stats.totalStations}</div>
                     <div className="detail-item">Active Stations: {stats.activeStationsCount}</div>
-                    <div className="detail-item">Total Rides: {stats.totalRides}</div>
-                    <div className="detail-item">Punctual Rides: {stats.punctualRides}</div>
+                    <div className="detail-item">Total Rides: {stats.totalJourneys}</div>
+                    <div className="detail-item">Punctual Rides: {stats.punctualJourneys}</div>
                 </div>
             )}
         </div>

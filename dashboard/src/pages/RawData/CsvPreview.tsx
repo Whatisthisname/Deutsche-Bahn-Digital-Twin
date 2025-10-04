@@ -1,5 +1,5 @@
 import { useEventStream } from "@/state/useEventStream";
-import { useAllSimpleRides } from "@/state/useSimpleRides";
+import { useAllJourneys } from "@/state/useAggregatedJourneys";
 import { useSimStore } from "@/state/useSimStore";
 import { ISO_to_ms } from "@/utils/time";
 import type { JourneyEvent } from "@/types/ride";
@@ -12,7 +12,7 @@ export default function CsvPreview({
 }: Partial<CsvPreviewProps> = {}) {
     const processedEvents = useEventStream(state => state.processedEvents);
     const currentTime = useSimStore(state => state.cursorTs) ?? 0;
-    const allRides = useAllSimpleRides(processedEvents, currentTime);
+    const allRides = useAllJourneys(processedEvents, currentTime);
 
     const activeRides = allRides.filter(ride => ride.status === "ACTIVE");
     const finishedRides = allRides.filter(ride => ride.status === "FINISHED");

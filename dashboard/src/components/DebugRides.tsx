@@ -1,6 +1,6 @@
 // src/components/DebugRides.tsx
 import { useMemo } from 'react'
-import { useAllSimpleRides, type RideStatus } from '@/state/useSimpleRides'
+import { useAllJourneys, type JourneyStatus } from '@/state/useAggregatedJourneys'
 import { useEventStream } from '@/state/useEventStream'
 import { useSimStore } from '@/state/useSimStore'
 
@@ -9,7 +9,7 @@ type RideInfo = {
     destination: string | undefined;
     startTs: string;
     endTs: string | null;
-    status: RideStatus;
+    status: JourneyStatus;
     eventCount: number;
     isCanceled: boolean;
 }
@@ -17,7 +17,7 @@ type RideInfo = {
 export default function DebugRides() {
     const processedEvents = useEventStream(state => state.processedEvents)
     const currentTime = useSimStore(state => state.cursorTs) ?? 0
-    const allRides = useAllSimpleRides(processedEvents, currentTime)
+    const allRides = useAllJourneys(processedEvents, currentTime)
 
     const activeRides = allRides.filter(ride => ride.status === "ACTIVE")
     const finishedRides = allRides.filter(ride => ride.status === "FINISHED")

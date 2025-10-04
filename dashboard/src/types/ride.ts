@@ -1,7 +1,7 @@
 // types/ride.ts
 // TypeScript interfaces for ride-related data structures
 
-import type { RideStatus } from "@/state/useSimpleRides";
+import type { JourneyStatus } from "@/state/useAggregatedJourneys";
 
 /** Journey event from CSV data */
 export interface JourneyEvent {
@@ -32,7 +32,7 @@ export interface RideWithStatus {
     destination?: string;
     startTs: number;
     endTs: number | null;
-    status: RideStatus;
+    status: JourneyStatus;
     isCanceled: boolean;
     segments: Map<string, RideSegment>;
     lastUpdated: number;
@@ -59,4 +59,4 @@ export interface StationInfo {
 }
 
 // Re-export RideStatus for convenience
-export type { RideStatus };
+export type { JourneyStatus as RideStatus };
