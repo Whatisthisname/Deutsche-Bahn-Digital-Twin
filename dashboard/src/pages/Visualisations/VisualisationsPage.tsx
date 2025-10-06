@@ -1,6 +1,5 @@
 import MainStats from "../../components/MainStats";
-import AverageDelayChart from "../../components/AverageDelayChart";
-import DelayAccuracy from "@/components/DelayAccuracy";
+import DelayAccuracy from "@/components/ValidationChart";
 
 export default function VisualisationsPage() {
 
