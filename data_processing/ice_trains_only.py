@@ -12,13 +12,13 @@ def filter_ice(src: pathlib.Path):
 
     # Only keep ICE trains
     if "train_type" not in df.columns:
-        print(f"⚠️  {src.name}: no 'train_type' column, skipping")
+        print(f"{src.name}: no 'train_type' column, skipping")
         return None
 
     ice_df = df[df["train_type"].astype(str).str.upper() == "ICE"].copy()
 
     if ice_df.empty:
-        print(f"ℹ️  {src.name}: no ICE trains found")
+        print(f"{src.name}: no ICE trains found")
         return None
 
     out = OUT_DIR / src.name.replace("events-", "events-ice-")
@@ -39,7 +39,7 @@ def main():
             if result:
                 written.append(result.name)
         except Exception as e:
-            print(f"❌ {f.name}: {e}")
+            print(f"{f.name}: {e}")
 
     if written:
         print("\nDone! ICE-only files written:")
