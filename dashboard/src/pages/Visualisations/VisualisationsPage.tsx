@@ -1,5 +1,6 @@
 import MainStats from "../../components/MainStats";
 import AverageDelayChart from "../../components/AverageDelayChart";
+import DelayAccuracy from "@/components/DelayAccuracy";
 
 export default function VisualisationsPage() {
 
@@ -9,8 +10,9 @@ export default function VisualisationsPage() {
             <MainStats />
             <div className="visualisations-grid">
                 {/* Average Delay Chart */}
+
                 <div className="panel wide">
-                    <AverageDelayChart />
+                    <DelayAccuracy />
                 </div>
 
 
