@@ -7,8 +7,8 @@ import { score } from './mlModel.js';
 
 export interface ModelInput {
     event_type: number;
-    expected_next_event_time: [number, number, number, number, number];
-    timestamp: [number, number, number, number, number];
+    expected_next_event_time: [number, number, number, number, number, number];
+    timestamp: [number, number, number, number, number, number];
     delay_min: number;
     from_station_centrality: number;
     to_station_centrality: number;
@@ -30,19 +30,23 @@ export interface PredictionResult {
 /**
  * Convert datetime to normalized features as per Python implementation
  */
-function datetimeFeatureMap(time: Date): [number, number, number, number, number] {
+function datetimeFeatureMap(time: Date): [number, number, number, number, number, number] {
     const month = time.getMonth() + 1; // getMonth() returns 0-11, we want 1-12
     const day = time.getDate();
     const hour = time.getHours();
     const minute = time.getMinutes();
     const second = time.getSeconds();
+    const weekday = time.getDay(); // 0 (Sunday) to 6 (Saturday)
+    // remap to monday=0,...sunday=6
+    const remappedWeekday = (weekday + 6) % 7;
 
     return [
         month / 12,
         day / 31,
         hour / 23,
         minute / 59,
-        second / 59
+        second / 59,
+        remappedWeekday / 6
     ];
 }
 
@@ -130,7 +134,7 @@ function toModelInput(
     // Find edge distance
     const distance = findEdgeDistance(currentEvent.from_station, currentEvent.to_station, graph);
 
-    return {
+    const val = {
         event_type: mappedValue,
         expected_next_event_time: expectedTimeFeatures,
         timestamp: timestampFeatures,
@@ -140,13 +144,17 @@ function toModelInput(
         station_num: currentEvent.station_num,
         distance
     };
+
+    // alert('Model input: ' + JSON.stringify(val, null, 2));
+    // throw new Error('Debugging - remove this line after checking model input');
+    return val
 }
 
 /**
  * Flatten ModelInput to the 16-element array expected by the ML model
  */
 function flattenModelInput(input: ModelInput): number[] {
-    return [
+    const val = [
         input.event_type,
         ...input.expected_next_event_time,
         ...input.timestamp,
@@ -156,6 +164,7 @@ function flattenModelInput(input: ModelInput): number[] {
         input.station_num,
         input.distance
     ];
+    return val;
 }
 
 /**
