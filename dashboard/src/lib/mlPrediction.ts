@@ -214,9 +214,9 @@ export function predictNextDelay(
     const pastEvent = sortedEvents.length >= 2 ? sortedEvents[sortedEvents.length - 2] : null;
 
     // Debug logging to check what's happening
-    console.log('Predicting for ride with events:', sortedEvents.length);
-    console.log('Current event:', currentEvent.event_type, 'at', currentEvent.from_station, '→', currentEvent.to_station);
-    console.log('Expected next time:', currentEvent.expected_next_event_time);
+    // console.log('Predicting for ride with events:', sortedEvents.length);
+    // console.log('Current event:', currentEvent.event_type, 'at', currentEvent.from_station, '→', currentEvent.to_station);
+    // console.log('Expected next time:', currentEvent.expected_next_event_time);
 
     if (currentEvent.expected_next_event_time === undefined || currentEvent.expected_next_event_time === null) {
         console.log('Cannot predict: missing expected_next_event_time');

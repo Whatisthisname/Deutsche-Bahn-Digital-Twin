@@ -1,11 +1,9 @@
 // This is the popup thing that shows confidence and AI prediciton when you clikc something in the ActiveJourneysList.
 // The confidence is just a heuristic right now, and the model itself will be improved by us by training on more data and features.
 import type { Journey } from '@/state/useJourneys';
-import type { PredictionResult } from '@/lib/mlPrediction';
 
 interface DelayPredictionModalProps {
     ride: Journey | null;
-    prediction: PredictionResult | null;
     isOpen: boolean;
     onClose: () => void;
     isLoading: boolean;
@@ -13,28 +11,11 @@ interface DelayPredictionModalProps {
 
 export default function DelayPredictionModal({
     ride,
-    prediction,
     isOpen,
     onClose,
     isLoading
 }: DelayPredictionModalProps) {
     if (!isOpen) return null;
-
-    const getConfidenceColor = (confidence: 'low' | 'medium' | 'high') => {
-        switch (confidence) {
-            case 'high': return '#22c55e'; // green
-            case 'medium': return '#f59e0b'; // yellow
-            case 'low': return '#ef4444'; // red
-        }
-    };
-
-    const getConfidenceIcon = (confidence: 'low' | 'medium' | 'high') => {
-        switch (confidence) {
-            case 'high': return '🟢';
-            case 'medium': return '🟡';
-            case 'low': return '🔴';
-        }
-    };
 
     const formatNumber = (num: number, decimals: number = 1) => {
         return num.toFixed(decimals);
@@ -73,26 +54,14 @@ export default function DelayPredictionModal({
                         </div>
                     )}
 
-                    {prediction && !isLoading && (
+    
                         <div className="prediction-results">
                             <div className="prediction-main">
                                 <div className="prediction-value">
                                     <span className="predicted-number">
-                                        {formatNumber(prediction.predictedDelay)} min
+                                        {formatNumber(ride?.events[(ride?.events.length)-1].predicted_delay ?? 0)} min
                                     </span>
                                     <span className="prediction-label">Predicted Delay</span>
-                                </div>
-
-                                <div className="prediction-confidence">
-                                    <span className="confidence-icon">
-                                        {getConfidenceIcon(prediction.confidence)}
-                                    </span>
-                                    <span
-                                        className="confidence-text"
-                                        style={{ color: getConfidenceColor(prediction.confidence) }}
-                                    >
-                                        {prediction.confidence.toUpperCase()} CONFIDENCE
-                                    </span>
                                 </div>
                             </div>
 
@@ -100,51 +69,20 @@ export default function DelayPredictionModal({
                                 <h4>Prediction Context</h4>
                                 <div className="context-grid">
                                     <div className="context-item">
-                                        <span className="context-label">Past Delay:</span>
-                                        <span className="context-value">
-                                            {formatNumber(prediction.context.pastDelay)} min
-                                        </span>
-                                    </div>
-                                    <div className="context-item">
                                         <span className="context-label">Current Segment:</span>
                                         <span className="context-value">
-                                            {prediction.context.currentEvent.from_station} → {prediction.context.currentEvent.to_station}
-                                        </span>
-                                    </div>
-                                    <div className="context-item">
-                                        <span className="context-label">Distance:</span>
-                                        <span className="context-value">
-                                            {formatNumber(prediction.context.distance)} km
+                                            {ride?.events[ride?.events.length - 1].from_station}
                                         </span>
                                     </div>
                                     <div className="context-item">
                                         <span className="context-label">Event Type:</span>
                                         <span className="context-value">
-                                            {prediction.context.currentEvent.event_type}
+                                            {ride?.events[ride?.events.length - 1].event_type}
                                         </span>
                                     </div>
                                 </div>
                             </div>
-
-                            <div className="prediction-disclaimer">
-                                <p>
-                                    <strong>⚡ AI Prediction</strong> - This prediction is based on historical patterns
-                                    and may not reflect real-time conditions. Always refer to official sources for
-                                    current train status.
-                                </p>
-                            </div>
                         </div>
-                    )}
-
-                    {!prediction && !isLoading && ride && (
-                        <div className="error-state">
-                            <div className="error-icon">⚠️</div>
-                            <p>Unable to generate prediction</p>
-                            <p className="error-subtext">
-                                This ride may not have enough events or required data for prediction.
-                            </p>
-                        </div>
-                    )}
                 </div>
             </div>
         </div>

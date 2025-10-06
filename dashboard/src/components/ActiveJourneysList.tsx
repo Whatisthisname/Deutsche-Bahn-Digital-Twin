@@ -12,7 +12,6 @@ import type { Journey } from "@/state/useJourneys";
 import type { ActiveJourneysListProps } from "@/types/components";
 import { getRideStatusColor as getJourneyStatusColor, formatRideTime, getRideStartStation, getRideEndStation, getRideDurationMinutes } from "@/utils/rideHelpers";
 import { useGraphStructure } from "@/state/useGraphStructure";
-import { predictNextDelay, type PredictionResult } from "@/lib/mlPrediction";
 import DelayPredictionModal from "./DelayPredictionModal";
 
 export default function ActiveJourneysList({
@@ -27,12 +26,10 @@ export default function ActiveJourneysList({
     const [predictionModal, setPredictionModal] = useState<{
         isOpen: boolean;
         ride: Journey | null;
-        prediction: PredictionResult | null;
         isLoading: boolean;
     }>({
         isOpen: false,
         ride: null,
-        prediction: null,
         isLoading: false
     });
 
@@ -92,15 +89,12 @@ export default function ActiveJourneysList({
             setPredictionModal({
                 isOpen: true,
                 ride,
-                prediction: null,
                 isLoading: true
             });
 
             try {
-                const prediction = predictNextDelay(ride.events, graph);
                 setPredictionModal(prev => ({
                     ...prev,
-                    prediction,
                     isLoading: false
                 }));
             } catch (error) {
@@ -120,7 +114,6 @@ export default function ActiveJourneysList({
         setPredictionModal({
             isOpen: false,
             ride: null,
-            prediction: null,
             isLoading: false
         });
     };
@@ -243,7 +236,6 @@ export default function ActiveJourneysList({
                 {/* ML Prediction Modal */}
                 <DelayPredictionModal
                     ride={predictionModal.ride}
-                    prediction={predictionModal.prediction}
                     isOpen={predictionModal.isOpen}
                     onClose={closePredictionModal}
                     isLoading={predictionModal.isLoading}
@@ -269,7 +261,6 @@ export default function ActiveJourneysList({
             {/* ML Prediction Modal */}
             <DelayPredictionModal
                 ride={predictionModal.ride}
-                prediction={predictionModal.prediction}
                 isOpen={predictionModal.isOpen}
                 onClose={closePredictionModal}
                 isLoading={predictionModal.isLoading}

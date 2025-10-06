@@ -3,10 +3,11 @@ import { useMemo } from "react";
 import { create } from "zustand";
 import type { ArrivalOrDepartureEvent as ArrivalOrDepartureEvent } from "@/types/ride";
 import { ISO_to_ms } from "@/utils/time";
+import { predictNextDelay } from "@/lib/mlPrediction";
+import { useGraphStructure } from "./useGraphStructure";
 
 /** Ride status */
 export type JourneyStatus = "ACTIVE" | "FINISHED" | "CANCELED";
-
 
 export type Journey = {
     rideId: string;
@@ -115,10 +116,12 @@ export const useAggregatedJourneysStore = create<OptimizedRideState>((set, get) 
     rideCache: new Map(),
     earliestOngoingRideTs: null,
     lastProcessedIndex: 0,
-
     updateRideCache: (processedEvents: ArrivalOrDepartureEvent[], _currentTime: number) => {
         const state = get();
         const { rideCache, earliestOngoingRideTs, lastProcessedIndex } = state;
+
+        // Get the graph structure
+        const graph = useGraphStructure.getState().graph;
 
         // Binary search to find the start of relevant events
         const getRelevantEvents = () => {
@@ -179,6 +182,20 @@ export const useAggregatedJourneysStore = create<OptimizedRideState>((set, get) 
                 allRideEvents = relevantEvents.filter(e => e.id_ === rideId);
                 // console.log(`🔧 updateRideCache: New ride ${rideId} with ${allRideEvents.length} total events`);
             }
+
+            for (let i = 0; i < allRideEvents.length; i++) {
+                const list = allRideEvents.slice(0, i+1);
+                // Use the imported graph only if it is defined
+                const pred = graph ? predictNextDelay(list, graph) : null;
+                if (pred == undefined) {
+                    throw new Error(`Prediction failed for ride ${rideId} at event index ${i}`);
+                }
+                if (pred?.predictedDelay == undefined) {
+                   throw new Error(`Prediction returned null delay for ride ${rideId} at event index ${i}`);
+                }
+                allRideEvents[i].predicted_delay = pred?.predictedDelay;
+            }
+
 
             // Sort by timestamp
             allRideEvents.sort((a, b) => (ISO_to_ms(a.timestamp) ?? 0) - (ISO_to_ms(b.timestamp) ?? 0));
@@ -269,3 +286,4 @@ export const useCanceledJourneys = (processedEvents: ArrivalOrDepartureEvent[], 
         return allRides.filter(ride => ride.status === "CANCELED");
     }, [allRides]);
 };
+
