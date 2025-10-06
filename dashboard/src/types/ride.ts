@@ -12,6 +12,7 @@ export interface ArrivalOrDepartureEvent {
     timestamp: string;
     expected_next_event_time: string | undefined;
     final_destination_station: string;
+    predicted_delay?: number;
 }
 
 /** Ride segment between two stations */
