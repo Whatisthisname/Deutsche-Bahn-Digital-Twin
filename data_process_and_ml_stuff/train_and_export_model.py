@@ -8,7 +8,7 @@ import m2cgen as m2c
 
 # 1) Load CSV: assumes 16 columns total → 15 features + 1 target (last column is target).
 #    If you have headers, this still works. Adjust indexing if needed.
-df = pd.read_csv("dataset.csv")
+df = pd.read_csv("data_process_and_ml_stuff/ml_dataset.csv")
 
 # If the target column has a name, set it here, e.g.: target_col = "y"
 # Otherwise, assume last column is target:

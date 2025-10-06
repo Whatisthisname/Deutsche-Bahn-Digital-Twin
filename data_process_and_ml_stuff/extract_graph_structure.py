@@ -71,7 +71,7 @@ def order(a, b):
 
 
 def extract_stations_and_edges(
-    csv_file: str, stations_locations: dict[str, dict[str, str | float | None]]
+    csv_file: str, stations_locations: dict[str, dict[str, str | float | None]], alt_name_map: dict[str, str]
 ) -> tuple[
     dict[int, Station], dict[tuple[int, int], tuple[float, int]], dict[str, int], dict[tuple[int, int], int]
 ]:
@@ -90,18 +90,26 @@ def extract_stations_and_edges(
                 else None
             )
             event_type = ctje.EventType[row["event_type"]]
+            from_station = row["from_station"]
+            if from_station in alt_name_map:
+                from_station = alt_name_map[from_station]
+            to_station = row["to_station"]
+            if to_station in alt_name_map:
+                to_station = alt_name_map[to_station]
+            final_destination_station = row["final_destination_station"]
+            if final_destination_station in alt_name_map:
+                final_destination_station = alt_name_map[final_destination_station]
 
             event = ctje.Arrival_or_Departure_Event(
                 event_type=event_type,
-                id_=int(row["id_"]),  # Convert string back to int for processing
+                id_=(row["id_"]),  # Convert string back to int for processing
                 train_name=row["train_name"],
-                delay_min=int(row["delay_min"]),
-                from_station=row["from_station"],
-                to_station=row["to_station"],
+                from_station=from_station,
+                to_station=to_station,
                 station_num=int(row["station_num"]),
                 timestamp=actual_time,
                 expected_next_event_time=expected_time,
-                final_destination_station=row["final_destination_station"],
+                final_destination_station=final_destination_station,
             )
             events.append(event)
 
@@ -120,7 +128,8 @@ def extract_stations_and_edges(
             seen_stations.add(station_name)
             coords = stations_locations.get(station_name)
             if coords is None:
-                raise ValueError(f"Station {station_name} not found in stations_locations")
+                print(f"Warning: Station {station_name} not found in stations_locations, skipping.")
+                continue
             lat = coords["lat"]
             lon = coords["lon"]
             if lat is None or lon is None:
@@ -232,7 +241,7 @@ def print_statistics(stations: dict[int, Station], edges: dict[tuple[int, int], 
 
 if __name__ == "__main__":
     # File paths
-    csv_file = "dashboard/src/data/ice_journey_events.csv"
+    csv_file = "dashboard/src/data/ice_journey_events_full_year.csv"
     mapping_file = "dashboard/src/data/alternative_station_name_to_station_name.json"
     stations_file = "station_cache/stations_index.json"
     output_file = "dashboard/src/data/graph_structure.json"
@@ -248,8 +257,11 @@ if __name__ == "__main__":
     print("Loading station mapping and coordinates...")
     stations_index = load_stations_index(stations_file)
 
+    with open(mapping_file, "r", encoding="utf-8") as f:
+        alt_name_map = json.load(f)
+
     # Extract stations and edges
-    stations, edges, station_name_to_id = extract_stations_and_edges(csv_file, stations_index)
+    stations, edges, station_name_to_id = extract_stations_and_edges(csv_file, stations_index, alt_name_map)
 
     # Build sparse adjacency structure
     print("Building sparse adjacency structure...")
