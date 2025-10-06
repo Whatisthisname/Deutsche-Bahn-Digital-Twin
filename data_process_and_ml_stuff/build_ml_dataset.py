@@ -22,7 +22,6 @@ class Arrival_or_Departure_Event:
     event_type: EventType
     id_: str
     train_name: str
-    delay_min: int
     from_station: str
     to_station: str
     station_num: int
@@ -72,7 +71,6 @@ def load_csv(input_path: str) -> list[Arrival_or_Departure_Event]:
                 event_type=EventType(row["event_type"]),
                 id_=str(row["id_"]),
                 train_name=row["train_name"],
-                delay_min=int(row["delay_min"]),
                 from_station=row["from_station"],
                 to_station=row["to_station"],
                 station_num=int(row["station_num"]),
@@ -88,7 +86,7 @@ def load_csv(input_path: str) -> list[Arrival_or_Departure_Event]:
 
 graph = json.load(open("dashboard/src/data/graph_structure.json", "r", encoding="utf-8"))
 print(graph.keys())
-rows = load_csv("dashboard/src/data/ice_journey_events.csv")
+rows = load_csv("dashboard/src/data/ice_journey_events_full_year.csv")
 
 
 event_dict: dict[str, list[Arrival_or_Departure_Event]] = {}
@@ -159,8 +157,8 @@ for journey_id, events in event_dict.items():
                     expected_next_event_time=datetime_feature_map(current_event.expected_next_event_time),
                     timestamp=datetime_feature_map(current_event.timestamp),
                     delay_min=delay,
-                    from_station=station_name_to_new_id[current_event.from_station],
-                    to_station=station_name_to_new_id[current_event.to_station],
+                    from_station=graph['stations'][from_station_id]['closenessCentrality'],
+                    to_station=graph['stations'][from_station_id]['closenessCentrality'],
                     station_num=current_event.station_num,
                     distance=edge[2],
                 ).flatten()
@@ -176,8 +174,7 @@ for journey_id, events in event_dict.items():
                 # No next event available - cannot train for this example
                 delays.append(0.0)  # or skip by not appending
 
-print(delays)
-with open("dataset.csv", "w", encoding="utf-8") as f:
+with open("data_process_and_ml_stuff/ml_dataset.csv", "w", encoding="utf-8") as f:
     for x, y in zip(rows, delays):
         f.write(",".join([str(i) for i in x + [y]]))
         f.write("\n")

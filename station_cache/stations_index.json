@@ -143,8 +143,8 @@
     "stationID": "1027",
     "evaNr": null,
     "rl100Code": null,
-    "lat": 53.439035,
-    "lon": 13.299645
+    "lat": 53.440365,
+    "lon": 13.30198
   },
   "Capelle (Westf)": {
     "stationID": "1028",
@@ -2950,8 +2950,8 @@
     "stationID": "1517",
     "evaNr": null,
     "rl100Code": null,
-    "lat": 52.150237,
-    "lon": 11.215214
+    "lat": 52.1502354,
+    "lon": 11.2152117
   },
   "Eilvese": {
     "stationID": "1518",
@@ -4843,7 +4843,7 @@
     "lat": 50.112562,
     "lon": 8.696987
   },
-  "Frankfurt am Main Stadion": {
+  "Frankfurt (Main) Stadion": {
     "stationID": "1854",
     "evaNr": null,
     "rl100Code": null,
@@ -4924,8 +4924,8 @@
     "stationID": "1866",
     "evaNr": null,
     "rl100Code": null,
-    "lat": 50.107145,
-    "lon": 8.663789
+    "lat": 50.1066819,
+    "lon": 8.66282825
   },
   "Frankfurt-Berkersheim": {
     "stationID": "1867",
@@ -6233,8 +6233,8 @@
     "stationID": "2088",
     "evaNr": null,
     "rl100Code": null,
-    "lat": 49.580886,
-    "lon": 9.710612
+    "lat": 49.5810338,
+    "lon": 9.71081911
   },
   "Gerlenhofen": {
     "stationID": "2089",
@@ -9341,8 +9341,8 @@
     "stationID": "2647",
     "evaNr": null,
     "rl100Code": null,
-    "lat": 50.02286,
-    "lon": 9.380805
+    "lat": 50.0226086,
+    "lon": 9.38083589
   },
   "Heilbronn Hbf": {
     "stationID": "2648",
@@ -9355,8 +9355,8 @@
     "stationID": "2650",
     "evaNr": null,
     "rl100Code": null,
-    "lat": 49.151601,
-    "lon": 9.220598
+    "lat": 49.1513167,
+    "lon": 9.22043086
   },
   "Mücheln (Geiseltal) - Stadt": {
     "stationID": "2651",
@@ -13121,8 +13121,8 @@
     "stationID": "3324",
     "evaNr": null,
     "rl100Code": null,
-    "lat": 50.943665,
-    "lon": 6.934389
+    "lat": 50.9428861,
+    "lon": 6.93339653
   },
   "Köln-Buchforst": {
     "stationID": "3325",
@@ -17643,8 +17643,8 @@
     "stationID": "4145",
     "evaNr": null,
     "rl100Code": null,
-    "lat": 49.321107,
-    "lon": 9.357979
+    "lat": 49.3207894,
+    "lon": 9.35795665
   },
   "Mockrehna": {
     "stationID": "4146",
@@ -17671,8 +17671,8 @@
     "stationID": "415",
     "evaNr": null,
     "rl100Code": null,
-    "lat": 52.195498,
-    "lon": 9.815279
+    "lat": 52.1951452,
+    "lon": 9.81478963
   },
   "Mögglingen (b Gmünd)": {
     "stationID": "4150",
@@ -20800,8 +20800,8 @@
     "stationID": "468",
     "evaNr": null,
     "rl100Code": null,
-    "lat": 48.480974,
-    "lon": 9.976835
+    "lat": 48.4819997,
+    "lon": 9.97691392
   },
   "Oberröblingen (Helme)": {
     "stationID": "4683",
@@ -21549,8 +21549,8 @@
     "stationID": "481",
     "evaNr": null,
     "rl100Code": null,
-    "lat": 50.010379,
-    "lon": 7.05803
+    "lat": 50.0105406,
+    "lon": 7.05860134
   },
   "Ostrau": {
     "stationID": "4811",
@@ -21591,8 +21591,8 @@
     "stationID": "4818",
     "evaNr": null,
     "rl100Code": null,
-    "lat": 48.888526,
-    "lon": 8.240582
+    "lat": 48.8883808,
+    "lon": 8.24040414
   },
   "Ötisheim": {
     "stationID": "4819",
@@ -21969,8 +21969,8 @@
     "stationID": "4879",
     "evaNr": null,
     "rl100Code": null,
-    "lat": 49.969536,
-    "lon": 12.165956
+    "lat": 49.9694672,
+    "lon": 12.1660599
   },
   "Bensheim": {
     "stationID": "488",
@@ -25021,8 +25021,8 @@
     "stationID": "542",
     "evaNr": null,
     "rl100Code": null,
-    "lat": 52.496254,
-    "lon": 13.290326
+    "lat": 52.496345,
+    "lon": 13.290102
   },
   "Ruhland": {
     "stationID": "5422",
@@ -26452,7 +26452,7 @@
     "lat": 48.86834,
     "lon": 9.354943
   },
-  "Schwalbach a Ts (Limes)": {
+  "Schwalbach (Taunus) Limes": {
     "stationID": "5708",
     "evaNr": null,
     "rl100Code": null,
@@ -28006,7 +28006,7 @@
     "lat": 53.942319,
     "lon": 11.596334
   },
-  "Steinheim/Main": {
+  "Steinheim am Main (Hanau)": {
     "stationID": "5998",
     "evaNr": null,
     "rl100Code": null,
@@ -28213,8 +28213,8 @@
     "stationID": "6037",
     "evaNr": null,
     "rl100Code": null,
-    "lat": 50.79448,
-    "lon": 6.217478
+    "lat": 50.7944104,
+    "lon": 6.21715667
   },
   "Stollberg (Sachs)": {
     "stationID": "6038",
@@ -28479,8 +28479,8 @@
     "stationID": "6078",
     "evaNr": null,
     "rl100Code": null,
-    "lat": 48.813673,
-    "lon": 9.169382
+    "lat": 48.8136825,
+    "lon": 9.16913332
   },
   "Stuttgart Feuersee": {
     "stationID": "6079",
@@ -33984,7 +33984,7 @@
     "lat": 50.1204216,
     "lon": 8.85817498
   },
-  "Offenbach-Kaiserlei": {
+  "Offenbach (Main) Kaiserlei": {
     "stationID": "7169",
     "evaNr": null,
     "rl100Code": null,
@@ -33998,14 +33998,14 @@
     "lat": 48.266373,
     "lon": 10.837891
   },
-  "Offenbach Ledermuseum": {
+  "Offenbach (Main) Ledermuseum": {
     "stationID": "7170",
     "evaNr": null,
     "rl100Code": null,
     "lat": 50.105989,
     "lon": 8.750485
   },
-  "Offenbach Marktplatz": {
+  "Offenbach (Main) Marktplatz": {
     "stationID": "7171",
     "evaNr": null,
     "rl100Code": null,
@@ -36277,8 +36277,8 @@
     "stationID": "8166",
     "evaNr": null,
     "rl100Code": null,
-    "lat": 49.307098,
-    "lon": 8.942274
+    "lat": 49.3069897,
+    "lon": 8.9423415
   },
   "Helmstadt (Baden)": {
     "stationID": "8167",
@@ -36900,10 +36900,10 @@
     "stationID": "8314",
     "evaNr": null,
     "rl100Code": null,
-    "lat": 53.534824,
-    "lon": 10.0246596
+    "lat": 53.5348434,
+    "lon": 10.0247937
   },
-  "Frankfurt am Main-Ginnheim": {
+  "Frankfurt (Main) Ginnheim": {
     "stationID": "8320",
     "evaNr": null,
     "rl100Code": null,
@@ -37502,8 +37502,8 @@
     "stationID": "917",
     "evaNr": null,
     "rl100Code": null,
-    "lat": 50.829249,
-    "lon": 6.912718
+    "lat": 50.8286504,
+    "lon": 6.91310522
   },
   "Hinrichssegen": {
     "stationID": "918",
@@ -37586,8 +37586,8 @@
     "stationID": "936",
     "evaNr": null,
     "rl100Code": null,
-    "lat": 54.268211,
-    "lon": 12.712682
+    "lat": 54.268238,
+    "lon": 12.711533
   },
   "Büches-Düdelsheim": {
     "stationID": "937",

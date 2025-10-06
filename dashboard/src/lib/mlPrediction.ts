@@ -10,8 +10,8 @@ export interface ModelInput {
     expected_next_event_time: [number, number, number, number, number];
     timestamp: [number, number, number, number, number];
     delay_min: number;
-    from_station: number;
-    to_station: number;
+    from_station_centrality: number;
+    to_station_centrality: number;
     station_num: number;
     distance: number;
 }
@@ -100,7 +100,6 @@ function toModelInput(
     currentEvent: ArrivalOrDepartureEvent,
     pastEvent: ArrivalOrDepartureEvent | null,
     graph: GraphStructure,
-    stationNameToNewId: { [key: string]: number }
 ): ModelInput {
     // Map event type to numeric value
     const eventTypeMap = {
@@ -122,9 +121,11 @@ function toModelInput(
     const timestampFeatures = datetimeFeatureMap(currentTime);
     const expectedTimeFeatures = datetimeFeatureMap(expectedTime);
 
+    graph.stationNameToId[currentEvent.from_station];
+
     // Find station mappings
-    const fromStationId = stationNameToNewId[currentEvent.from_station];
-    const toStationId = stationNameToNewId[currentEvent.to_station];
+    const fromStationCentrality = graph.stations[graph.stationNameToId[currentEvent.from_station]].closenessCentrality;
+    const toStationCentrality = graph.stations[graph.stationNameToId[currentEvent.to_station]].closenessCentrality;
 
     // Find edge distance
     const distance = findEdgeDistance(currentEvent.from_station, currentEvent.to_station, graph);
@@ -134,8 +135,8 @@ function toModelInput(
         expected_next_event_time: expectedTimeFeatures,
         timestamp: timestampFeatures,
         delay_min: delayMin,
-        from_station: fromStationId,
-        to_station: toStationId,
+        from_station_centrality: fromStationCentrality,
+        to_station_centrality: toStationCentrality,
         station_num: currentEvent.station_num,
         distance
     };
@@ -150,8 +151,8 @@ function flattenModelInput(input: ModelInput): number[] {
         ...input.expected_next_event_time,
         ...input.timestamp,
         input.delay_min,
-        input.from_station,
-        input.to_station,
+        input.from_station_centrality,
+        input.to_station_centrality,
         input.station_num,
         input.distance
     ];
@@ -195,9 +196,6 @@ export function predictNextDelay(
     events: ArrivalOrDepartureEvent[],
     graph: GraphStructure
 ): PredictionResult | null {
-    if (events.length < 2) {
-        return null; // Need at least 2 events for prediction
-    }
 
     // Ensure events are sorted chronologically
     const sortedEvents = [...events].sort((a, b) =>
@@ -227,7 +225,7 @@ export function predictNextDelay(
 
     try {
         // Convert to model input
-        const modelInput = toModelInput(currentEvent, pastEvent, graph, stationNameToNewId);
+        const modelInput = toModelInput(currentEvent, pastEvent, graph);
 
         // Flatten and predict
         const inputArray = flattenModelInput(modelInput);

@@ -92,12 +92,19 @@ def main():
         json.dumps(stations, ensure_ascii=False, indent=2), encoding="utf-8"
     )
 
+    with open("dashboard/src/data/alternative_station_name_to_station_name.json", "r", encoding="utf-8") as f:
+        alt_name_map = json.load(f)\
+    
+
     print("Building index (using only RIS-Stations data)…")
     index: Dict[str, Dict[str, Any]] = {}
     misses: List[Dict[str, Any]] = []
 
     for i, st in enumerate(stations, 1):
         name = name_from_station(st)
+        if name in alt_name_map.keys():
+            name = alt_name_map[name]
+            print(f"  mapped alternative name to standard: {name}")
         if not name:
             continue
         latlon = coords_from_station(st)

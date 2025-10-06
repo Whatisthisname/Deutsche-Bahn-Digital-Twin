@@ -267,8 +267,8 @@ def load_station_mapping(mapping_file: str) -> dict[str, str]:
 
 
 def main():
-    input_file = "dashboard/src/data/ice.csv"
-    output_file = "dashboard/src/data/ice_journey_events.csv"
+    input_file = "dashboard/src/data/july_2024_to_july_2025_ice.csv"
+    output_file = "dashboard/src/data/ice_journey_events_full_year.csv"
 
     try:
         name_mapping = load_station_mapping(

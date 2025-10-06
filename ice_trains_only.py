@@ -1,50 +1,24 @@
 #!/usr/bin/env python3
-import pathlib
 import pandas as pd
+import pathlib
 
 DATA_DIR = pathlib.Path("dashboard/public/data")
-OUT_DIR = DATA_DIR / "ice"
-OUT_DIR.mkdir(parents=True, exist_ok=True)
-
-def filter_ice(src: pathlib.Path):
-    # Read the monthly events CSV
-    df = pd.read_csv(src)
-
-    # Only keep ICE trains
-    if "train_type" not in df.columns:
-        print(f"⚠️  {src.name}: no 'train_type' column, skipping")
-        return None
-
-    ice_df = df[df["train_type"].astype(str).str.upper() == "ICE"].copy()
-
-    if ice_df.empty:
-        print(f"ℹ️  {src.name}: no ICE trains found")
-        return None
-
-    out = OUT_DIR / src.name.replace("events-", "events-ice-")
-    ice_df.to_csv(out, index=False)
-    print(f"{src.name} → {out.name} | ICE rows: {len(ice_df):,}")
-    return out
+INPUT_FILE = DATA_DIR / "all_data.csv"
+OUTPUT_FILE = DATA_DIR / "all_data_ice.csv"
 
 def main():
-    files = sorted(list(DATA_DIR.glob("events-*.csv")))
-    if not files:
-        print("No events-*.csv files found in ./dashboard/public/data/")
+    if not INPUT_FILE.exists():
+        print(f"{INPUT_FILE} not found.")
         return
 
-    written = []
-    for f in files:
-        try:
-            result = filter_ice(f)
-            if result:
-                written.append(result.name)
-        except Exception as e:
-            print(f"❌ {f.name}: {e}")
+    df = pd.read_csv(INPUT_FILE)
+    if "train_type" not in df.columns:
+        print("No 'train_type' column found in all_data.csv.")
+        return
 
-    if written:
-        print("\nDone! ICE-only files written:")
-        for w in written:
-            print("  -", w)
+    ice_df = df[df["train_type"].astype(str).str.upper() == "ICE"]
+    ice_df.to_csv(OUTPUT_FILE, index=False)
+    print(f"Saved {len(ice_df):,} ICE train rows to {OUTPUT_FILE}")
 
 if __name__ == "__main__":
     main()
