@@ -1,5 +1,9 @@
 import MainStats from "../../components/MainStats";
 import DelayAccuracy from "@/components/ValidationChart";
+import TopBusiestStations from "@/components/BusiestStations";
+import TrainActivityPerHour from "@/components/TrainActivityPerHour";
+import JourneyStatusPieChart from "@/components/JourneyStatusPieChart";
+import AverageDelayChart from "@/components/AverageDelayChart";
 
 export default function VisualisationsPage() {
 
@@ -14,6 +18,21 @@ export default function VisualisationsPage() {
                     <DelayAccuracy />
                 </div>
 
+                <div className="panel wide">
+                    <TopBusiestStations />
+                </div>
+
+                <div className="panel wide">
+                    <TrainActivityPerHour />
+                </div>
+
+                <div className="panel wide">
+                    <JourneyStatusPieChart />
+                </div>
+
+                <div className="panel wide">
+                    <AverageDelayChart />
+                </div>
 
                 {/* Placeholder for future visualizations */}
                 <div className="panel">

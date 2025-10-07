@@ -5,6 +5,7 @@ import { useMemo } from "react";
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Tooltip, CartesianGrid } from "recharts";
 import { useSimStore } from "@/state/useSimStore";
 import { useStationStats } from "@/state/useStationStats"; // ← use the new hook
+import { useCurrentAnalytics } from "@/state/useAnalytics"; // ← add analytics for consistency
 import { useGraphStructure } from "@/state/useGraphStructure";
 
 type Row = {
@@ -23,6 +24,7 @@ export default function AverageDelayChart() {
     const cursorTs = useSimStore((s) => s.cursorTs);
     const { loaded } = useGraphStructure();
     const { stations } = useStationStats(); // ← reactive array
+    const analytics = useCurrentAnalytics(); // ← consistent analytics
 
     const currentTime = cursorTs ? new Date(cursorTs).toLocaleTimeString() : "—";
 
@@ -126,7 +128,7 @@ Punctuality: ${row?.punctualityRate ?? 0}%`;
                 <div className="metric-detail">
                     Showing top {chartData.length} stations by average delay
                     <div style={{ fontSize: "10px", marginTop: "4px", color: "#888" }}>
-                        Total active stations: {activeStationsCount} • Dynamic updates
+                        Total active stations: {activeStationsCount} • Overall avg delay: {analytics.averageDelay.toFixed(1)}min • Punctuality: {analytics.punctualityRate.toFixed(1)}%
                     </div>
                 </div>
             </div>
