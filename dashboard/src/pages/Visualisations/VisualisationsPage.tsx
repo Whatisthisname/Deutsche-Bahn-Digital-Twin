@@ -5,6 +5,7 @@ import JourneyStatusPieChart from "@/components/JourneyStatusPieChart";
 import AverageDelayChart from "@/components/AverageDelayChart";
 
 import TrainActivityPerHourNew from "@/components/TrainActivityPerHourNew";
+import DelayBetweenStations from "@/components/DelayBetweenStations";
 
 export default function VisualisationsPage() {
 
@@ -33,6 +34,10 @@ export default function VisualisationsPage() {
 
                 <div className="panel wide">
                     <AverageDelayChart />
+                </div>
+
+                <div className="panel wide">
+                    <DelayBetweenStations />
                 </div>
 
                 {/* Placeholder for future visualizations */}
