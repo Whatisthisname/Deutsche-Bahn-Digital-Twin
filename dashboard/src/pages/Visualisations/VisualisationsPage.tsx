@@ -4,7 +4,6 @@ import TopBusiestStations from "@/components/BusiestStations";
 import JourneyStatusPieChart from "@/components/JourneyStatusPieChart";
 import AverageDelayChart from "@/components/AverageDelayChart";
 
-import TrainActivityPerHour from "@/components/TrainActivityPerHour";
 import DelayBetweenStations from "@/components/DelayBetweenStations";
 
 export default function VisualisationsPage() {
@@ -22,10 +21,6 @@ export default function VisualisationsPage() {
 
                 <div className="panel wide">
                     <TopBusiestStations />
-                </div>
-
-                <div className="panel wide">
-                    <TrainActivityPerHour />
                 </div>
 
                 <div className="panel wide">

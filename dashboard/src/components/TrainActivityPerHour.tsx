@@ -166,24 +166,28 @@ export default function JourneysChartAggregated({
       }
     }
 
-    const rows: { time: string; Active: number; Delayed: number; Cancelled: number }[] =
-      new Array(buckets);
-    let a = 0, d = 0;
-    for (let i = 0; i < buckets; i++) {
-      a += activeDiff[i];
-      d += delayedDiff[i];
-      const bucketStart = windowStartAligned + i * spanMs;
-      rows[i] = {
-        time: labelFor(bucketStart, agg),
-        Active: a,
-        Delayed: d,
-        Cancelled: cancelledPerBucket[i],
-      };
-    }
+    // materialize counts per bucket
+  const rows: { ts: number; label: string; Active: number; Delayed: number; Cancelled: number }[] =
+    new Array(buckets);
 
-    // hide empty buckets so the chart grows as events arrive
-    const filtered = rows.filter(r => (r.Active || r.Delayed || r.Cancelled));
-    return filtered;
+  let a = 0, d = 0;
+  for (let i = 0; i < buckets; i++) {
+    a += activeDiff[i];
+    d += delayedDiff[i];
+    const bucketStart = windowStartAligned + i * spanMs;
+    rows[i] = {
+      ts: bucketStart,                      // <-- numeric timestamp
+      label: labelFor(bucketStart, agg),    // <-- pretty label for tooltips
+      Active: a,
+      Delayed: d,
+      Cancelled: cancelledPerBucket[i],
+    };
+  }
+
+  // hide any empty buckets so the chart grows as events arrive
+  const filtered = rows.filter(r => (r.Active || r.Delayed || r.Cancelled));
+  return filtered;
+
   }, [windowEvents, activeRideIdsNow, windowStartAligned, spanMs, buckets, agg, now]);
 
   // ----- Y-axis lock (user adjustable) -----
@@ -252,13 +256,24 @@ export default function JourneysChartAggregated({
       <ResponsiveContainer width="100%" height={360}>
         <LineChart data={chartData}>
           <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="time" minTickGap={agg === "minute" ? 48 : 24} />
+          <XAxis
+            dataKey="ts"
+            type="number"
+            scale="time"
+            domain={['dataMin', 'dataMax']}     // follows incoming data smoothly
+            tickFormatter={(t) => labelFor(t as number, agg)}
+            minTickGap={agg === 'minute' ? 48 : 24}
+            allowDuplicatedCategory={false}
+          />
           <YAxis allowDecimals={false} domain={yDomain as any} />
-          <Tooltip />
+          <Tooltip
+            labelFormatter={(t) => new Date(t as number).toLocaleString()}
+            formatter={(v, name) => [v as any, name]}
+          />
           <Legend />
-          <Line type="monotone" dataKey="Active"    stroke="#2563eb" strokeWidth={2} dot={false} isAnimationActive={false} />
-          <Line type="monotone" dataKey="Delayed"   stroke="#f59e0b" strokeWidth={2} dot={false} isAnimationActive={false} />
-          <Line type="monotone" dataKey="Cancelled" stroke="#ef4444" strokeWidth={2} dot={false} isAnimationActive={false} />
+          <Line connectNulls type="monotone" dataKey="Active"    stroke="#2563eb" strokeWidth={2} dot={false} isAnimationActive={false} />
+          <Line connectNulls type="monotone" dataKey="Delayed"   stroke="#f59e0b" strokeWidth={2} dot={false} isAnimationActive={false} />
+          <Line connectNulls type="monotone" dataKey="Cancelled" stroke="#ef4444" strokeWidth={2} dot={false} isAnimationActive={false} />
         </LineChart>
       </ResponsiveContainer>
 
