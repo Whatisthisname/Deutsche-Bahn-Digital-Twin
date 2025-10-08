@@ -20,15 +20,24 @@ export default function CsvPreview({
     const canceledRides = allRides.filter(ride => ride.status === "CANCELED");
 
     // Get visible events (events that have occurred up to current time)
-    const visible = processedEvents.filter(event => {
+    const visible = processedEvents
+    .filter(event => {
         const eventTime = ISO_to_ms(event.timestamp);
         return eventTime <= currentTime;
+    })
+    .sort((a, b) => {
+        // Sort by timestamp descending (newest first)
+        const timeA = ISO_to_ms(a.timestamp);
+        const timeB = ISO_to_ms(b.timestamp);
+        return timeB - timeA;
     });
 
     if (!visible.length) return <div className="loading">No events at current time…</div>;
 
     const cols = Object.keys(visible[0]);
-    const displayEvents = maxRows > 0 ? visible.slice(0, maxRows) : visible;
+    const displayEvents = visible.length > maxRows 
+        ? visible.slice(-maxRows).reverse()
+        : visible.slice().reverse();
 
     return (
         <div className={`preview ${className || ''}`}>

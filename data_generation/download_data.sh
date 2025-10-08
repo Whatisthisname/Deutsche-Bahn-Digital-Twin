@@ -1,7 +1,11 @@
 #!/bin/bash
 
 # Create the target data directory
+<<<<<<< HEAD:download_data.sh
+mkdir -p "Deutsche-Bahn-Digital-Twin/dashboard/public/data"
+=======
 mkdir -p "data_generation/data"
+>>>>>>> main:data_generation/download_data.sh
 
 # Set the start and end dates
 start_date="2024-07-01"
