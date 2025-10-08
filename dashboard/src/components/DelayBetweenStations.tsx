@@ -134,7 +134,7 @@ export default function EdgeDelayStatsAllHistoryCard() {
     <div className="analytics-card chart-card">
       {/* Header */}
       <div className="analytics-header">
-        <h3 className="analytics-title">Edge Delay (All History)</h3>
+        <h3 className="analytics-title">Delays between Stations</h3>
         <div className="analytics-time">Sim: {new Date(now).toLocaleString()}</div>
       </div>
 
@@ -196,13 +196,12 @@ export default function EdgeDelayStatsAllHistoryCard() {
 
       {/* KPIs */}
       {fromStation && toStation && stats.count > 0 && (
-        <div className="mb-4" style={{ display: "grid", gridTemplateColumns: "repeat(6, minmax(0,1fr))", gap: 12 }}>
-          <Metric label="Samples" value={stats.count} />
-          <Metric label="Min" value={fmt(stats.min)} />
-          <Metric label="Median" value={fmt(stats.median)} />
-          <Metric label="Avg (signed)" value={fmt(stats.avg)} />
-          <Metric label="Avg (late-only)" value={fmt(stats.avgLateOnly)} />
-          <Metric label="P90" value={fmt(stats.p90)} />
+        <div className="mb-4" style={{ display: "grid", gridTemplateColumns: "repeat(5, minmax(0,1fr))", gap: 12 }}>
+          <Metric label="Delay Occurrences" value={stats.count} />
+          <Metric label="Min Delay" value={fmt(stats.min)} />
+          <Metric label="Median Delay" value={fmt(stats.median)} />
+          <Metric label="Avg Delay" value={fmt(stats.avg)} />
+          <Metric label = "Max Delay" value={fmt(stats.max)} />
           {/* If you want Max as well, bump to 7 columns or wrap */}
         </div>
       )}
@@ -213,8 +212,9 @@ export default function EdgeDelayStatsAllHistoryCard() {
       <div className="analytics-footer">
         <div className="metric-detail">
           {fromStation && toStation && stats.count > 0
-            ? <>On-time rate (≤ 0 min): <strong>{stats.ontimeRate.toFixed(1)}%</strong></>
-            : <>Select an edge to view its historical delay distribution.</>}
+            ? `Punctuality rate: ${stats.ontimeRate.toFixed(1)}% (delay ≤ 0 min)`
+            : <>Select an edge to view its historical delay distribution.</>
+        }
         </div>
       </div>
     </div>

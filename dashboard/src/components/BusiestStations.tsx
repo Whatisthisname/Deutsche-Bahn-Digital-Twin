@@ -193,44 +193,10 @@ export default function BusiestStations({ topN = 10 }: { topN?: number }) {
                     Active journeys: {debugInfo.activeJourneysCount} | 
                     Total events: {allEvents.length} | 
                     Stations shown: {chartData.length} |
-                    {debugInfo.shouldThrottle ? ' (Playback)' : ' (Paused)'} |
-                    Sim time: {currentSimTime ? new Date(currentSimTime).toLocaleTimeString() : 'Not set'}
+                    Time: {currentSimTime ? new Date(currentSimTime).toLocaleTimeString() : 'Not set'}
                 </div>
             </div>
 
-            {/* Debug info panel */}
-            {process.env.NODE_ENV === 'development' && (
-                <details className="mb-4 p-2 border rounded text-sm bg-gray-50">
-                    <summary className="cursor-pointer font-medium">Debug Info</summary>
-                    <pre className="mt-2 text-xs">
-                        {JSON.stringify(debugInfo, null, 2)}
-                    </pre>
-                    {allEvents.length > 0 && (
-                        <div className="mt-2">
-                            <strong>Sample events:</strong>
-                            <pre className="text-xs">
-                                {JSON.stringify(allEvents.slice(0, 3), null, 2)}
-                            </pre>
-                        </div>
-                    )}
-                    {chartData.length > 0 && (
-                        <div className="mt-2">
-                            <strong>Chart data validation:</strong>
-                            <p className="text-xs">
-                                Valid stations: {chartData.length}<br/>
-                                All numeric arrivals: {chartData.every(d => typeof d.Arrivals === 'number') ? 'Yes' : 'No'}<br/>
-                                All numeric departures: {chartData.every(d => typeof d.Departures === 'number') ? 'Yes' : 'No'}<br/>
-                                Max total: {chartData.length > 0 ? Math.max(...chartData.map(d => d.Total)) : 0}<br/>
-                                Has station names: {chartData.every(d => d.station && d.station.length > 0) ? 'Yes' : 'No'}
-                            </p>
-                            <strong>Sample chart data:</strong>
-                            <pre className="text-xs">
-                                {JSON.stringify(chartData.slice(0, 2), null, 2)}
-                            </pre>
-                        </div>
-                    )}
-                </details>
-            )}
 
             <ResponsiveContainer width="100%" height={400}>
                 <BarChart 

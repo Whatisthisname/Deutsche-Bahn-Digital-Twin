@@ -67,7 +67,7 @@ export default function AverageDelayChart() {
   return (
     <div className="analytics-card chart-card">
       <div className="analytics-header">
-        <h3 className="analytics-title">Average Delay by Station</h3>
+        <h3 className="analytics-title">Top 10 Most Delayed Stations (on average)</h3>
         <div className="analytics-time">{currentTime}</div>
       </div>
 
@@ -139,8 +139,7 @@ Punctuality: ${row?.punctualityRate ?? 0}%`;
 
       <div className="analytics-footer">
         <div className="metric-detail">
-          Showing top {chartData.length} stations by average delay
-          <div style={{ fontSize: "10px", marginTop: "4px", color: "#888" }}>
+          <div style={{ fontSize: "15px", marginTop: "4px", color: "#888" }}>
             Total active stations: {activeStationsCount} • Overall avg delay:{" "}
             {analytics.averageDelay.toFixed(1)}min • Punctuality:{" "}
             {analytics.punctualityRate.toFixed(1)}%

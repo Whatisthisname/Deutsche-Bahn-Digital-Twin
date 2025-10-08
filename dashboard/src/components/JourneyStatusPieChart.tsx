@@ -166,7 +166,7 @@ export default function JourneyStatusPieChart() {
   return (
     <div className="w-full">
       <div className="mb-4">
-        <h2 className="text-xl font-bold mb-2">Cumulative Journey Status</h2>
+        <h2 className="text-xl font-bold mb-2"> Journey Status Pie Chart</h2>
 
         {/* Filter Controls */}
         <div className="flex flex-wrap gap-4 mb-4">
@@ -216,7 +216,12 @@ export default function JourneyStatusPieChart() {
       {/* Pie Chart */}
       {analysis.total > 0 ? (
         <div className="flex flex-col lg:flex-row items-center gap-8">
-          <div className="w-full lg:w-2/3">
+
+
+
+
+            
+          <div className="w-half lg:w-2/3">
             <ResponsiveContainer width="100%" height={400}>
               <PieChart>
                 <Pie
@@ -314,6 +319,8 @@ export default function JourneyStatusPieChart() {
           </p>
         </div>
       )}
+
+      
     </div>
   );
 }
