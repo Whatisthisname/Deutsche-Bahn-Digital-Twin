@@ -34,6 +34,14 @@ print("MAE:", mean_absolute_error(yte, preds))
 mean_guess = [ytr.mean()] * len(yte)
 print("MAE (mean guess):", mean_absolute_error(yte, mean_guess))
 
+<<<<<<< HEAD
+=======
+#save the python model for future use
+import joblib
+joblib.dump(model, 'tree_model.joblib')
+
+
+>>>>>>> main
 # 4) Export to JavaScript using m2cgen
 #    This generates a pure function taking a numeric array -> number.
 js_code = m2c.export_to_javascript(model)

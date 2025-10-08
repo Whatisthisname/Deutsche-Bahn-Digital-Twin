@@ -1,3 +1,6 @@
+// This one should show a ranked list of stations by their average delay, updated in real-time as the simulation runs.
+// I think it currently has an issue with how often it refreshes though.
+
 import { useMemo } from "react";
 import {
   BarChart,
