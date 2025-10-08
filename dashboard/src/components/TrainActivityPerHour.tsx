@@ -7,9 +7,8 @@ import { useEventStream } from "@/state/useEventStream";
 import { useActiveJourneys } from "@/hooks/useStreamingTrainEvents";
 import type { ArrivalOrDepartureEvent } from "@/types/ride";
 import { calculateDelayMinutes, calculateEventDelay } from "@/utils/delayUtils";
-import { ISO_to_ms } from "@/utils/time"; // ← use your time util for consistency
+import { ISO_to_ms } from "@/utils/time";
 
-// -------------------- constants --------------------
 const MINUTE = 60_000;
 const HOUR = 60 * MINUTE;
 const DAY = 24 * HOUR;
@@ -17,16 +16,14 @@ const DELAY_THRESHOLD_MIN = 5 as const;
 
 type Agg = "minute" | "hour" | "day";
 
-// default rolling windows per aggregation
 const WINDOW_MS: Record<Agg, number> = {
-  minute: 24 * HOUR,  // last 24h, per-minute
-  hour:   24 * HOUR,    // last 7d, per-hour
-  day:    7 * DAY,   // last 7d, per-day
+  minute: 24 * HOUR,
+  hour:   24 * HOUR,
+  day:    7 * DAY,
 };
 
-// -------------------- helpers --------------------
+// ----- helpers -----
 function tsOf(e: { timestamp?: string | number; ts?: number; time?: number; t?: number }) {
-  // Prefer your ISO_to_ms for strings; accept epoch numbers too
   const t = e?.timestamp ?? e?.ts ?? e?.time ?? e?.t;
   if (typeof t === "number") return t;
   if (typeof t === "string") return ISO_to_ms(t);
@@ -42,9 +39,16 @@ function startOfBucket(ts: number, spanMs: number) {
 function labelFor(ts: number, agg: Agg) {
   const d = new Date(ts);
   const pad = (n: number) => String(n).padStart(2, "0");
-  if (agg === "minute") return `${pad(d.getHours())}:${pad(d.getMinutes())}`;            // HH:mm
-  if (agg === "hour")   return `${pad(d.getHours())}:00 ${d.toLocaleDateString()}`;     // HH:00 + date
-  return d.toLocaleDateString();                                                        // day label
+  if (agg === "minute") return `${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  if (agg === "hour")   return `${pad(d.getHours())}:00 ${d.toLocaleDateString()}`;
+  return d.toLocaleDateString();
+}
+// nice round-up for suggested y-axis
+function niceCeil(n: number) {
+  if (n <= 0) return 1;
+  const p = Math.pow(10, Math.floor(Math.log10(n)));
+  const step = p / 2; // 1, 5, 50, 500, ...
+  return Math.ceil(n / step) * step;
 }
 
 export default function JourneysChartAggregated({
@@ -57,7 +61,6 @@ export default function JourneysChartAggregated({
   // ---- simulation time ----
   const cursorTs = useSimStore((s) => s.cursorTs) ?? 0;
   const now = cursorTs > 0 ? cursorTs : Date.now();
-  // recompute at least once per minute so the newest bucket fills live
   const minuteTick = Math.floor(now / MINUTE);
 
   // ---- data sources ----
@@ -77,13 +80,12 @@ export default function JourneysChartAggregated({
   const windowMs = windows[agg];
 
   // ---- window bounds aligned to buckets ----
-  const windowEnd = startOfBucket(now, spanMs) + spanMs - 1; // include current (partial) bucket
+  const windowEnd = startOfBucket(now, spanMs) + spanMs - 1;
   const windowStartAligned = startOfBucket(now - windowMs + 1, spanMs);
   const buckets = Math.floor((windowEnd - windowStartAligned + 1) / spanMs);
 
-  // ---- fetch only events that can affect the window (with a small lookback) ----
+  // ---- fetch only events that can affect the window ----
   const windowEvents = useMemo(() => {
-    // look back one full bucket to catch intervals that start just before the window
     const lowerBound = windowStartAligned - spanMs;
     return processedEvents
       .filter((e) => {
@@ -94,22 +96,17 @@ export default function JourneysChartAggregated({
   }, [processedEvents, windowStartAligned, spanMs, now, minuteTick]);
 
   const chartData = useMemo(() => {
-    // difference arrays so we can add intervals efficiently
     const activeDiff = new Int32Array(buckets + 1);
     const delayedDiff = new Int32Array(buckets + 1);
-    const cancelledPerBucket = new Int32Array(buckets); // new cancellations per bucket
+    const cancelledPerBucket = new Int32Array(buckets);
 
-    // group by ride, order events by station/sequence
     const byRide = new Map<string, ArrivalOrDepartureEvent[]>();
     for (const e of windowEvents) {
       const id = String((e as any).id_);
       (byRide.get(id) ?? (byRide.set(id, []), byRide.get(id)!)).push(e as ArrivalOrDepartureEvent);
     }
-    for (const [, arr] of byRide) {
-      arr.sort((a: any, b: any) => a.station_num - b.station_num);
-    }
+    for (const [, arr] of byRide) arr.sort((a: any, b: any) => a.station_num - b.station_num);
 
-    // deposit intervals into diff arrays
     const bucketIndex = (ts: number) =>
       Math.max(0, Math.min(buckets, Math.floor((ts - windowStartAligned) / spanMs)));
 
@@ -121,13 +118,11 @@ export default function JourneysChartAggregated({
       const cancelEv = arr.find((e) => isCancellation(e));
       const cancelledAt = cancelEv ? tsOf(cancelEv) : undefined;
 
-      // ACTIVE: from first event to cancel OR (if still active) to now; clamp to window
       const activeStart = Math.max(firstTs, windowStartAligned);
       const activeEnd = Math.min(
         cancelledAt ?? (activeRideIdsNow.has(rideId) ? now : lastTs),
         now
       );
-
       if (activeEnd > activeStart) {
         const sIdx = bucketIndex(activeStart);
         const eIdx = Math.min(buckets, bucketIndex(activeEnd) + 1);
@@ -135,15 +130,11 @@ export default function JourneysChartAggregated({
         activeDiff[eIdx] -= 1;
       }
 
-      // CANCELLED: cumulative from its bucket onwards
       if (cancelledAt && cancelledAt <= now) {
         const cIdx = bucketIndex(Math.max(cancelledAt, windowStartAligned));
-        if (cIdx >= 0 && cIdx < buckets) {
-          cancelledPerBucket[cIdx] += 1;
-        }
+        if (cIdx >= 0 && cIdx < buckets) cancelledPerBucket[cIdx] += 1;
       }
 
-      // DELAY: carry last known delay forward until next event (or cancel/end)
       let prev: ArrivalOrDepartureEvent | null = null;
       for (let i = 0; i < arr.length; i++) {
         const cur = arr[i];
@@ -171,13 +162,12 @@ export default function JourneysChartAggregated({
             delayedDiff[eIdx] -= 1;
           }
         }
-
         prev = cur;
       }
     }
 
-    // materialize counts per bucket
-    const rows: { time: string; Active: number; Delayed: number; Cancelled: number }[] = new Array(buckets);
+    const rows: { time: string; Active: number; Delayed: number; Cancelled: number }[] =
+      new Array(buckets);
     let a = 0, d = 0;
     for (let i = 0; i < buckets; i++) {
       a += activeDiff[i];
@@ -191,22 +181,32 @@ export default function JourneysChartAggregated({
       };
     }
 
-     const filtered = rows.filter(r => (r.Active || r.Delayed || r.Cancelled));
-
-
-
+    // hide empty buckets so the chart grows as events arrive
+    const filtered = rows.filter(r => (r.Active || r.Delayed || r.Cancelled));
     return filtered;
   }, [windowEvents, activeRideIdsNow, windowStartAligned, spanMs, buckets, agg, now]);
+
+  // ----- Y-axis lock (user adjustable) -----
+  const suggestedY = useMemo(() => {
+    if (chartData.length === 0) return 10;
+    const maxVal = Math.max(
+      ...chartData.map(r => Math.max(r.Active, r.Delayed, r.Cancelled))
+    );
+    return niceCeil(maxVal);
+  }, [chartData]);
+
+  const [yMax, setYMax] = useState<number | null>(null); // null => auto
+  const yDomain = (yMax != null) ? [0, yMax] : (['auto', 'auto'] as const);
 
   return (
     <div className="bg-white p-6 rounded-lg shadow-lg">
       <div className="flex flex-wrap items-center justify-between gap-3 mb-3">
         <h2 className="text-lg font-semibold">Train Activity per window</h2>
-        <div className="flex items-center gap-2 text-xs text-gray-600 font-mono">
+
+        <div className="flex items-center gap-3 text-xs text-gray-600 font-mono">
           <span>Time: {cursorTs ? new Date(cursorTs).toLocaleString() : "Not set"}</span>
-          <span>
-            
-          </span>
+
+          {/* Aggregation selector */}
           <label className="flex items-center gap-2">
             <span className="text-gray-500">Aggregation</span>
             <select
@@ -219,6 +219,33 @@ export default function JourneysChartAggregated({
               <option value="day">Per day (7d)</option>
             </select>
           </label>
+
+          {/* Y-axis control */}
+          <label className="flex items-center gap-2">
+            <span className="text-gray-500">Y&nbsp;max</span>
+            <input
+              type="number"
+              min={1}
+              className="border rounded px-2 py-1 w-20"
+              value={yMax ?? ""}
+              placeholder={String(suggestedY)}
+              onChange={(e) => {
+                const v = e.target.value;
+                if (v === "") { setYMax(null); return; }  // back to auto
+                const n = Number(v);
+                setYMax(Number.isFinite(n) && n > 0 ? Math.floor(n) : 1);
+              }}
+              title="Leave empty for auto-scale"
+            />
+            <button
+              type="button"
+              className="border rounded px-2 py-1"
+              onClick={() => setYMax(null)}
+              title="Back to auto-scale"
+            >
+              Auto
+            </button>
+          </label>
         </div>
       </div>
 
@@ -226,7 +253,7 @@ export default function JourneysChartAggregated({
         <LineChart data={chartData}>
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="time" minTickGap={agg === "minute" ? 48 : 24} />
-          <YAxis allowDecimals={false} />
+          <YAxis allowDecimals={false} domain={yDomain as any} />
           <Tooltip />
           <Legend />
           <Line type="monotone" dataKey="Active"    stroke="#2563eb" strokeWidth={2} dot={false} isAnimationActive={false} />
