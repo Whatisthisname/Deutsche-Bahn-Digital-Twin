@@ -358,7 +358,7 @@ Barleben,410,,,52.208945,11.620875
 Barleber See,411,,,52.214328,11.640852
 Barmbek,412,,,53.587458,10.044164
 Barnstorf (Han),414,,,52.707587,8.510462
-Barnten,415,,,52.195498,9.815279
+Barnten,415,,,52.1951452,9.81478963
 Barrien,416,,,52.946837,8.818506
 Barsinghausen,418,,,52.30489,9.467112
 Barthmühle,420,,,50.557957,12.163681
@@ -391,7 +391,7 @@ Beetz-Sommerfeld,458,,,52.804259,13.022086
 Behringersdorf,463,,,49.481574,11.198498
 Beienheim,464,,,50.359131,8.821022
 Beilrode,467,,,51.571005,13.064935
-Beimerstetten,468,,,48.480974,9.976835
+Beimerstetten,468,,,48.4819997,9.97691392
 Beldorf,470,,,54.125266,9.356217
 Belgershain,472,,,51.233947,12.542785
 Belleben,473,,,51.673603,11.633376
@@ -401,7 +401,7 @@ Bellheim Am Mühlbuckel,8201,,,49.192639,8.297626
 Bellheim Bf,476,,,49.188303,8.29456
 Bempflingen,479,,,48.572364,9.273425
 Benediktbeuern,480,,,47.709121,11.403051
-Bengel,481,,,50.010379,7.05803
+Bengel,481,,,50.0105406,7.05860134
 Bennemühlen,482,,,52.580993,9.726836
 Bennewitz,6951,,,51.355926,12.70843
 Bennigsen,483,,,52.240733,9.666376
@@ -451,7 +451,7 @@ Berlin-Friedrichstraße,527,,,52.520373,13.3872056
 Berlin-Frohnau,539,,,52.632758,13.289934
 Berlin-Grunewald,541,,,52.488693,13.26172
 Berlin-Grünau,540,,,52.413028,13.573497
-Berlin-Halensee,542,,,52.496254,13.290326
+Berlin-Halensee,542,,,52.496345,13.290102
 Berlin-Hermsdorf,543,,,52.617782,13.30769
 Berlin-Hohenschönhausen,544,,,52.5660016,13.5124218
 Berlin-Karlshorst,545,,,52.4797942,13.5279465
@@ -737,14 +737,14 @@ Bruckmühl,912,,,47.8808225,11.9155312
 Brunau-Packebusch,919,,,52.751274,11.484586
 Brunnen,8257,,,48.6291594,11.2981001
 Brück (Mark),909,,,52.186795,12.758467
-Brühl,917,,,50.829249,6.912718
+Brühl,917,,,50.8286504,6.91310522
 Brühl-Kierberg,3175,,,50.838197,6.888375
 Bubach,923,,,49.411024,6.94821
 Bubenreuth,924,,,49.629542,11.011994
 Buchbrunn-Mainstockheim,927,,,49.763284,10.145179
 Buchenau (Oberbay),933,,,48.160277,11.224497
 Buchenhain,935,,,48.031255,11.497442
-Buchenhorst,936,,,54.268211,12.712682
+Buchenhorst,936,,,54.268238,12.711533
 Buchholz (Baden),939,,,48.083581,7.915166
 Buchholz (Nordheide),941,,,53.324683,9.876266
 Buchholz (Zauche),942,,,52.167574,12.922416
@@ -829,7 +829,7 @@ Calbe (Saale) West,1021,,,51.905693,11.758783
 Calberlah,1022,,,52.427559,10.624914
 Calw,1025,,,48.714682,8.741854
 Camburg (Saale),1026,,,51.050857,11.70468
-Cammin (Meckl),1027,,,53.439035,13.299645
+Cammin (Meckl),1027,,,53.440365,13.30198
 Capelle (Westf),1028,,,51.735268,7.61108
 Caputh-Geltow,1029,,,52.350295,12.984406
 Caputh-Schwielowsee,5767,,,52.340976,12.980368
@@ -1218,7 +1218,7 @@ Eidelstedt,1511,,,53.595887,9.907097
 Eilenburg,1512,,,51.4518507,12.6370132
 Eilenburg Ost,1513,,,51.463424,12.667772
 Eilendorf,1515,,,50.785561,6.154367
-Eilsleben (b Magdeburg),1517,,,52.150237,11.215214
+Eilsleben (b Magdeburg),1517,,,52.1502354,11.2152117
 Eilvese,1518,,,52.545215,9.428147
 Eimeldingen,1519,,,47.627948,7.5956
 Einbeck-Salzderhelden,1520,,,51.798169,9.922775
@@ -1236,7 +1236,7 @@ Eislingen (Fils),1539,,,48.6965941,9.70481157
 Eiswoog,234,,,49.516578,7.983562
 Eitensheim,1540,,,48.815979,11.319259
 Eitorf,1541,,,50.773619,7.447326
-Elbbrücken,8314,,,53.534824,10.0246596
+Elbbrücken,8314,,,53.5348434,10.0247937
 Elbgaustraße,1542,,,53.602575,9.893738
 Elfershausen-Trimberg,1546,,,50.14048,9.969109
 Elgersburg,1547,,,50.706054,10.849905
@@ -1464,14 +1464,16 @@ Frankenthal Hbf,1848,,,49.535567,8.349702
 Frankenthal Süd,8210,,,49.522649,8.349558
 Frankfurt (Main) Flughafen Regionalbahnhof,1849,,,50.051219,8.571251
 Frankfurt (Main) Galluswarte,1863,,,50.10403,8.64472
+Frankfurt (Main) Ginnheim,8320,,,50.1429986,8.6431396
 Frankfurt (Main) Hauptwache,1864,,,50.113926,8.678947
-Frankfurt (Main) Hbf,1866,,,50.107145,8.663789
+Frankfurt (Main) Hbf,1866,,,50.1066819,8.66282825
 Frankfurt (Main) Konstablerwache,1865,,,50.114623,8.687098
 Frankfurt (Main) Lokalbahnhof,1850,,,50.102171,8.693025
 Frankfurt (Main) Mühlberg,1851,,,50.101915,8.70060593
 Frankfurt (Main) Niederrad,1876,,,50.0809969,8.63701344
 Frankfurt (Main) Ost,1852,,,50.112574,8.70864
 Frankfurt (Main) Ostendstraße,1853,,,50.112562,8.696987
+Frankfurt (Main) Stadion,1854,,,50.068228,8.633247
 Frankfurt (Main) Stresemannallee,1855,,,50.0943686,8.67126793
 Frankfurt (Main) Süd,1856,,,50.099365,8.686457
 Frankfurt (Main) Taunusanlage,1857,,,50.113565,8.668864
@@ -1482,8 +1484,6 @@ Frankfurt (Oder)-Rosengarten,1862,,,52.337769,14.472631
 Frankfurt am Main Flughafen Fernbahnhof,7982,,,50.053167,8.570185
 Frankfurt am Main Gateway Gardens,8268,,,50.0565739,8.59449506
 Frankfurt am Main Messe,7980,,,50.111736,8.64351779
-Frankfurt am Main Stadion,1854,,,50.068228,8.633247
-Frankfurt am Main-Ginnheim,8320,,,50.1429986,8.6431396
 Frankfurt-Berkersheim,1867,,,50.176486,8.697827
 Frankfurt-Eschersheim,1868,,,50.1582983,8.65520954
 Frankfurt-Frankfurter Berg,1869,,,50.1702242,8.67655724
@@ -1658,7 +1658,7 @@ Geraberg,2082,,,50.715593,10.857196
 Geradstetten,2083,,,48.805203,9.439753
 Gerhausen,2085,,,48.39972,9.806227
 Gerichshain,2086,,,51.35388,12.587444
-Gerlachsheim,2088,,,49.580886,9.710612
+Gerlachsheim,2088,,,49.5810338,9.71081911
 Gerlenhofen,2089,,,48.351332,10.037282
 Germering-Unterpfaffenhofen,2091,,,48.12887,11.364023
 Germersheim,2092,,,49.225402,8.365282
@@ -2063,10 +2063,10 @@ Heidenheim-Mergelstetten,2641,,,48.653279,10.160976
 Heidenheim-Schnaitheim,2642,,,48.708281,10.15876
 Heidesheim (Rheinhess),2644,,,49.997023,8.111318
 Heidkrug,2645,,,53.057093,8.680195
-Heigenbrücken,2647,,,50.02286,9.380805
+Heigenbrücken,2647,,,50.0226086,9.38083589
 Heilbad Heiligenstadt,2654,,,51.3773156,10.1245183
 Heilbronn Hbf,2648,,,49.143306,9.207715
-Heilbronn Sülmertor,2650,,,49.151601,9.220598
+Heilbronn Sülmertor,2650,,,49.1513167,9.22043086
 Heilbronn Trappensee,7623,,,49.140282,9.25257
 Heiligengrabe,2653,,,53.1501066,12.3425844
 Heiligensee,7729,,,52.624586,13.229278
@@ -2642,7 +2642,7 @@ Köln Steinstraße,2090,,,50.895558,7.057173
 Köln Süd,3321,,,50.9273,6.938059
 Köln Trimbornstr,3322,,,50.935857,6.996734
 Köln Volkhovener Weg,3323,,,51.014251,6.893241
-Köln West,3324,,,50.943665,6.934389
+Köln West,3324,,,50.9428861,6.93339653
 Köln-Blumenberg,7651,,,51.037414,6.881921
 Köln-Buchforst,3325,,,50.953487,7.004327
 Köln-Chorweiler,3326,,,51.021126,6.897824
@@ -3261,7 +3261,7 @@ Murnau,4284,,,47.682266,11.192628
 Murnau Ort,4285,,,47.678834,11.19566
 Murrhardt,4287,,,48.982757,9.57777
 Mußbach,4288,,,49.37196,8.168529
-Möckmühl,4145,,,49.321107,9.357979
+Möckmühl,4145,,,49.3207894,9.35795665
 Mögelin,4149,,,52.560089,12.329815
 Mögglingen (b Gmünd),4150,,,48.8246454,9.95801747
 Möhringen Bahnhof,8035,,,47.958151,8.770796
@@ -3391,7 +3391,7 @@ Naumburg (Saale) Hbf,4309,,,51.163071,11.796984
 Naunhof,4311,,,51.277086,12.594242
 Nebra,4313,,,51.28344,11.570126
 Nechlin,4314,,,53.440927,13.90288
-Neckarbischofsheim Nord,8166,,,49.307098,8.942274
+Neckarbischofsheim Nord,8166,,,49.3069897,8.9423415
 Neckarburken,4315,,,49.3782046,9.16323602
 Neckargemünd,4317,,,49.393678,8.788425
 Neckargemünd Altstadt,8053,,,49.392391,8.802954
@@ -3714,11 +3714,11 @@ Oestrich-Winkel,4738,,,50.002659,8.0189
 Oeventrop,4739,,,51.39202,8.132081
 Offenau,4740,,,49.246414,9.165293
 Offenbach (Main) Hbf,4742,,,50.099264,8.760743
+Offenbach (Main) Kaiserlei,7169,,,50.1052457,8.73847067
+Offenbach (Main) Ledermuseum,7170,,,50.105989,8.750485
+Offenbach (Main) Marktplatz,7171,,,50.105855,8.763633
 Offenbach (Main) Ost,4743,,,50.1027107,8.78442362
-Offenbach Ledermuseum,7170,,,50.105989,8.750485
-Offenbach Marktplatz,7171,,,50.105855,8.763633
 Offenbach-Bieber,4744,,,50.0904212,8.80858898
-Offenbach-Kaiserlei,7169,,,50.1052457,8.73847067
 Offenbach-Waldhof,4831,,,50.081691,8.828938
 Offenburg,4745,,,48.476475,7.946723
 Offenburg Kreisschulzentrum,8000,,,48.459784,7.955192
@@ -3822,7 +3822,7 @@ Passau Hbf,4872,,,48.573632,13.450776
 Passow (Uckermark),4874,,,53.148702,14.10137
 Paulinenaue,4876,,,52.675892,12.71327
 Paulinzella,4877,,,50.701106,11.10596
-Pechbrunn,4879,,,49.969536,12.165956
+Pechbrunn,4879,,,49.9694672,12.1660599
 Pegau,4881,,,51.165966,12.241046
 Pegnitz,4883,,,49.7587084,11.5475965
 Peine,4885,,,52.318942,10.232145
@@ -4389,8 +4389,8 @@ Schwabmünchen,5702,,,48.178688,10.768291
 Schwabsberg,5703,,,48.92519,10.138893
 Schwaig,5704,,,49.471494,11.200442
 Schwaikheim,5707,,,48.86834,9.354943
+Schwalbach (Taunus) Limes,5708,,,50.154354,8.52797
 Schwalbach Nord,8197,,,50.15986,8.534777
-Schwalbach a Ts (Limes),5708,,,50.154354,8.52797
 Schwallungen,5709,,,50.689385,10.346514
 Schwalmstadt-Wiera,6740,,,50.881937,9.136421
 Schwandorf,5710,,,49.3263803,12.103802
@@ -4642,8 +4642,8 @@ Steinhagen (Westf),5996,,,52.017419,8.420787
 Steinhagen Bielefelder Straße,3030,,,52.011416,8.436453
 Steinhausen-Neuburg,5997,,,53.942319,11.596334
 Steinheim (Westf),5999,,,51.868177,9.088447
+Steinheim am Main (Hanau),5998,,,50.121369,8.906852
 Steinheim-Sandebeck,5496,,,51.818371,8.986954
-Steinheim/Main,5998,,,50.121369,8.906852
 Steinpleis,6004,,,50.708976,12.394074
 Steinsfurt,6005,,,49.235822,8.907978
 Steintorbrücke,6006,,,51.490201,11.986895
@@ -4670,7 +4670,7 @@ Stockhausen (Lahn),6031,,,50.540536,8.325365
 Stockheim (Oberfr),6032,,,50.306822,11.282133
 Stockstadt (Main),6034,,,49.976627,9.063369
 Stockstadt (Rhein),6035,,,49.809433,8.47244
-Stolberg (Rheinl) Hbf,6037,,,50.79448,6.217478
+Stolberg (Rheinl) Hbf,6037,,,50.7944104,6.21715667
 Stollberg (Sachs),6038,,,50.70931,12.773549
 Stolpen,6039,,,51.037051,14.08725
 Stommeln,6040,,,51.018092,6.752466
@@ -4710,7 +4710,7 @@ Stuttgart Stadtmitte,6085,,,48.776229,9.172925
 Stuttgart Universität,6076,,,48.745837,9.105398
 Stuttgart Österfeld,6075,,,48.737651,9.116774
 Stuttgart-Bad Cannstatt,6077,,,48.801377,9.217531
-Stuttgart-Feuerbach,6078,,,48.813673,9.169382
+Stuttgart-Feuerbach,6078,,,48.8136825,9.16913332
 Stuttgart-Münster,6080,,,48.820724,9.21586
 Stuttgart-Obertürkheim,6081,,,48.762013,9.267889
 Stuttgart-Rohr,6082,,,48.717902,9.108328
@@ -5412,7 +5412,7 @@ Züttlingen,7064,,,49.291657,9.329117
 Öhringen Hbf,4754,,,49.203214,9.502705
 Öhringen West,7558,,,49.20014,9.485804
 Ölbronn-Dürrn,7764,,,48.98581,8.753677
-Ötigheim,4818,,,48.888526,8.240582
+Ötigheim,4818,,,48.8883808,8.24040414
 Ötisheim,4819,,,48.966571,8.813508
 Übach-Palenberg,6297,,,50.924336,6.097265
 Überlingen,8002,,,47.769101,9.162853

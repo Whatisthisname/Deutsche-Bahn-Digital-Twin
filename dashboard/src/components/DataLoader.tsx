@@ -1,33 +1,60 @@
 // components/DataLoader.tsx
 import { useEffect } from "react";
-import { useTrainEvents } from "@/state/useTrainEvents";
+import { useEventStream } from "@/state/useEventStream";
 import { useSimStore } from "@/state/useSimStore";
-import iceCsvUrl from "@/data/ice.csv?url";
+import iceJourneyEventsCsvUrl from "@/data/ice_journey_events.csv?url";
+import type { DataLoaderProps } from "@/types/components";
+import { ISO_to_ms } from "@/utils/time";
 
-export default function DataLoader() {
-    const loadEvents = useTrainEvents(s => s.loadEvents);
+export default function DataLoader({
+    dataUrl = iceJourneyEventsCsvUrl,
+    autoStart = true,
+    onDataLoaded,
+    onError
+}: Partial<DataLoaderProps> = {}) {
+    const loadAllEvents = useEventStream(s => s.loadAllEvents);
+    const startStreaming = useEventStream(s => s.startStreaming);
     const setRange = useSimStore(s => s.setRange);
+    const scrubToTime = useSimStore(s => s.scrubToTime);
 
     // on mount, load the CSV and set the timeline range based on the data
     useEffect(() => {
-        loadEvents(iceCsvUrl).then(() => {
-            const all = useTrainEvents.getState().allEvents;
-            if (all.length) {
-                const firstRaw = Number(all[0].ts_ms ?? all[0].timestamp ?? 0);
-                const lastRaw = Number(all.at(-1)?.ts_ms ?? all.at(-1)?.timestamp ?? 0);
+        loadAllEvents(dataUrl).then(() => {
+            const allEvents = useEventStream.getState().allEvents;
+            if (allEvents.length) {
+                // Calculate time range from events
+                const firstEvent = allEvents[0];
+                const lastEvent = allEvents[allEvents.length - 1];
 
-                // normalize seconds → ms if needed
-                const normalize = (x: number) =>
-                    String(x).length === 10 ? x * 1000 : x;
+                const first = ISO_to_ms(firstEvent.timestamp);
+                const last = ISO_to_ms(lastEvent.timestamp);
 
-                const first = normalize(firstRaw);
-                const last = normalize(lastRaw);
-
-                // 👇 start one second before first event
+                // 👇 start one second before first event, end at last event
                 setRange(first - 1000, last);
+
+                // Move cursor to right before the first event
+                const targetTime = first - 1000; // 1 second before first event
+
+                // Use the new scrubbing method to properly initialize the simulation
+                scrubToTime(targetTime).then(() => {
+                    // Start streaming if autoStart is enabled
+                    if (autoStart) {
+                        startStreaming();
+                    }
+
+                    // Call onDataLoaded callback if provided
+                    if (onDataLoaded) {
+                        onDataLoaded();
+                    }
+                });
+            }
+        }).catch((error) => {
+            // Call onError callback if provided
+            if (onError) {
+                onError(error);
             }
         });
-    }, [loadEvents, setRange]);
+    }, [loadAllEvents, startStreaming, setRange, scrubToTime, dataUrl, autoStart, onDataLoaded, onError]);
 
     return null;
 }

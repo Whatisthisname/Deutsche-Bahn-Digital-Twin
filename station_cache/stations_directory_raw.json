@@ -34,7 +34,8 @@
       "longitude": 6.091499,
       "latitude": 50.7678
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "1000",
@@ -437,7 +438,8 @@
       "longitude": 11.9981942,
       "latitude": 53.8371137
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": false
   },
   {
     "stationID": "1015",
@@ -901,8 +903,8 @@
     "state": "MV",
     "timeZone": "Europe/Berlin",
     "position": {
-      "longitude": 13.299645,
-      "latitude": 53.439035
+      "longitude": 13.30198,
+      "latitude": 53.440365
     },
     "validFrom": "2018-12-31T23:00:00Z"
   },
@@ -1162,7 +1164,8 @@
       "longitude": 10.062468,
       "latitude": 52.6204548
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": false
   },
   {
     "stationID": "1037",
@@ -1311,7 +1314,8 @@
       "longitude": 12.930877,
       "latitude": 50.839696
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "1041",
@@ -1858,7 +1862,8 @@
       "longitude": 10.9573281,
       "latitude": 50.2629273
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "106",
@@ -2186,7 +2191,8 @@
       "longitude": 13.369545,
       "latitude": 52.525592
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "1072",
@@ -2371,7 +2377,8 @@
       "longitude": 14.324162,
       "latitude": 51.750957
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "1079",
@@ -2552,7 +2559,8 @@
       "longitude": 11.628443,
       "latitude": 49.84947
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": false
   },
   {
     "stationID": "1084",
@@ -3620,7 +3628,8 @@
       "longitude": 8.629636,
       "latitude": 49.872503
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "1127",
@@ -4616,7 +4625,8 @@
       "longitude": 8.629758,
       "latitude": 53.052792
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "116",
@@ -5060,7 +5070,8 @@
       "longitude": 12.234945,
       "latitude": 51.839865
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "1174",
@@ -6894,7 +6905,8 @@
       "longitude": 13.564241,
       "latitude": 51.620576
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": false
   },
   {
     "stationID": "1242",
@@ -7485,7 +7497,8 @@
       "longitude": 10.771443,
       "latitude": 48.714026
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "1267",
@@ -10132,7 +10145,8 @@
       "longitude": 11.862902,
       "latitude": 49.447616
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": false
   },
   {
     "stationID": "1341",
@@ -10243,7 +10257,8 @@
       "longitude": 13.732035,
       "latitude": 51.040563
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "1344",
@@ -10573,7 +10588,8 @@
       "longitude": 13.740701,
       "latitude": 51.065899
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "1353",
@@ -11127,7 +11143,8 @@
       "longitude": 6.775903,
       "latitude": 51.429785
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "1375",
@@ -12046,7 +12063,8 @@
       "longitude": 6.786836,
       "latitude": 51.292009
     },
-    "validFrom": "2021-12-31T23:00:00Z"
+    "validFrom": "2021-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "1401",
@@ -12083,7 +12101,8 @@
       "longitude": 6.794319,
       "latitude": 51.219962
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "1402",
@@ -13449,7 +13468,8 @@
       "longitude": 7.404839,
       "latitude": 50.434542
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": false
   },
   {
     "stationID": "1440",
@@ -13486,7 +13506,8 @@
       "longitude": 11.970243,
       "latitude": 48.07497
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": false
   },
   {
     "stationID": "1441",
@@ -13596,7 +13617,8 @@
       "longitude": 13.797062,
       "latitude": 52.834021
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": false
   },
   {
     "stationID": "1445",
@@ -14074,7 +14096,8 @@
       "longitude": 9.835115,
       "latitude": 54.4676
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": false
   },
   {
     "stationID": "1458",
@@ -14948,7 +14971,8 @@
       "longitude": 13.996361,
       "latitude": 53.015221
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": false
   },
   {
     "stationID": "1481",
@@ -16234,8 +16258,8 @@
     "state": "ST",
     "timeZone": "Europe/Berlin",
     "position": {
-      "longitude": 11.215214,
-      "latitude": 52.150237
+      "longitude": 11.2152117,
+      "latitude": 52.1502354
     },
     "validFrom": "2018-12-31T23:00:00Z"
   },
@@ -16565,7 +16589,8 @@
       "longitude": 10.331986,
       "latitude": 50.976922
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "1529",
@@ -17511,7 +17536,8 @@
       "longitude": 9.659408,
       "latitude": 53.754025
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "1559",
@@ -17840,7 +17866,8 @@
       "longitude": 13.516428,
       "latitude": 51.459677
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": false
   },
   {
     "stationID": "1570",
@@ -18208,7 +18235,8 @@
       "longitude": 7.195176,
       "latitude": 53.369036
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "1583",
@@ -19128,7 +19156,8 @@
       "longitude": 10.578239,
       "latitude": 49.298032
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "1610",
@@ -19856,7 +19885,8 @@
       "longitude": 11.0379928,
       "latitude": 50.9723561
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "1635",
@@ -20470,7 +20500,8 @@
       "longitude": 11.0016382,
       "latitude": 49.5958303
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "1651",
@@ -21533,7 +21564,8 @@
       "longitude": 7.014793,
       "latitude": 51.451355
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "1691",
@@ -23706,7 +23738,8 @@
       "longitude": 13.247685,
       "latitude": 51.58362
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": false
   },
   {
     "stationID": "1754",
@@ -25059,7 +25092,8 @@
       "longitude": 13.710388,
       "latitude": 51.637001
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": false
   },
   {
     "stationID": "1797",
@@ -25868,7 +25902,8 @@
       "longitude": 11.78597,
       "latitude": 48.353728
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "1823",
@@ -26708,7 +26743,8 @@
       "longitude": 8.571251,
       "latitude": 50.051219
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "185",
@@ -26899,7 +26935,7 @@
     "stationID": "1854",
     "names": {
       "DE": {
-        "name": "Frankfurt am Main Stadion"
+        "name": "Frankfurt (Main) Stadion"
       }
     },
     "metropolis": {},
@@ -26930,7 +26966,8 @@
       "longitude": 8.633247,
       "latitude": 50.068228
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": false
   },
   {
     "stationID": "1855",
@@ -27004,7 +27041,8 @@
       "longitude": 8.686457,
       "latitude": 50.099365
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "1857",
@@ -27115,7 +27153,8 @@
       "longitude": 14.546496,
       "latitude": 52.336416
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "186",
@@ -27332,10 +27371,11 @@
     "state": "HE",
     "timeZone": "Europe/Berlin",
     "position": {
-      "longitude": 8.663789,
-      "latitude": 50.107145
+      "longitude": 8.66282825,
+      "latitude": 50.1066819
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "1867",
@@ -27483,7 +27523,8 @@
       "longitude": 9.143697,
       "latitude": 49.980557
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "1870",
@@ -27742,7 +27783,8 @@
       "longitude": 8.63701344,
       "latitude": 50.0809969
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": false
   },
   {
     "stationID": "1877",
@@ -28223,7 +28265,8 @@
       "longitude": 7.84117,
       "latitude": 47.997697
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "1894",
@@ -28519,7 +28562,8 @@
       "longitude": 12.325564,
       "latitude": 47.779106
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": false
   },
   {
     "stationID": "1900",
@@ -28778,7 +28822,8 @@
       "longitude": 12.977193,
       "latitude": 47.836916
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "1907",
@@ -29621,7 +29666,8 @@
       "longitude": 8.762056,
       "latitude": 50.332606
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "1931",
@@ -29912,7 +29958,8 @@
       "longitude": 11.465689,
       "latitude": 51.757122
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": false
   },
   {
     "stationID": "1940",
@@ -30208,7 +30255,8 @@
       "longitude": 9.4739,
       "latitude": 47.653224
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "195",
@@ -31016,7 +31064,8 @@
       "longitude": 9.68416929,
       "latitude": 50.5549058
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "1974",
@@ -31377,7 +31426,8 @@
       "longitude": 10.989988,
       "latitude": 49.469707
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "1985",
@@ -32403,7 +32453,8 @@
       "longitude": 11.097013,
       "latitude": 47.491452
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "2015",
@@ -33684,7 +33735,8 @@
       "longitude": 7.102455,
       "latitude": 51.504903
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "2053",
@@ -33943,7 +33995,8 @@
       "longitude": 9.699894,
       "latitude": 50.050018
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": false
   },
   {
     "stationID": "2061",
@@ -34274,7 +34327,8 @@
       "longitude": 12.077092,
       "latitude": 50.883421
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "2075",
@@ -34601,8 +34655,8 @@
     "state": "BW",
     "timeZone": "Europe/Berlin",
     "position": {
-      "longitude": 9.710612,
-      "latitude": 49.580886
+      "longitude": 9.71081911,
+      "latitude": 49.5810338
     },
     "validFrom": "2018-12-31T23:00:00Z"
   },
@@ -35710,7 +35764,8 @@
       "longitude": 8.661462,
       "latitude": 50.579059
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "2121",
@@ -37625,7 +37680,8 @@
       "longitude": 14.97908,
       "latitude": 51.146767
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "2195",
@@ -37773,7 +37829,8 @@
       "longitude": 10.88557,
       "latitude": 48.365441
     },
-    "validFrom": "2019-12-31T23:00:00Z"
+    "validFrom": "2019-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "2200",
@@ -38212,7 +38269,8 @@
       "longitude": 9.926072,
       "latitude": 51.536815
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "2219",
@@ -38952,7 +39010,8 @@
       "longitude": 11.962758,
       "latitude": 48.047217
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": false
   },
   {
     "stationID": "2243",
@@ -39211,7 +39270,8 @@
       "longitude": 13.370262,
       "latitude": 54.092923
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": false
   },
   {
     "stationID": "2253",
@@ -39433,7 +39493,8 @@
       "longitude": 9.644046,
       "latitude": 47.953052
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "2261",
@@ -44104,7 +44165,8 @@
       "longitude": 10.2792621,
       "latitude": 48.4605626
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": false
   },
   {
     "stationID": "2424",
@@ -44363,7 +44425,8 @@
       "longitude": 12.172836,
       "latitude": 53.800597
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": false
   },
   {
     "stationID": "2433",
@@ -44511,7 +44574,8 @@
       "longitude": 8.385071,
       "latitude": 51.906941
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "2439",
@@ -45176,7 +45240,8 @@
       "longitude": 7.460249,
       "latitude": 51.362747
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "2458",
@@ -45987,7 +46052,8 @@
       "longitude": 7.158539,
       "latitude": 52.30985
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": false
   },
   {
     "stationID": "2480",
@@ -46277,7 +46343,8 @@
       "longitude": 11.073452,
       "latitude": 51.899309
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": false
   },
   {
     "stationID": "2491",
@@ -46535,7 +46602,8 @@
       "longitude": 11.987085,
       "latitude": 51.477509
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "25",
@@ -47013,7 +47081,8 @@
       "longitude": 9.989566,
       "latitude": 53.560751
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "2514",
@@ -47162,7 +47231,8 @@
       "longitude": 9.935175,
       "latitude": 53.552695
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "2518",
@@ -47199,7 +47269,8 @@
       "longitude": 10.206171,
       "latitude": 53.489832
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "2519",
@@ -47236,7 +47307,8 @@
       "longitude": 9.991701,
       "latitude": 53.455908
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "2520",
@@ -47829,7 +47901,8 @@
       "longitude": 8.929,
       "latitude": 50.120953
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "2538",
@@ -48124,7 +48197,8 @@
       "longitude": 9.741021,
       "latitude": 52.376761
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "2546",
@@ -49003,7 +49077,8 @@
       "longitude": 11.554562,
       "latitude": 49.498858
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": false
   },
   {
     "stationID": "2576",
@@ -50653,7 +50728,8 @@
       "longitude": 9.101029,
       "latitude": 54.193563
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "2628",
@@ -50690,7 +50766,8 @@
       "longitude": 8.675442,
       "latitude": 49.403567
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "2629",
@@ -51314,8 +51391,8 @@
     "state": "BY",
     "timeZone": "Europe/Berlin",
     "position": {
-      "longitude": 9.380805,
-      "latitude": 50.02286
+      "longitude": 9.38083589,
+      "latitude": 50.0226086
     },
     "validFrom": "2018-12-31T23:00:00Z"
   },
@@ -51354,7 +51431,8 @@
       "longitude": 9.207715,
       "latitude": 49.143306
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "2650",
@@ -51388,8 +51466,8 @@
     "state": "BW",
     "timeZone": "Europe/Berlin",
     "position": {
-      "longitude": 9.220598,
-      "latitude": 49.151601
+      "longitude": 9.22043086,
+      "latitude": 49.1513167
     },
     "validFrom": "2018-12-31T23:00:00Z"
   },
@@ -52729,7 +52807,7 @@
       "houseNumber": "1",
       "postalCode": "8207",
       "city": "Schaffhausen",
-      "state": "Schweiz CH",
+      "state": "Kanton Schaffhausen",
       "country": "CH"
     },
     "availableTransports": [],
@@ -53115,7 +53193,8 @@
       "longitude": 8.663643,
       "latitude": 52.119609
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "2709",
@@ -55033,7 +55112,8 @@
       "longitude": 9.953497,
       "latitude": 52.160626
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "2766",
@@ -56766,7 +56846,8 @@
       "longitude": 11.923067,
       "latitude": 50.307743
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "2819",
@@ -57426,7 +57507,8 @@
       "longitude": 8.620624,
       "latitude": 50.219904
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": false
   },
   {
     "stationID": "2840",
@@ -58934,7 +59016,8 @@
       "longitude": 11.466925,
       "latitude": 53.766974
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": false
   },
   {
     "stationID": "2890",
@@ -59008,7 +59091,8 @@
       "longitude": 7.337035,
       "latitude": 49.328082
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "2893",
@@ -60842,7 +60926,8 @@
       "longitude": 9.05595303,
       "latitude": 54.4720826
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "2954",
@@ -61026,7 +61111,8 @@
       "longitude": 7.866435,
       "latitude": 49.842399
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "2960",
@@ -62241,7 +62327,8 @@
       "longitude": 11.437337,
       "latitude": 48.744541
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "2994",
@@ -63052,7 +63139,8 @@
       "longitude": 9.510287,
       "latitude": 53.923873
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": false
   },
   {
     "stationID": "3018",
@@ -63712,7 +63800,8 @@
       "longitude": 11.587461,
       "latitude": 50.924856
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": false
   },
   {
     "stationID": "3044",
@@ -63786,7 +63875,8 @@
       "longitude": 11.577848,
       "latitude": 50.923286
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "3046",
@@ -64884,7 +64974,8 @@
       "longitude": 7.76862681,
       "latitude": 49.4358593
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "3083",
@@ -65622,7 +65713,8 @@
       "longitude": 8.402181,
       "latitude": 48.993515
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "3108",
@@ -66248,7 +66340,8 @@
       "longitude": 9.44711566,
       "latitude": 51.3125585
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "3128",
@@ -66760,7 +66853,8 @@
       "longitude": 10.629496,
       "latitude": 47.875432
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": false
   },
   {
     "stationID": "3142",
@@ -67203,7 +67297,8 @@
       "longitude": 10.31761,
       "latitude": 47.711745
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "3156",
@@ -67680,7 +67775,8 @@
       "longitude": 10.3825414,
       "latitude": 53.8053902
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "3170",
@@ -67828,7 +67924,8 @@
       "longitude": 10.131976,
       "latitude": 54.314985
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "3175",
@@ -69225,7 +69322,8 @@
       "longitude": 12.881825,
       "latitude": 47.731168
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": false
   },
   {
     "stationID": "3210",
@@ -71095,7 +71193,8 @@
       "longitude": 7.588345,
       "latitude": 50.350929
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "33",
@@ -71867,7 +71966,8 @@
       "longitude": 6.958729,
       "latitude": 50.94303
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "3321",
@@ -72011,8 +72111,8 @@
     "state": "NW",
     "timeZone": "Europe/Berlin",
     "position": {
-      "longitude": 6.934389,
-      "latitude": 50.943665
+      "longitude": 6.93339653,
+      "latitude": 50.9428861
     },
     "validFrom": "2018-12-31T23:00:00Z"
   },
@@ -72197,7 +72297,8 @@
       "longitude": 6.975001,
       "latitude": 50.940874
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "333",
@@ -73193,7 +73294,8 @@
       "longitude": 9.177312,
       "latitude": 47.658754
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "3364",
@@ -76505,7 +76607,8 @@
       "longitude": 9.792863,
       "latitude": 52.316899
     },
-    "validFrom": "2019-12-31T23:00:00Z"
+    "validFrom": "2019-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": false
   },
   {
     "stationID": "3489",
@@ -77466,7 +77569,8 @@
       "longitude": 12.13593,
       "latitude": 48.547492
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "3514",
@@ -80585,7 +80689,8 @@
       "longitude": 7.465283,
       "latitude": 53.23165
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "3610",
@@ -81241,7 +81346,8 @@
       "longitude": 12.3820639,
       "latitude": 51.3454712
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "3632",
@@ -83407,7 +83513,8 @@
       "longitude": 11.059472,
       "latitude": 50.146452
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "3701",
@@ -83736,7 +83843,8 @@
       "longitude": 8.190831,
       "latitude": 48.790327
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "3711",
@@ -83958,7 +84066,8 @@
       "longitude": 8.062342,
       "latitude": 50.384119
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": false
   },
   {
     "stationID": "3721",
@@ -84069,7 +84178,8 @@
       "longitude": 8.096112,
       "latitude": 50.382498
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": false
   },
   {
     "stationID": "3724",
@@ -84179,7 +84289,8 @@
       "longitude": 9.680469,
       "latitude": 47.544341
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "3728",
@@ -84253,7 +84364,8 @@
       "longitude": 9.703292,
       "latitude": 47.552384
     },
-    "validFrom": "2020-12-12T23:00:00Z"
+    "validFrom": "2020-12-12T23:00:00Z",
+    "mobilityServiceStaffOnSite": false
   },
   {
     "stationID": "373",
@@ -84769,7 +84881,8 @@
       "longitude": 8.348785,
       "latitude": 51.670687
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": false
   },
   {
     "stationID": "3747",
@@ -86609,7 +86722,8 @@
       "longitude": 10.669821,
       "latitude": 53.867547
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "3808",
@@ -87495,7 +87609,8 @@
       "longitude": 8.433042,
       "latitude": 49.476529
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "3838",
@@ -88232,7 +88347,8 @@
       "longitude": 12.13786,
       "latitude": 53.843724
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": false
   },
   {
     "stationID": "3862",
@@ -88306,7 +88422,8 @@
       "longitude": 12.662285,
       "latitude": 51.867811
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": false
   },
   {
     "stationID": "3864",
@@ -88710,7 +88827,8 @@
       "longitude": 11.626963,
       "latitude": 52.1305112
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "3882",
@@ -89295,7 +89413,8 @@
       "longitude": 8.25872,
       "latitude": 50.001117
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "3899",
@@ -90174,7 +90293,8 @@
       "longitude": 8.468921,
       "latitude": 49.479354
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "3927",
@@ -90322,7 +90442,8 @@
       "longitude": 10.899489,
       "latitude": 49.900759
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "3930",
@@ -90765,7 +90886,8 @@
       "longitude": 8.775014,
       "latitude": 50.819272
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "3944",
@@ -91708,7 +91830,8 @@
       "longitude": 12.082583,
       "latitude": 50.004596
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "398",
@@ -92440,7 +92563,8 @@
       "longitude": 10.096271,
       "latitude": 48.841013
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "40",
@@ -92769,7 +92893,8 @@
       "longitude": 12.107818,
       "latitude": 49.198019
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": false
   },
   {
     "stationID": "4008",
@@ -94272,7 +94397,8 @@
       "longitude": 10.186853,
       "latitude": 47.985581
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": false
   },
   {
     "stationID": "4052",
@@ -96289,7 +96415,8 @@
       "longitude": 8.934728,
       "latitude": 52.290138
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "4124",
@@ -96764,8 +96891,8 @@
     "state": "BW",
     "timeZone": "Europe/Berlin",
     "position": {
-      "longitude": 9.357979,
-      "latitude": 49.321107
+      "longitude": 9.35795665,
+      "latitude": 49.3207894
     },
     "validFrom": "2018-12-31T23:00:00Z"
   },
@@ -96912,8 +97039,8 @@
     "state": "NI",
     "timeZone": "Europe/Berlin",
     "position": {
-      "longitude": 9.815279,
-      "latitude": 52.195498
+      "longitude": 9.81478963,
+      "latitude": 52.1951452
     },
     "validFrom": "2018-12-31T23:00:00Z"
   },
@@ -97209,7 +97336,8 @@
       "longitude": 6.446111,
       "latitude": 51.196583
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "4163",
@@ -97466,7 +97594,8 @@
       "longitude": 7.825333,
       "latitude": 50.444834
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": false
   },
   {
     "stationID": "4170",
@@ -98975,7 +99104,8 @@
       "longitude": 6.88651,
       "latitude": 51.431342
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": false
   },
   {
     "stationID": "4220",
@@ -99492,7 +99622,8 @@
       "longitude": 11.558335,
       "latitude": 48.140232
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "4235",
@@ -99687,7 +99818,7 @@
       "houseNumber": "200",
       "postalCode": "4016",
       "city": "Basel",
-      "state": "Schweiz CH",
+      "state": "Kanton Basel-Stadt",
       "country": "CH"
     },
     "availableTransports": [],
@@ -99707,7 +99838,8 @@
       "longitude": 7.607805,
       "latitude": 47.567288
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "4240",
@@ -99743,7 +99875,8 @@
       "longitude": 11.575386,
       "latitude": 48.137048
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "4241",
@@ -99780,7 +99913,8 @@
       "longitude": 11.604971,
       "latitude": 48.12744
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "4242",
@@ -100438,7 +100572,8 @@
       "longitude": 11.503669,
       "latitude": 48.144371
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "4259",
@@ -100769,7 +100904,8 @@
       "longitude": 11.461872,
       "latitude": 48.149852
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "4267",
@@ -101282,7 +101418,8 @@
       "longitude": 7.635715,
       "latitude": 51.956566
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "4281",
@@ -101430,7 +101567,8 @@
       "longitude": 11.192628,
       "latitude": 47.682266
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": false
   },
   {
     "stationID": "4285",
@@ -102318,7 +102456,8 @@
       "longitude": 11.796984,
       "latitude": 51.163071
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "431",
@@ -103935,7 +104074,8 @@
       "longitude": 13.261465,
       "latitude": 53.561831
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": false
   },
   {
     "stationID": "4364",
@@ -104563,7 +104703,8 @@
       "longitude": 11.579985,
       "latitude": 49.949616
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "4390",
@@ -104710,7 +104851,8 @@
       "longitude": 11.551709,
       "latitude": 49.626653
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": false
   },
   {
     "stationID": "4397",
@@ -104795,7 +104937,7 @@
       "houseNumber": "18",
       "postalCode": "8212",
       "city": "Neuhausen",
-      "state": "Schweiz CH",
+      "state": "Kanton Schaffhausen",
       "country": "CH"
     },
     "availableTransports": [],
@@ -105511,7 +105653,8 @@
       "longitude": 9.979816,
       "latitude": 54.075752
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "4422",
@@ -105600,7 +105743,7 @@
       "houseNumber": "3",
       "postalCode": "8225",
       "city": "Neunkirch",
-      "state": "Schweiz CH",
+      "state": "Kanton Schaffhausen",
       "country": "CH"
     },
     "availableTransports": [],
@@ -106171,7 +106314,8 @@
       "longitude": 6.684527,
       "latitude": 51.204351
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "4441",
@@ -106430,7 +106574,8 @@
       "longitude": 10.80849,
       "latitude": 54.104002
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": false
   },
   {
     "stationID": "4448",
@@ -106649,7 +106794,8 @@
       "longitude": 12.168337,
       "latitude": 49.725918
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": false
   },
   {
     "stationID": "4453",
@@ -106723,7 +106869,8 @@
       "longitude": 8.140757,
       "latitude": 49.349553
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "4455",
@@ -107273,7 +107420,8 @@
       "longitude": 8.834572,
       "latitude": 54.789605
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "4473",
@@ -110554,7 +110702,8 @@
       "longitude": 7.158806,
       "latitude": 53.624315
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "4571",
@@ -111183,7 +111332,8 @@
       "longitude": 9.986618,
       "latitude": 51.703139
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "4588",
@@ -111293,7 +111443,8 @@
       "longitude": 11.082989,
       "latitude": 49.445616
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "4594",
@@ -113024,7 +113175,8 @@
       "longitude": 6.851588,
       "latitude": 51.474878
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "4649",
@@ -113934,8 +114086,8 @@
     "state": "BW",
     "timeZone": "Europe/Berlin",
     "position": {
-      "longitude": 9.976835,
-      "latitude": 48.480974
+      "longitude": 9.97691392,
+      "latitude": 48.4819997
     },
     "validFrom": "2018-12-31T23:00:00Z"
   },
@@ -114379,7 +114531,8 @@
       "longitude": 10.278097,
       "latitude": 47.411032
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "4697",
@@ -115961,7 +116114,8 @@
       "longitude": 7.946723,
       "latitude": 48.476475
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "4746",
@@ -116619,7 +116773,8 @@
       "longitude": 8.222713,
       "latitude": 53.144323
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "4766",
@@ -117321,7 +117476,8 @@
       "longitude": 8.061781,
       "latitude": 52.272851
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "4788",
@@ -117985,7 +118141,8 @@
       "longitude": 13.469105,
       "latitude": 52.503037
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "481",
@@ -118019,8 +118176,8 @@
     "state": "RP",
     "timeZone": "Europe/Berlin",
     "position": {
-      "longitude": 7.05803,
-      "latitude": 50.010379
+      "longitude": 7.05860134,
+      "latitude": 50.0105406
     },
     "validFrom": "2018-12-31T23:00:00Z"
   },
@@ -118240,8 +118397,8 @@
     "state": "BW",
     "timeZone": "Europe/Berlin",
     "position": {
-      "longitude": 8.240582,
-      "latitude": 48.888526
+      "longitude": 8.24040414,
+      "latitude": 48.8883808
     },
     "validFrom": "2019-12-31T23:00:00Z"
   },
@@ -119273,7 +119430,8 @@
       "longitude": 8.740505,
       "latitude": 51.712979
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "4847",
@@ -119678,7 +119836,8 @@
       "longitude": 13.365319,
       "latitude": 52.475047
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "486",
@@ -120121,7 +120280,8 @@
       "longitude": 13.450776,
       "latitude": 48.573632
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "4874",
@@ -120266,8 +120426,8 @@
     "state": "BY",
     "timeZone": "Europe/Berlin",
     "position": {
-      "longitude": 12.165956,
-      "latitude": 49.969536
+      "longitude": 12.1660599,
+      "latitude": 49.9694672
     },
     "validFrom": "2018-12-31T23:00:00Z"
   },
@@ -121594,7 +121754,8 @@
       "longitude": 8.703099,
       "latitude": 48.894152
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "4925",
@@ -122516,7 +122677,8 @@
       "longitude": 12.86394,
       "latitude": 48.779619
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "4954",
@@ -122590,7 +122752,8 @@
       "longitude": 12.129419,
       "latitude": 50.506163
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": false
   },
   {
     "stationID": "4957",
@@ -123429,7 +123592,8 @@
       "longitude": 13.417821,
       "latitude": 54.4205
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": false
   },
   {
     "stationID": "4990",
@@ -124242,7 +124406,8 @@
       "longitude": 13.0667031,
       "latitude": 52.391509
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "5013",
@@ -124387,7 +124552,8 @@
       "longitude": 13.375988,
       "latitude": 52.509379
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "5017",
@@ -124977,7 +125143,8 @@
       "longitude": 12.346615,
       "latitude": 47.855513
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": false
   },
   {
     "stationID": "5036",
@@ -126749,7 +126916,8 @@
       "longitude": 8.968984,
       "latitude": 47.735873
     },
-    "validFrom": "2019-12-31T23:00:00Z"
+    "validFrom": "2019-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "5098",
@@ -128847,7 +129015,8 @@
       "longitude": 12.099617,
       "latitude": 49.011672
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "517",
@@ -128958,7 +129127,8 @@
       "longitude": 12.125142,
       "latitude": 49.122157
     },
-    "validFrom": "2019-12-31T23:00:00Z"
+    "validFrom": "2019-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": false
   },
   {
     "stationID": "5174",
@@ -129490,7 +129660,7 @@
       "houseNumber": "9",
       "postalCode": "8222",
       "city": "Beringen",
-      "state": "Schweiz CH",
+      "state": "Kanton Schaffhausen",
       "country": "CH"
     },
     "availableTransports": [],
@@ -130274,7 +130444,8 @@
       "longitude": 7.23026991,
       "latitude": 50.5770029
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": false
   },
   {
     "stationID": "5217",
@@ -130496,7 +130667,8 @@
       "longitude": 9.671134,
       "latitude": 54.302262
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": false
   },
   {
     "stationID": "5224",
@@ -131419,7 +131591,8 @@
       "longitude": 7.434255,
       "latitude": 52.276299
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "5252",
@@ -131861,7 +132034,8 @@
       "longitude": 12.487015,
       "latitude": 54.251016
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": false
   },
   {
     "stationID": "5265",
@@ -131898,7 +132072,8 @@
       "longitude": 12.436965,
       "latitude": 54.239176
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "5266",
@@ -132009,7 +132184,8 @@
       "longitude": 13.3872056,
       "latitude": 52.520373
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "5270",
@@ -132171,7 +132347,7 @@
       "houseNumber": "25",
       "postalCode": "4125",
       "city": "Riehen ",
-      "state": "Schweiz CH",
+      "state": "Kanton Basel-Stadt",
       "country": "CH"
     },
     "availableTransports": [],
@@ -132265,7 +132441,8 @@
       "longitude": 13.287734,
       "latitude": 51.309654
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "5277",
@@ -132413,7 +132590,8 @@
       "longitude": 13.388513,
       "latitude": 52.548963
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "5280",
@@ -132964,7 +133142,8 @@
       "longitude": 13.410961,
       "latitude": 52.521481
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "530",
@@ -133001,7 +133180,8 @@
       "longitude": 13.4346807,
       "latitude": 52.5104881
     },
-    "validFrom": "2019-12-31T23:00:00Z"
+    "validFrom": "2019-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "5301",
@@ -133995,7 +134175,8 @@
       "longitude": 13.3324447,
       "latitude": 52.5073407
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "5330",
@@ -134580,7 +134761,8 @@
       "longitude": 12.119202,
       "latitude": 47.850018
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "535",
@@ -134986,7 +135168,8 @@
       "longitude": 12.131079,
       "latitude": 54.078246
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "5367",
@@ -136740,8 +136923,8 @@
     "state": "BE",
     "timeZone": "Europe/Berlin",
     "position": {
-      "longitude": 13.290326,
-      "latitude": 52.496254
+      "longitude": 13.290102,
+      "latitude": 52.496345
     },
     "validFrom": "2018-12-31T23:00:00Z"
   },
@@ -137509,7 +137692,8 @@
       "longitude": 11.3745832,
       "latitude": 50.6502734
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "5451",
@@ -137546,7 +137730,8 @@
       "longitude": 6.991021,
       "latitude": 49.241065
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "5453",
@@ -138656,7 +138841,8 @@
       "longitude": 13.4966934,
       "latitude": 52.5101355
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "5490",
@@ -139736,7 +139922,7 @@
       "houseNumber": "29",
       "postalCode": "8200",
       "city": "Schaffhausen",
-      "state": "Schweiz CH",
+      "state": "Kanton Schaffhausen",
       "country": "CH"
     },
     "availableTransports": [],
@@ -142092,7 +142278,8 @@
       "longitude": 13.1968975,
       "latitude": 52.5346481
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "5614",
@@ -143300,7 +143487,8 @@
       "longitude": 13.1795275,
       "latitude": 52.4209723
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "5660",
@@ -144668,7 +144856,7 @@
     "stationID": "5708",
     "names": {
       "DE": {
-        "name": "Schwalbach a Ts (Limes)"
+        "name": "Schwalbach (Taunus) Limes"
       }
     },
     "metropolis": {},
@@ -144772,7 +144960,8 @@
       "longitude": 13.5926414,
       "latitude": 52.6755689
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": false
   },
   {
     "stationID": "5710",
@@ -145533,7 +145722,8 @@
       "longitude": 10.212919,
       "latitude": 50.035313
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "5743",
@@ -145865,7 +146055,8 @@
       "longitude": 11.407455,
       "latitude": 53.634739
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "5756",
@@ -148401,7 +148592,8 @@
       "longitude": 7.203026,
       "latitude": 50.793915
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "5841",
@@ -148475,7 +148667,8 @@
       "longitude": 8.016508,
       "latitude": 50.875939
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "5844",
@@ -148581,7 +148774,8 @@
       "longitude": 10.769108,
       "latitude": 54.068523
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": false
   },
   {
     "stationID": "5847",
@@ -149124,7 +149318,8 @@
       "longitude": 8.84126902,
       "latitude": 47.7588801
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "5866",
@@ -149527,7 +149722,8 @@
       "longitude": 8.104589,
       "latitude": 51.578419
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": false
   },
   {
     "stationID": "5877",
@@ -149712,7 +149908,8 @@
       "longitude": 7.004187,
       "latitude": 51.160766
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "5883",
@@ -152250,7 +152447,8 @@
       "longitude": 10.994239,
       "latitude": 50.108258
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": false
   },
   {
     "stationID": "5964",
@@ -153323,7 +153521,7 @@
     "stationID": "5998",
     "names": {
       "DE": {
-        "name": "Steinheim/Main"
+        "name": "Steinheim am Main (Hanau)"
       }
     },
     "metropolis": {},
@@ -153721,7 +153919,8 @@
       "longitude": 11.854412,
       "latitude": 52.594723
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "6012",
@@ -154487,8 +154686,8 @@
     "state": "NW",
     "timeZone": "Europe/Berlin",
     "position": {
-      "longitude": 6.217478,
-      "latitude": 50.79448
+      "longitude": 6.21715667,
+      "latitude": 50.7944104
     },
     "validFrom": "2018-12-31T23:00:00Z"
   },
@@ -154859,7 +155058,8 @@
       "longitude": 13.077321,
       "latitude": 54.308626
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "605",
@@ -155634,7 +155834,8 @@
       "longitude": 9.181635,
       "latitude": 48.784084
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "6072",
@@ -155887,8 +156088,8 @@
     "state": "BW",
     "timeZone": "Europe/Berlin",
     "position": {
-      "longitude": 9.169382,
-      "latitude": 48.813673
+      "longitude": 9.16913332,
+      "latitude": 48.8136825
     },
     "validFrom": "2019-12-31T23:00:00Z"
   },
@@ -157248,7 +157449,8 @@
       "longitude": 11.739277,
       "latitude": 49.499478
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": false
   },
   {
     "stationID": "6117",
@@ -159398,7 +159600,7 @@
       "houseNumber": "31",
       "postalCode": "8240",
       "city": "Thayngen",
-      "state": "Schweiz CH",
+      "state": "Kanton Schaffhausen",
       "country": "CH"
     },
     "availableTransports": [],
@@ -160038,7 +160240,8 @@
       "longitude": 10.76227,
       "latitude": 53.994212
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": false
   },
   {
     "stationID": "622",
@@ -160075,7 +160278,8 @@
       "longitude": 8.532722,
       "latitude": 52.029261
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "6220",
@@ -160602,7 +160806,7 @@
       "houseNumber": "1",
       "postalCode": "8219",
       "city": "Trasadingen",
-      "state": "Schweiz CH",
+      "state": "Kanton Schaffhausen",
       "country": "CH"
     },
     "availableTransports": [],
@@ -160804,7 +161008,8 @@
       "longitude": 12.638801,
       "latitude": 47.869727
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": false
   },
   {
     "stationID": "6242",
@@ -160914,7 +161119,8 @@
       "longitude": 11.5522903,
       "latitude": 50.0653281
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": false
   },
   {
     "stationID": "6245",
@@ -161172,7 +161378,8 @@
       "longitude": 10.908159,
       "latitude": 48.961267
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": false
   },
   {
     "stationID": "6253",
@@ -161541,7 +161748,8 @@
       "longitude": 6.652453,
       "latitude": 49.756846
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "6265",
@@ -161981,7 +162189,8 @@
       "longitude": 9.05539513,
       "latitude": 48.5156414
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "628",
@@ -163009,7 +163218,8 @@
       "longitude": 10.553053,
       "latitude": 52.969781
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "6311",
@@ -163780,7 +163990,8 @@
       "longitude": 7.692858,
       "latitude": 51.538982
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": false
   },
   {
     "stationID": "6336",
@@ -166128,7 +166339,8 @@
       "longitude": 12.803137,
       "latitude": 54.277316
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": false
   },
   {
     "stationID": "6406",
@@ -168585,7 +168797,8 @@
       "longitude": 7.884263,
       "latitude": 49.968729
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": false
   },
   {
     "stationID": "6490",
@@ -169718,7 +169931,8 @@
       "longitude": 13.600507,
       "latitude": 54.404819
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": false
   },
   {
     "stationID": "6530",
@@ -169977,7 +170191,8 @@
       "longitude": 12.680678,
       "latitude": 53.521512
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": false
   },
   {
     "stationID": "6539",
@@ -170121,7 +170336,8 @@
       "longitude": 12.091271,
       "latitude": 54.176852
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": false
   },
   {
     "stationID": "6546",
@@ -172350,7 +172566,8 @@
       "longitude": 11.326458,
       "latitude": 50.991487
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "6618",
@@ -174303,7 +174520,8 @@
       "longitude": 10.788805,
       "latitude": 51.840254
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": false
   },
   {
     "stationID": "6693",
@@ -175035,7 +175253,8 @@
       "longitude": 8.310925,
       "latitude": 54.906839
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "6716",
@@ -175880,7 +176099,8 @@
       "longitude": 8.243731,
       "latitude": 50.070791
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "6745",
@@ -176474,7 +176694,7 @@
       "houseNumber": "18",
       "postalCode": "8217",
       "city": "Wilchingen",
-      "state": "Schweiz CH",
+      "state": "Kanton Schaffhausen",
       "country": "CH"
     },
     "availableTransports": [],
@@ -178916,7 +179136,8 @@
       "longitude": 6.943557,
       "latitude": 49.973121
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": false
   },
   {
     "stationID": "6836",
@@ -179793,7 +180014,8 @@
       "longitude": 10.787784,
       "latitude": 52.429498
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "686",
@@ -180378,7 +180600,8 @@
       "longitude": 8.356448,
       "latitude": 49.63494
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "6888",
@@ -181188,7 +181411,8 @@
       "longitude": 7.149543,
       "latitude": 51.254363
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "6915",
@@ -181963,7 +182187,8 @@
       "longitude": 9.93578,
       "latitude": 49.801796
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "6946",
@@ -184966,7 +185191,8 @@
       "longitude": 13.548191,
       "latitude": 53.973879
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": false
   },
   {
     "stationID": "7064",
@@ -185114,7 +185340,8 @@
       "longitude": 12.474716,
       "latitude": 50.714668
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "707",
@@ -186729,7 +186956,7 @@
     "stationID": "7169",
     "names": {
       "DE": {
-        "name": "Offenbach-Kaiserlei"
+        "name": "Offenbach (Main) Kaiserlei"
       }
     },
     "metropolis": {},
@@ -186803,7 +187030,7 @@
     "stationID": "7170",
     "names": {
       "DE": {
-        "name": "Offenbach Ledermuseum"
+        "name": "Offenbach (Main) Ledermuseum"
       }
     },
     "metropolis": {},
@@ -186840,7 +187067,7 @@
     "stationID": "7171",
     "names": {
       "DE": {
-        "name": "Offenbach Marktplatz"
+        "name": "Offenbach (Main) Marktplatz"
       }
     },
     "metropolis": {},
@@ -187793,7 +188020,8 @@
       "longitude": 7.223275,
       "latitude": 51.478609
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "7248",
@@ -190579,7 +190807,8 @@
       "longitude": 7.097136,
       "latitude": 50.732008
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "768",
@@ -194291,7 +194520,7 @@
       "street": "Hugo-Eckener-Ring",
       "houseNumber": "1",
       "postalCode": "60549",
-      "city": "Frankfurt am Main",
+      "city": "Frankfurt (Main)",
       "state": "Hessen",
       "country": "DE"
     },
@@ -194314,7 +194543,8 @@
       "longitude": 8.570185,
       "latitude": 50.053167
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "7983",
@@ -195599,7 +195829,8 @@
       "longitude": 12.223426,
       "latitude": 51.423338
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": false
   },
   {
     "stationID": "8016",
@@ -199303,8 +199534,8 @@
     "state": "BW",
     "timeZone": "Europe/Berlin",
     "position": {
-      "longitude": 8.942274,
-      "latitude": 49.307098
+      "longitude": 8.9423415,
+      "latitude": 49.3069897
     },
     "validFrom": "2018-12-31T23:00:00Z"
   },
@@ -199564,7 +199795,8 @@
       "longitude": 13.5119498,
       "latitude": 52.3648038
     },
-    "validFrom": "2020-09-30T22:00:00Z"
+    "validFrom": "2020-09-30T22:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "8193",
@@ -203045,7 +203277,7 @@
       "street": "Rauracherstrasse",
       "postalCode": "4125",
       "city": "Riehen",
-      "state": "Schweiz CH",
+      "state": "Kanton Basel-Stadt",
       "country": "CH"
     },
     "availableTransports": [],
@@ -203116,7 +203348,7 @@
       "street": "Bahnweg",
       "postalCode": "8222",
       "city": "Beringen",
-      "state": "Schweiz CH",
+      "state": "Kanton Schaffhausen",
       "country": "CH"
     },
     "availableTransports": [],
@@ -203277,8 +203509,8 @@
     "state": "HH",
     "timeZone": "Europe/Berlin",
     "position": {
-      "longitude": 10.0246596,
-      "latitude": 53.534824
+      "longitude": 10.0247937,
+      "latitude": 53.5348434
     },
     "validFrom": "2018-12-31T23:00:00Z"
   },
@@ -203286,7 +203518,7 @@
     "stationID": "8320",
     "names": {
       "DE": {
-        "name": "Frankfurt am Main-Ginnheim"
+        "name": "Frankfurt (Main) Ginnheim"
       }
     },
     "metropolis": {},
@@ -203609,7 +203841,8 @@
       "longitude": 10.540295,
       "latitude": 52.252218
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "8350",
@@ -204584,7 +204817,8 @@
       "longitude": 8.943319,
       "latitude": 51.766433
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "850",
@@ -204802,7 +205036,8 @@
       "longitude": 8.813834,
       "latitude": 53.083481
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "856",
@@ -205320,7 +205555,8 @@
       "longitude": 8.599555,
       "latitude": 53.534912
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "87",
@@ -206425,7 +206661,8 @@
       "longitude": 8.589649,
       "latitude": 49.124622
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "908",
@@ -206680,8 +206917,8 @@
     "state": "NW",
     "timeZone": "Europe/Berlin",
     "position": {
-      "longitude": 6.912718,
-      "latitude": 50.829249
+      "longitude": 6.91310522,
+      "latitude": 50.8286504
     },
     "validFrom": "2018-12-31T23:00:00Z"
   },
@@ -206939,7 +207176,8 @@
       "longitude": 10.623298,
       "latitude": 53.474972
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": false
   },
   {
     "stationID": "93",
@@ -207219,8 +207457,8 @@
     "state": "MV",
     "timeZone": "Europe/Berlin",
     "position": {
-      "longitude": 12.712682,
-      "latitude": 54.268211
+      "longitude": 12.711533,
+      "latitude": 54.268238
     },
     "validFrom": "2018-12-31T23:00:00Z"
   },
@@ -207479,7 +207717,8 @@
       "longitude": 10.716217,
       "latitude": 48.033723
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": true
   },
   {
     "stationID": "945",
@@ -208911,7 +209150,8 @@
       "longitude": 11.242723,
       "latitude": 50.137657
     },
-    "validFrom": "2018-12-31T23:00:00Z"
+    "validFrom": "2018-12-31T23:00:00Z",
+    "mobilityServiceStaffOnSite": false
   },
   {
     "stationID": "992",

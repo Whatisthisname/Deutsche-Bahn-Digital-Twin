@@ -1,120 +1,197 @@
+// This renders the map itself and also draws the lines for the latest event in each active journey. 
+// Also handles hovers on stations to show their "useStationStats" stats.
+
 // src/pages/Map/MapView.tsx
-import {useMemo} from "react";
+import { useMemo, useState } from "react";
 import {
   Map as MapGL,
   NavigationControl,
   Source,
   Layer,
+  Marker,
 } from "@vis.gl/react-maplibre";
-import type {FeatureCollection, Feature, Point, LineString} from "geojson";
+import type { FeatureCollection, Feature, LineString } from "geojson";
 import "maplibre-gl/dist/maplibre-gl.css";
 
-import {useStations} from "@/state/useStations";
-import {useVisibleActiveEvents} from "@/state/useTrainEvents";
-import {useSimStore} from "@/state/useSimStore";
+import { useGraphStructure } from "@/state/useGraphStructure";
+import { useActiveJourneys } from "@/hooks/useStreamingTrainEvents";
+import { useSimStore } from "@/state/useSimStore";
+import { useStationStats } from "@/state/useStationStats";
+import { calculateDelayMinutes } from "@/utils/delayUtils";
+import { ISO_to_ms } from "@/utils/time";
+import type { StationInfo } from "@/types/ride";
 
-type StopEvent = {
-  station?: string;
-  train_line_ride_id?: string | number;
-  train_line_station_num?: number;
-  delay_in_min?: number;
-};
-
-function edgeColor(delay?: number) {
-  if ((delay ?? 0) <= 2)  return "#2e7d32";
+function delay_to_color(delay?: number) {
+  if ((delay ?? 0) <= 2) return "#2e7d32";
   if ((delay ?? 0) <= 10) return "#f9a825";
   return "#c62828";
 }
 
 export default function MapView() {
-  const {stations, loaded} = useStations();
-  const events = useVisibleActiveEvents(0) as StopEvent[];
-  const playhead = useSimStore(s => s.cursorTs) ?? 0;
+  const { graph, loaded } = useGraphStructure();
+  const activeJourneys = useActiveJourneys();
+  const playhead = useSimStore((s) => s.cursorTs) ?? 0;
 
-  const {stationFC, edgeFC, counts} = useMemo(() => {
-    // Stations FC
-    const stationFeatures: Feature<Point,{name:string}>[] =
-      Object.entries(stations).map(([name, s]) => ({
-        type: "Feature",
-        geometry: {type: "Point", coordinates: [s.lon, s.lat]},
-        properties: {name},
-      }));
-    // add one bright test point (Berlin) so you can verify rendering
-    stationFeatures.push({
-      type: "Feature",
-      geometry: {type: "Point", coordinates: [13.4050, 52.5200]},
-      properties: {name: "__test__ Berlin"},
-    });
+  // NEW: pull stations (and stats if you ever want them) from the network stats hook
+  const { stations } = useStationStats();
 
-    const stationFC: FeatureCollection<Point,{name:string}> = {
-      type: "FeatureCollection",
-      features: stationFeatures
-    };
+  // Fast lookup by stationId for hover
+  const stationFeaturesById = useMemo(() => {
+    const m = new Map<string, (typeof stations)[number]["features"]>();
+    for (const s of stations) m.set(s.stationId, s.features);
+    return m;
+  }, [stations]);
 
-    // Group by ride
-    const byRide: globalThis.Map<string, StopEvent[]> = new globalThis.Map();
-    for (const e of events) {
-      const id = String(e.train_line_ride_id ?? "");
-      if (!id) continue;
-      (byRide.get(id) ?? (byRide.set(id, []), byRide.get(id)!)).push(e);
+  // State for hover popup
+  const [hoveredStationInfo, setHoveredStationInfo] = useState<StationInfo | null>(null);
+
+  const { edgeFC, backgroundEdgeFC, counts } = useMemo(() => {
+    if (!graph) {
+      return {
+        edgeFC: { type: "FeatureCollection" as const, features: [] },
+        backgroundEdgeFC: { type: "FeatureCollection" as const, features: [] },
+        counts: { stations: 0, events: 0, edges: 0, backgroundEdges: 0 },
+      };
     }
 
-    const edgeFeatures: Feature<LineString,{color:string;width:number;label:string}>[] = [];
-    for (const [, grpRaw] of byRide) {
-      const grp = grpRaw.slice().sort(
-        (a, b) =>
-          Number(a.train_line_station_num ?? 0) -
-          Number(b.train_line_station_num ?? 0)
+    // Background edges FC - all possible edges from graph structure
+    const backgroundEdgeFeatures: Feature<
+      LineString,
+      { fromStation: string; toStation: string; distance: number; frequency: number }
+    >[] = Object.entries(graph.edges)
+      .map(([, edge]) => {
+        const from = edge[0];
+        const to = edge[1];
+        const distance = edge[2];
+        const frequency = edge[3];
+        const fromStation = graph.stations[from];
+        const toStation = graph.stations[to];
+
+        if (!fromStation || !toStation) return null;
+
+        return {
+          type: "Feature",
+          geometry: {
+            type: "LineString",
+            coordinates: [
+              [fromStation.lon, fromStation.lat],
+              [toStation.lon, toStation.lat],
+            ],
+          },
+          properties: {
+            fromStation: fromStation.name,
+            toStation: toStation.name,
+            distance,
+            frequency,
+          },
+        };
+      })
+      .filter(Boolean) as Feature<
+        LineString,
+        { fromStation: string; toStation: string; distance: number; frequency: number }
+      >[];
+
+    const backgroundEdgeFC: FeatureCollection<
+      LineString,
+      { fromStation: string; toStation: string; distance: number; frequency: number }
+    > = {
+      type: "FeatureCollection",
+      features: backgroundEdgeFeatures,
+    };
+
+    // Live edges from active rides: draw latest DEPARTURE segment per ride
+    const edgeFeatures: Feature<LineString, { color: string; width: number; label: string }>[] = [];
+
+    for (const journey of activeJourneys) {
+      if (!journey.events || journey.events.length === 0) continue;
+
+      const departureEvents = journey.events.filter((e) => e.event_type === "DEPARTURE");
+      const latestDeparture = departureEvents.sort(
+        (a, b) => (ISO_to_ms(b.timestamp) ?? 0) - (ISO_to_ms(a.timestamp) ?? 0)
+      )[0];
+
+      if (!latestDeparture || !latestDeparture.from_station || !latestDeparture.to_station) continue;
+
+      const fromStationId = graph.stationNameToId[latestDeparture.from_station];
+      const toStationId = graph.stationNameToId[latestDeparture.to_station];
+      if (fromStationId === undefined || toStationId === undefined) continue;
+
+      const fromStation = graph.stations[fromStationId];
+      const toStation = graph.stations[toStationId];
+      if (!fromStation || !toStation) continue;
+
+      // Calculate delay using consecutive events from the ride
+      const sortedEvents = journey.events.slice().sort(
+        (a, b) => (ISO_to_ms(a.timestamp) ?? 0) - (ISO_to_ms(b.timestamp) ?? 0)
       );
-      if (grp.length < 2) continue;
 
-      // last pair of distinct stations
-      let i = grp.length - 1;
-      while (i > 0 && grp[i].station === grp[i-1].station) i--;
-      if (i <= 0) continue;
+      // Find the position of the latest departure in the sorted events
+      const latestDepartureIndex = sortedEvents.findIndex(e =>
+        e.timestamp === latestDeparture.timestamp &&
+        e.from_station === latestDeparture.from_station &&
+        e.to_station === latestDeparture.to_station
+      );
 
-      const prev = grp[i-1], curr = grp[i];
-      if (!prev.station || !curr.station || prev.station === curr.station) continue;
-      const A = stations[prev.station], B = stations[curr.station];
-      if (!A || !B) continue;
+      // Calculate delay using the previous event (if available)
+      const previousEvent = latestDepartureIndex > 0 ? sortedEvents[latestDepartureIndex - 1] : null;
+      const delay = calculateDelayMinutes(latestDeparture, previousEvent);
 
-      const delay = Math.max(Number(prev.delay_in_min ?? 0), Number(curr.delay_in_min ?? 0));
       edgeFeatures.push({
         type: "Feature",
-        geometry: {type: "LineString", coordinates: [[A.lon, A.lat], [B.lon, B.lat]]},
-        properties: {color: edgeColor(delay), width: 2, label: `${prev.station} → ${curr.station}`},
+        geometry: {
+          type: "LineString",
+          coordinates: [
+            [fromStation.lon, fromStation.lat],
+            [toStation.lon, toStation.lat],
+          ],
+        },
+        properties: {
+          color: delay_to_color(delay),
+          width: 2,
+          label: `${latestDeparture.from_station} → ${latestDeparture.to_station}`,
+        },
       });
     }
 
-    const edgeFC: FeatureCollection<LineString,{color:string;width:number;label:string}> = {
+    const edgeFC: FeatureCollection<LineString, { color: string; width: number; label: string }> = {
       type: "FeatureCollection",
-      features: edgeFeatures
+      features: edgeFeatures,
     };
 
     return {
-      stationFC,
       edgeFC,
+      backgroundEdgeFC,
       counts: {
-        stations: Object.keys(stations).length,
-        events: events.length,
-        edges: edgeFeatures.length
-      }
+        stations: graph ? Object.keys(graph.stations).length : 0,
+        events: activeJourneys.reduce((sum, ride) => sum + ride.events.length, 0),
+        edges: edgeFeatures.length,
+        backgroundEdges: backgroundEdgeFeatures.length,
+      },
     };
-  }, [stations, loaded, events, playhead]);
+  }, [graph, activeJourneys, playhead]);
 
   return (
-    <div className="map-view" style={{position:"relative"}}>
+    <div className="map-view" style={{ position: "relative" }}>
       {/* tiny debug badge */}
-      <div style={{
-        position:"absolute", zIndex:1, top:8, left:8,
-        background:"rgba(0,0,0,0.6)", color:"#fff",
-        padding:"4px 8px", borderRadius:6, fontSize:12
-      }}>
-        loaded:{String(loaded)} | stations:{counts.stations} | events:{counts.events} | edges:{counts.edges}
+      <div
+        style={{
+          position: "absolute",
+          zIndex: 1,
+          top: 8,
+          left: 8,
+          background: "rgba(0,0,0,0.6)",
+          color: "#fff",
+          padding: "4px 8px",
+          borderRadius: 6,
+          fontSize: 12,
+        }}
+      >
+        loaded:{String(loaded)} | stations:{counts.stations} | events:{counts.events} | edges:{counts.edges} | bg:
+        {counts.backgroundEdges}
       </div>
 
       <MapGL
-        initialViewState={{longitude: 10, latitude: 51, zoom: 5}}
+        initialViewState={{ longitude: 10, latitude: 51, zoom: 5 }}
         mapStyle="https://basemaps.cartocdn.com/gl/positron-gl-style/style.json"
       >
         <NavigationControl position="top-right" />
@@ -122,25 +199,131 @@ export default function MapView() {
         {/* Only render layers if stations are loaded */}
         {loaded && (
           <>
-            <Source id="stations" type="geojson" data={stationFC}>
-              <Layer id="stations-dots" type="circle" paint={{
-                "circle-radius": 2.5,
-                "circle-color": "#1f2937",
-                "circle-stroke-color": "#fff",
-                "circle-stroke-width": 0.5
-              }}/>
+            {/* Background edges - all possible connections */}
+            <Source id="background-edges" type="geojson" data={backgroundEdgeFC}>
+              <Layer
+                id="background-edges-lines"
+                type="line"
+                paint={{
+                  "line-color": "#e5e7eb",
+                  "line-width": 2,
+                  "line-opacity": 0.7,
+                }}
+              />
             </Source>
 
+            {/* Live edges - currently active train movements */}
             <Source id="edges" type="geojson" data={edgeFC}>
-              <Layer id="edges-lines" type="line" paint={{
-                "line-color": ["get","color"],
-                "line-width": ["get","width"],
-                "line-opacity": 0.9
-              }}/>
+              <Layer
+                id="edges-lines"
+                type="line"
+                paint={{
+                  "line-color": ["get", "color"],
+                  "line-width": ["get", "width"],
+                  "line-opacity": 0.9,
+                }}
+              />
             </Source>
+
+            {/* Station Markers - Individual interactive markers */}
+            {graph &&
+              Object.entries(graph.stations).map(([stationId, station]) => {
+                return (
+                  <Marker key={stationId} longitude={station.lon} latitude={station.lat}>
+                    <div
+                      style={{
+                        width: "10px",
+                        height: "10px",
+                        backgroundColor: "#3b82f6",
+                        border: "2px solid #fff",
+                        borderRadius: "50%",
+                        cursor: "pointer",
+                        transition: "all 0.2s ease",
+                        boxShadow: "0 2px 4px rgba(0,0,0,0.2)",
+                      }}
+                      onMouseEnter={() => {
+                        const features =
+                          stationFeaturesById.get(stationId) ?? {
+                            rideCount: 0,
+                            totalDelaySum: 0,
+                            averageDelay: 0,
+                            currentDelay: 0,
+                            maxDelay: 0,
+                            punctualityRate: 0,
+                            lastUpdated: 0,
+                          };
+                        setHoveredStationInfo({
+                          stationName: station.name,
+                          stationId,
+                          features,
+                          coordinates: [station.lon, station.lat],
+                        });
+                      }}
+                      onMouseLeave={() => setHoveredStationInfo(null)}
+                    />
+                  </Marker>
+                );
+              })}
           </>
         )}
       </MapGL>
+
+      {/* Station Hover Popup */}
+      {hoveredStationInfo && (
+        <div
+          style={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            background: "white",
+            border: "1px solid #ccc",
+            borderRadius: "8px",
+            padding: "16px",
+            boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+            zIndex: 1000,
+            minWidth: "250px",
+            maxWidth: "300px",
+            pointerEvents: "none", // Prevent popup from interfering with mouse events
+          }}
+        >
+          <div style={{ marginBottom: "8px" }}>
+            <h3 style={{ margin: 0, fontSize: "16px", fontWeight: "bold", color: "#333" }}>
+              {hoveredStationInfo.stationName}
+            </h3>
+          </div>
+
+          {hoveredStationInfo.features ? (
+            <div style={{ fontSize: "14px", lineHeight: "1.4" }}>
+              <div style={{ marginBottom: "8px" }}>
+                <strong>Rides:</strong> {hoveredStationInfo.features.rideCount}
+              </div>
+              <div style={{ marginBottom: "8px" }}>
+                <strong>Average Delay:</strong> {hoveredStationInfo.features.averageDelay.toFixed(1)} min
+              </div>
+              <div style={{ marginBottom: "8px" }}>
+                <strong>Current Delay:</strong>{" "}
+                {(hoveredStationInfo.features.currentDelay ?? 0).toFixed(1)} min
+              </div>
+              <div style={{ marginBottom: "8px" }}>
+                <strong>Max Delay:</strong> {(hoveredStationInfo.features.maxDelay ?? 0).toFixed(1)} min
+              </div>
+              <div style={{ marginBottom: "8px" }}>
+                <strong>Punctuality:</strong>{" "}
+                {(hoveredStationInfo.features.punctualityRate ?? 0).toFixed(1)}%
+              </div>
+              <div style={{ fontSize: "12px", color: "#666", marginTop: "8px" }}>
+                Last updated:{" "}
+                {hoveredStationInfo.features.lastUpdated
+                  ? new Date(hoveredStationInfo.features.lastUpdated).toLocaleTimeString()
+                  : "Never"}
+              </div>
+            </div>
+          ) : (
+            <div style={{ fontSize: "14px", color: "#666" }}>No activity data available</div>
+          )}
+        </div>
+      )}
     </div>
   );
 }

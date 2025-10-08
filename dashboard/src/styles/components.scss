@@ -3,7 +3,7 @@
 /* Main Stats */
 .main-stats {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(4, 1fr);
     gap: 8px;
     padding: 12px;
     border-bottom: 1px solid var(--border);
@@ -26,6 +26,12 @@
         .statistic-value {
             font-size: 20px;
             font-weight: 600;
+        }
+
+        .statistic-time {
+            font-size: 10px;
+            color: var(--faded);
+            margin-top: 2px;
         }
     }
 }
@@ -57,7 +63,7 @@
     gap: 8px;
 
     button,
-    select.speed-select {
+    select {
         padding: 6px 10px;
         border: 1px solid var(--border);
         background: #fff;
@@ -69,7 +75,7 @@
         outline: none;
     }
 
-    select.speed-select {
+    select {
         background-repeat: no-repeat;
         background-position: right 8px center;
         background-size: 12px;
@@ -93,4 +99,447 @@
         border-color: #111;
         color: #fff;
     }
+}
+
+/* Active Rides List */
+.activeRides {
+    flex: 1;
+    overflow-y: auto;
+}
+
+.rides-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    height: 100%;
+}
+
+.ride-item {
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 8px 10px;
+    background: #fff;
+    transition: all 0.2s ease;
+
+    &:hover {
+        border-color: var(--primary);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+}
+
+.ride-line-1 {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 4px;
+}
+
+.ride-line-2 {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+}
+
+.ride-id {
+    font-weight: 600;
+    font-size: 13px;
+    color: var(--text);
+    font-family: monospace;
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    flex: 1;
+}
+
+.ml-prediction-indicator {
+    font-size: 10px;
+    color: #f59e0b;
+    background: #fef3cd;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-weight: 500;
+    margin: 0 8px 0 0;
+    flex-shrink: 0;
+}
+
+.ride-status {
+    font-size: 11px;
+    font-weight: 500;
+    padding: 2px 6px;
+    border-radius: 4px;
+    background: rgba(0, 0, 0, 0.05);
+    flex-shrink: 0;
+}
+
+.ride-route {
+    color: var(--text);
+    max-width: 180px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    .destination {
+        font-weight: 500;
+    }
+
+    .last-stop {
+        color: var(--faded);
+        font-style: italic;
+    }
+}
+
+.ride-times {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-family: monospace;
+    color: var(--faded);
+    flex-shrink: 0;
+}
+
+.time-value {
+    font-weight: 500;
+    color: var(--text);
+}
+
+.time-separator {
+    color: var(--faded);
+}
+
+.duration {
+    color: var(--primary);
+    font-weight: 500;
+}
+
+.no-rides {
+    text-align: center;
+    padding: 20px;
+    color: var(--faded);
+
+    p {
+        margin: 0;
+        font-style: italic;
+    }
+}
+
+/* Analytics Cards */
+.analytics-card {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+    background: #fff;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+
+    .analytics-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 12px;
+
+        .analytics-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin: 0;
+            color: #111;
+        }
+
+        .analytics-time {
+            font-size: 11px;
+            color: var(--faded);
+            background: #f5f5f5;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+    }
+
+    .analytics-metric {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+
+        .metric-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: #111;
+            line-height: 1;
+            margin-bottom: 4px;
+        }
+
+        .metric-label {
+            font-size: 12px;
+            color: var(--faded);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+    }
+
+    .analytics-footer {
+        margin-top: 12px;
+        padding-top: 8px;
+        border-top: 1px solid #f0f0f0;
+
+        .metric-detail {
+            font-size: 11px;
+            color: var(--faded);
+            text-align: center;
+        }
+    }
+
+    &.chart-card {
+        .chart-container {
+            flex: 1;
+            min-height: 300px;
+        }
+    }
+}
+
+.dropdown {
+    position: relative;
+
+    span {
+        font-size: 10px;
+        color: var(--faded);
+        position: absolute;
+        top: -5px;
+        left: 9px;
+        background: white;
+        padding: 0 2px;
+    }
+}
+
+/* Delay Prediction Modal */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: white;
+    border-radius: 12px;
+    max-width: 500px;
+    width: 90vw;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 24px 0;
+    border-bottom: 1px solid #e5e7eb;
+    margin-bottom: 20px;
+}
+
+.modal-header h2 {
+    margin: 0;
+    color: #1f2937;
+    font-size: 1.5rem;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #6b7280;
+    padding: 0;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-body {
+    padding: 0 24px 24px;
+}
+
+.ride-info {
+    margin-bottom: 24px;
+}
+
+.ride-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.ride-info h3 {
+    margin: 0;
+    color: #1f2937;
+}
+
+.ride-status {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.status-active {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.status-finished {
+    background: #e0e7ff;
+    color: #3730a3;
+}
+
+.status-canceled {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+.ride-details p {
+    margin: 4px 0;
+    color: #4b5563;
+    font-size: 0.875rem;
+}
+
+.loading-state {
+    text-align: center;
+    padding: 40px 0;
+}
+
+.loading-spinner {
+    width: 32px;
+    height: 32px;
+    border: 3px solid #e5e7eb;
+    border-top: 3px solid #3b82f6;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 16px;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.prediction-main {
+    text-align: center;
+    margin-bottom: 24px;
+    padding: 20px;
+    background: #f9fafb;
+    border-radius: 8px;
+}
+
+.predicted-number {
+    display: block;
+    font-size: 3rem;
+    font-weight: 700;
+    color: #1f2937;
+    margin-bottom: 8px;
+}
+
+.prediction-label {
+    display: block;
+    color: #6b7280;
+    font-weight: 500;
+    margin-bottom: 16px;
+}
+
+.prediction-confidence {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.confidence-icon {
+    font-size: 1.25rem;
+}
+
+.confidence-text {
+    font-weight: 600;
+    font-size: 0.875rem;
+}
+
+.prediction-context h4 {
+    margin: 0 0 12px 0;
+    color: #1f2937;
+    font-size: 1.125rem;
+}
+
+.context-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.context-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.context-label {
+    font-size: 0.75rem;
+    color: #6b7280;
+    text-transform: uppercase;
+    font-weight: 500;
+}
+
+.context-value {
+    font-weight: 600;
+    color: #1f2937;
+}
+
+.prediction-disclaimer {
+    padding: 16px;
+    background: #fef3cd;
+    border-left: 4px solid #f59e0b;
+    border-radius: 4px;
+}
+
+.prediction-disclaimer p {
+    margin: 0;
+    font-size: 0.875rem;
+    color: #92400e;
+}
+
+.error-state {
+    text-align: center;
+    padding: 40px 0;
+}
+
+.error-icon {
+    font-size: 2rem;
+    margin-bottom: 16px;
+}
+
+.error-state p {
+    margin: 8px 0;
+    color: #dc2626;
+}
+
+.error-subtext {
+    font-size: 0.875rem;
+    color: #6b7280;
 }
