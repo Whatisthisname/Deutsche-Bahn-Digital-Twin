@@ -10,7 +10,6 @@ import {
 } from "recharts";
 import { useSimStore } from "@/state/useSimStore";
 import { useStationStats } from "@/state/useStationStats";
-import { useCurrentAnalytics } from "@/state/useAnalytics";
 import { useGraphStructure } from "@/state/useGraphStructure";
 
 type Row = {
@@ -29,14 +28,14 @@ export default function AverageDelayChart() {
   const cursorTs = useSimStore((s) => s.cursorTs) ?? 0;
   const { loaded } = useGraphStructure();
   const { stations } = useStationStats();     // reactive array (could be mutated in place)
-  const analytics = useCurrentAnalytics();
+  
 
   const currentTime = cursorTs ? new Date(cursorTs).toLocaleTimeString() : "—";
   // Force recompute once per simulation minute
   const minuteBucket = Math.floor(cursorTs / 60_000);
 
-  const { chartData, activeStationsCount } = useMemo(() => {
-    if (!loaded) return { chartData: [] as Row[], activeStationsCount: 0 };
+  const { chartData } = useMemo(() => {
+    
 
     // shallow copy so identity changes even if store mutates in place
     const active = [...stations].filter((s) => s.features.rideCount > 0);
@@ -137,15 +136,7 @@ Punctuality: ${row?.punctualityRate ?? 0}%`;
         )}
       </div>
 
-      <div className="analytics-footer">
-        <div className="metric-detail">
-          <div style={{ fontSize: "15px", marginTop: "4px", color: "#888" }}>
-            Total active stations: {activeStationsCount} • Overall avg delay:{" "}
-            {analytics.averageDelay.toFixed(1)}min • Punctuality:{" "}
-            {analytics.punctualityRate.toFixed(1)}%
-          </div>
-        </div>
-      </div>
+      
     </div>
   );
 }

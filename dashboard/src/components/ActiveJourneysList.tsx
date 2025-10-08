@@ -144,7 +144,7 @@ export default function ActiveJourneysList({
                         >
                             <div className="ride-line-1">
                                 <div className="ride-id">{ride.rideId}</div>
-                                <div className="ml-prediction-indicator">🤖 AI</div>
+                                
                                 {showStatus && (
                                     <div
                                         className="ride-status"

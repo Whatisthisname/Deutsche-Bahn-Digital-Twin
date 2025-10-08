@@ -191,7 +191,11 @@ export default function JourneysChartAggregated({
       };
     }
 
-    return rows;
+     const filtered = rows.filter(r => (r.Active || r.Delayed || r.Cancelled));
+
+
+
+    return filtered;
   }, [windowEvents, activeRideIdsNow, windowStartAligned, spanMs, buckets, agg, now]);
 
   return (
@@ -233,7 +237,7 @@ export default function JourneysChartAggregated({
 
       <div className="mt-2 text-xs text-gray-500">
         Window: {agg === "minute" ? "last 24h (per minute)" : agg === "hour" ? "last 3 days (per hour)" : "last 7 days (per day)"}.
-        Delayed &gt; {DELAY_THRESHOLD_MIN} min. Cancelled is cumulative.
+        Delayed &gt; {DELAY_THRESHOLD_MIN} min.
       </div>
     </div>
   );
