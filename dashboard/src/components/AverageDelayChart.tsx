@@ -69,7 +69,7 @@ export default function AverageDelayChart() {
   return (
     <div className="analytics-card chart-card">
       <div className="analytics-header">
-        <h3 className="analytics-title">Top 10 Most Delayed Stations (on average)</h3>
+        <h2 className="analytics-title">Top 10 Most Delayed Stations (on average)</h2>
         <div className="analytics-time">{currentTime}</div>
       </div>
 
