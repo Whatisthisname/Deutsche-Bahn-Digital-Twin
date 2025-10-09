@@ -55,11 +55,24 @@
             border-radius: 10px;
             padding: 12px;
         }
-
-        .panel.wide {
-            grid-column: 1 / -1;
-        }
     }
+}
+
+.piechartstatswrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+.statswrap {
+    display: flex;
+    justify-content: space-between;
+
+    >div {
+        flex: 1;
+    }
+}
+.piechartstats {
+    flex: 1;
 }
 
 // Raw Data page

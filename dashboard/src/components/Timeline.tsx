@@ -69,7 +69,7 @@ export default function Timeline({
                 value={cursorTs ?? 0} // value is current cursor or 0 if no data
                 step={TICK_SIM_DELTA_MS}
                 onChange={(e) => onInput(Number(e.target.value))}
-                disabled={disabled || isScrubbing}
+                disabled={true}
             />
             {showLabels && (
                 <div className="timeline-labels">

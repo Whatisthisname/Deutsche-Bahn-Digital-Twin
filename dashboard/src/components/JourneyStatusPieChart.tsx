@@ -168,89 +168,57 @@ export default function JourneyStatusPieChart() {
       <div className="mb-4">
         <h2 className="text-xl font-bold mb-2"> Journey Status Pie Chart</h2>
 
-        {/* Filter Controls */}
-        <div className="flex flex-wrap gap-4 mb-4">
-          <div className="flex flex-col">
-            <label className="text-sm font-medium text-gray-700 mb-1">
-              Filter by Station:
-            </label>
-            <select
-              value={selectedStation}
-              onChange={(e) => setSelectedStation(e.target.value)}
-              className="px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              <option value="">All Stations</option>
-              {uniqueStations.map((station) => (
-                <option key={station} value={station}>
-                  {station}
-                </option>
-              ))}
-            </select>
-          </div>
 
-          <div className="flex flex-col">
-            <label className="text-sm font-medium text-gray-700 mb-1">
-              Delay Threshold (minutes):
-            </label>
-            <input
-              type="number"
-              value={delayThreshold}
-              onChange={(e) =>
-                setDelayThreshold(Math.max(1, parseInt(e.target.value) || 5))
-              }
-              min="1"
-              max="60"
-              className="px-3 py-2 border border-gray-300 rounded-md text-sm w-20 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-        </div>
-
-        {/* Summary Stats */}
-        <div className="text-sm text-gray-600 mb-4">
-          Total Journeys Analyzed: {analysis.total} of {journeys?.length || 0} total journeys
-          {selectedStation && ` (filtered by station: ${selectedStation})`}
-          {delayThreshold !== 5 && ` (delay threshold: ${delayThreshold}min)`}
-        </div>
       </div>
+      <div className="piechartstatswrapper">
+        <div className="piechartstats">
+          {/* Filter Controls */}
+          <div className="flex flex-wrap gap-4 mb-4">
+            <div className="flex flex-col">
+              <label className="text-sm font-medium text-gray-700 mb-1">
+                Filter by Station:
+              </label>
+              <select
+                value={selectedStation}
+                onChange={(e) => setSelectedStation(e.target.value)}
+                className="px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="">All Stations</option>
+                {uniqueStations.map((station) => (
+                  <option key={station} value={station}>
+                    {station}
+                  </option>
+                ))}
+              </select>
+            </div>
 
-      {/* Pie Chart */}
-      {analysis.total > 0 ? (
-        <div className="flex flex-col lg:flex-row items-center gap-8">
-
-
-
-
-            
-          <div className="w-half lg:w-2/3">
-            <ResponsiveContainer width="100%" height={400}>
-              <PieChart>
-                <Pie
-                  data={chartData}
-                  cx="50%"
-                  cy="50%"
-                  labelLine={false}
-                  label={({ name, percentage }) => `${name}: ${percentage}%`}
-                  outerRadius={120}
-                  fill="#8884d8"
-                  dataKey="value"
-                  isAnimationActive={false}
-                >
-                  {chartData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.color} />
-                  ))}
-                </Pie>
-                <Tooltip
-                  formatter={(value, name) => [value as any, name as any]}
-                  labelFormatter={() => "Journey Status"}
-                />
-                <Legend />
-              </PieChart>
-            </ResponsiveContainer>
+            <div className="flex flex-col">
+              <label className="text-sm font-medium text-gray-700 mb-1">
+                Delay Threshold (minutes):
+              </label>
+              <input
+                type="number"
+                value={delayThreshold}
+                onChange={(e) =>
+                  setDelayThreshold(Math.max(1, parseInt(e.target.value) || 5))
+                }
+                min="1"
+                max="60"
+                className="px-3 py-2 border border-gray-300 rounded-md text-sm w-20 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
           </div>
-
-          {/* Stats Panel */}
-          <div className="w-full lg:w-1/3 space-y-4">
-            <div className="bg-gray-50 p-4 rounded-lg">
+          {/* Summary Stats */}
+          <div className="text-sm text-gray-600 mb-4 ">
+            Total Journeys Analyzed: {analysis.total} of {journeys?.length || 0} total journeys
+            {selectedStation && ` (filtered by station: ${selectedStation})`}
+            {delayThreshold !== 5 && ` (delay threshold: ${delayThreshold}min)`}
+          </div>
+        </div>
+        {/* Stats Panel */}
+        <div className="w-full lg:w-1/3 space-y-4 piechartstats">
+          <div className="bg-gray-50 p-4 rounded-lg statswrap">
+            <div>
               <h3 className="font-semibold mb-3">Breakdown</h3>
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
@@ -284,29 +252,61 @@ export default function JourneyStatusPieChart() {
                   <span className="font-medium">{analysis.cancelled}</span>
                 </div>
               </div>
-
-              {/* Performance Metrics */}
-              <div className="mt-4 pt-4 border-t border-gray-200">
-                <h4 className="text-sm font-medium text-gray-700 mb-2">
-                  Performance
-                </h4>
-                <div className="text-sm text-gray-600 space-y-1">
-                  <div>
-                    On-time Rate:{" "}
-                    {chartData.find((d) => d.name === "On Time")?.percentage || "0.0"}%
-                  </div>
-                  <div>
-                    Delay Rate:{" "}
-                    {chartData.find((d) => d.name === "Delayed")?.percentage || "0.0"}%
-                  </div>
-                  <div>
-                    Cancellation Rate:{" "}
-                    {chartData.find((d) => d.name === "Cancelled")?.percentage || "0.0"}%
-                  </div>
+            </div>
+            {/* Performance Metrics */}
+            <div className="mt-4 pt-4 border-t border-gray-200">
+              <h4 className="text-sm font-medium text-gray-700 mb-2">
+                Performance
+              </h4>
+              <div className="text-sm text-gray-600 space-y-1">
+                <div>
+                  On-time Rate:{" "}
+                  {chartData.find((d) => d.name === "On Time")?.percentage || "0.0"}%
+                </div>
+                <div>
+                  Delay Rate:{" "}
+                  {chartData.find((d) => d.name === "Delayed")?.percentage || "0.0"}%
+                </div>
+                <div>
+                  Cancellation Rate:{" "}
+                  {chartData.find((d) => d.name === "Cancelled")?.percentage || "0.0"}%
                 </div>
               </div>
             </div>
           </div>
+        </div>
+      </div>
+      {/* Pie Chart */}
+      {analysis.total > 0 ? (
+        <div className="flex flex-col lg:flex-row items-center gap-8">
+          <div className="w-half lg:w-2/3">
+            <ResponsiveContainer width="100%" height={400}>
+              <PieChart>
+                <Pie
+                  data={chartData}
+                  cx="50%"
+                  cy="50%"
+                  labelLine={false}
+                  label={({ name, percentage }) => `${name}: ${percentage}%`}
+                  outerRadius={120}
+                  fill="#8884d8"
+                  dataKey="value"
+                  isAnimationActive={false}
+                >
+                  {chartData.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={entry.color} />
+                  ))}
+                </Pie>
+                <Tooltip
+                  formatter={(value, name) => [value as any, name as any]}
+                  labelFormatter={() => "Journey Status"}
+                />
+                <Legend />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
+
+
         </div>
       ) : (
         <div className="text-center py-8">
@@ -320,7 +320,7 @@ export default function JourneyStatusPieChart() {
         </div>
       )}
 
-      
+
     </div>
   );
 }
