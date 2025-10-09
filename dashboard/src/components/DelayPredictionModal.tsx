@@ -1,6 +1,7 @@
 // This is the popup thing that shows confidence and AI prediciton when you clikc something in the ActiveJourneysList.
 // The confidence is just a heuristic right now, and the model itself will be improved by us by training on more data and features.
 import type { Journey } from '@/state/useJourneys';
+import { getRideTrainName } from '@/utils/rideHelpers';
 
 interface DelayPredictionModalProps {
     ride: Journey | null;
@@ -33,13 +34,14 @@ export default function DelayPredictionModal({
                     {ride && (
                         <div className="ride-info">
                             <div className="ride-title">
-                                <h3>Train {ride.rideId}</h3>
+                                <h3>{getRideTrainName(ride)}</h3>
                                 <span className={`ride-status status-${ride.status.toLowerCase()}`}>
                                     {ride.status}
                                 </span>
                             </div>
 
                             <div className="ride-details">
+                                <p><strong>Train ID:</strong> {ride.rideId}</p>
                                 <p><strong>Final Destination:</strong> {ride.destination}</p>
                                 <p><strong>Events:</strong> {ride.eventCount}</p>
                                 <p><strong>Started:</strong> {new Date(ride.startTs).toLocaleString()}</p>
