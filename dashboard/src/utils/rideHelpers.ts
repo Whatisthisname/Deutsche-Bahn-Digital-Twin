@@ -45,3 +45,7 @@ export const getRideDurationMinutes = (startTs: number, endTs: number | null): n
     if (!endTs) return null;
     return Math.round((endTs - startTs) / (1000 * 60));
 };
+
+export const getRideTrainName = (ride: Journey): string => {
+    return (ride.events[0] as any)?.train_name ?? ride.rideId;
+};

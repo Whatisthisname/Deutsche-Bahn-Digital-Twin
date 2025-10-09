@@ -10,7 +10,7 @@ import { useActiveJourneys, useFinishedJourneys, useCanceledJourneys } from "@/s
 import { useMemo } from 'react';
 import type { Journey } from "@/state/useJourneys";
 import type { ActiveJourneysListProps } from "@/types/components";
-import { getRideStatusColor as getJourneyStatusColor, formatRideTime, getRideStartStation, getRideEndStation, getRideDurationMinutes } from "@/utils/rideHelpers";
+import { getRideStatusColor as getJourneyStatusColor, formatRideTime, getRideStartStation, getRideEndStation, getRideDurationMinutes, getRideTrainName } from "@/utils/rideHelpers";
 import { useGraphStructure } from "@/state/useGraphStructure";
 import DelayPredictionModal from "./DelayPredictionModal";
 
@@ -133,6 +133,8 @@ export default function ActiveJourneysList({
             );
         }
 
+        
+
         return (
             <div className="journey-section">
                 <h4>{title} ({journeys.length})</h4>
@@ -145,12 +147,7 @@ export default function ActiveJourneysList({
                             style={{ cursor: 'pointer' }}
                         >
                             <div className="ride-line-1">
-                                <div className="ride-route">
-                                    <span className="start-station">{getRideStartStation(ride)}</span>
-                                    <span className="route-separator">→</span>
-                                    <span className="end-station">{getRideEndStation(ride)}</span>
-                                </div>
-
+                                <div className="ride-id">{getRideTrainName(ride)}</div>
                                 {showStatus && (
                                     <div
                                         className="ride-status"
@@ -162,7 +159,12 @@ export default function ActiveJourneysList({
                             </div>
 
                             <div className="ride-line-2">
-                                <div className="ride-id">ID:{ride.rideId}</div>
+
+                                <div className="ride-route">
+                                    <span className="start-station">{getRideStartStation(ride)}</span>
+                                    <span className="route-separator">→</span>
+                                    <span className="end-station">{getRideEndStation(ride)}</span>
+                                </div>
                                 <div className="ride-times">
                                     <span className="time-value">{formatRideTime(ride.startTs)}</span>
                                     <span className="time-separator">→</span>
