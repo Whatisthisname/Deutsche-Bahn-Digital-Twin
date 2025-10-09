@@ -146,7 +146,7 @@
     font-size: 13px;
     color: var(--text);
     font-family: monospace;
-    max-width: 200px;
+    max-width: 150px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -175,7 +175,7 @@
 
 .ride-route {
     color: var(--text);
-    max-width: 180px;
+    flex: 1;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;

@@ -3,7 +3,7 @@
 // However ideally we would want it to make predictions automatically on all current journeys, and then see what the actual delay was in the future
 // check the accuracy of the prediction on the dashboard live as the simulation runs.
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSimStore } from "@/state/useSimStore";
 import { useEventStream } from "@/state/useEventStream";
 import { useActiveJourneys, useFinishedJourneys, useCanceledJourneys } from "@/state/useJourneys";
@@ -32,6 +32,8 @@ export default function ActiveJourneysList({
         ride: null,
         isLoading: false
     });
+
+
 
     // Force re-renders when simulation time changes
     useSimStore(state => state.cursorTs);
@@ -117,7 +119,7 @@ export default function ActiveJourneysList({
             isLoading: false
         });
     };
-
+    
     // Helper function to render a journey list
     const renderJourneyList = (journeys: Journey[], title: string, emptyMessage: string) => {
         if (journeys.length === 0) {
@@ -143,8 +145,12 @@ export default function ActiveJourneysList({
                             style={{ cursor: 'pointer' }}
                         >
                             <div className="ride-line-1">
-                                <div className="ride-id">{ride.rideId}</div>
-                                
+                                <div className="ride-route">
+                                    <span className="start-station">{getRideStartStation(ride)}</span>
+                                    <span className="route-separator">→</span>
+                                    <span className="end-station">{getRideEndStation(ride)}</span>
+                                </div>
+
                                 {showStatus && (
                                     <div
                                         className="ride-status"
@@ -156,11 +162,7 @@ export default function ActiveJourneysList({
                             </div>
 
                             <div className="ride-line-2">
-                                <div className="ride-route">
-                                    <span className="start-station">{getRideStartStation(ride)}</span>
-                                    <span className="route-separator">→</span>
-                                    <span className="end-station">{getRideEndStation(ride)}</span>
-                                </div>
+                                <div className="ride-id">ID:{ride.rideId}</div>
                                 <div className="ride-times">
                                     <span className="time-value">{formatRideTime(ride.startTs)}</span>
                                     <span className="time-separator">→</span>
@@ -203,7 +205,6 @@ export default function ActiveJourneysList({
                         >
                             <div className="ride-line-1">
                                 <div className="ride-id">{ride.rideId}</div>
-                                <div className="ml-prediction-indicator">🤖 AI</div>
                                 {showStatus && (
                                     <div
                                         className="ride-status"
